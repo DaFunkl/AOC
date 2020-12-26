@@ -3,7 +3,6 @@ package de.monx.aoc.year15;
 public class Y15 {
 	public Y15(int day) {
 		// @formatter:off
-		System.out.println("das");
 		switch (day) {
 			case  1: new Y15D1().run();  break;
 			case  2: new Y15D2().run();  break;
