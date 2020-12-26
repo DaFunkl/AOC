@@ -1,0 +1,15 @@
+/target/
+/.settings/
+/log/
+/out/
+/src/main/java/de/vv/praxedo_connector/tester/
+/src/main/java/de/vv/praxedo_connector/tester/
+/archiv/
+/bak/
+.idea
+.classpath
+.project
+*.iml
+/Java/
+test_config/outputs/*
+!*.sha256
