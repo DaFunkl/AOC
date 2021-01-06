@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.monx.aoc.util.Day;
 
@@ -56,23 +54,15 @@ public class Y15D19 extends Day {
 			prev = new String(msg);
 			for (String k : replacements.keySet()) {
 				for (String r : replacements.get(k)) {
-					msg = msg.replace(r, k);
-					
-					Pattern p = Pattern.compile(r, Pattern.LITERAL);
-					Matcher m = p.matcher(outtext);
-
-					int counter = 0;
-					StringBuffer sb = new StringBuffer();
-					while (m.find()) {
-					    counter++;
-					    m.appendReplacement(sb, repto);
+					if (!msg.contains(r)) {
+						continue;
 					}
-					m.appendTail(sb);
-					
+					msg = msg.replaceFirst(r, k);
+					count++;
 				}
 			}
 		}
-		return null;
+		return count;
 	}
 
 	void parse() {
