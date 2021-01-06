@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.common.Pair;
 
 public class Y15D19 extends Day {
 	String molecule = "";
@@ -49,19 +51,32 @@ public class Y15D19 extends Day {
 	public Object part2() {
 		String msg = molecule;
 		String prev = "";
+		var gamble = fetchGamble();
 		int count = 0;
-		while (!msg.equals("e") && !prev.equals(msg)) {
-			prev = new String(msg);
-			for (String k : replacements.keySet()) {
-				for (String r : replacements.get(k)) {
-					if (!msg.contains(r)) {
-						continue;
-					}
-					msg = msg.replaceFirst(r, k);
+		while (!msg.equals("e")) {
+			int tries = 0;
+			while (tries < 100) {
+				prev = new String(msg);
+
+				var rpl = gamble.get(random(0, gamble.size()));
+				if (msg.contains(rpl.first)) {
+					msg = msg.replaceFirst(rpl.first, rpl.second);
 					count++;
 				}
+
+				if (prev.equals(msg)) {
+					tries++;
+				} else {
+					tries = 0;
+				}
+			}
+			if (!msg.equals("e")) {
+				System.out.println("!E: " + msg);
+				count = 0;
+				msg = new String(molecule);
 			}
 		}
+		System.out.println("MSG: " + msg);
 		return count;
 	}
 
@@ -83,5 +98,22 @@ public class Y15D19 extends Day {
 				replacements.get(spl[0]).add(spl[1]);
 			}
 		}
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	List<Pair<String, String>> fetchGamble() {
+		List<Pair<String, String>> ret = new ArrayList<>();
+		for (String k : replacements.keySet()) {
+			for (String r : replacements.get(k)) {
+				ret.add(new Pair(r, k));
+			}
+		}
+		return ret;
+	}
+
+	Random random = new Random();
+
+	public int random(int min, int max) {
+		return random.nextInt(max - min) + min;
 	}
 }
