@@ -1,8 +1,5 @@
 package de.monx.aoc.year15;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.monx.aoc.util.Day;
 
 public class Y15D20 extends Day {
@@ -10,33 +7,58 @@ public class Y15D20 extends Day {
 
 	@Override
 	public Object part1() {
-		int divs = fetchPresents(input);
-		for (int i = input + 1; i < input*2; i++) {
-			int ip = fetchPresents(i);
-			if (i % 100000 == 0) {
-				System.out.println(i + " -> " + ip + " =/= " + divs);
-			}
-			if (divs == ip) {
-				return i;
-			}
-		}
-		return "Not Found";
+		return solve(input, false);
 	}
 
 	@Override
 	public Object part2() {
-
-		return null;
+		return solve(input, true);
 	}
 
-	int fetchPresents(int n) {
-		int ret = 0;
+	int solve(int input, boolean p2) { //@formatter:off
+		int i = 0, ip = 0;
+		while (ip < input) {
+			i++; ip = fetchPresents(i, p2);
+		}
+		return i;
+	}//@formatter:on
+
+	int fetchPresents(int n, boolean p2) {
+		if (!p2) {
+			return fetchPresents1(n);
+		} else {
+			return fetchPresents2(n);
+		}
+	}
+
+	int fetchPresents1(int n) {
 		int sqrt = (int) Math.sqrt(n);
+		int ret = 0;
 		for (int i = 1; i <= sqrt; i++) {
 			if (n % i == 0) {
-				ret += i;
-				if(i != sqrt) {
-					ret += n/i;
+				ret += i * 10;
+				if (i != sqrt) {
+
+					ret += (n / i) * 10;
+				}
+			}
+		}
+		return ret;
+	}
+
+	int fetchPresents2(int n) {
+		int sqrt = (int) Math.sqrt(n);
+		int ret = 0;
+		for (int i = 1; i <= sqrt; i++) {
+			if (n % i == 0) {
+				if (n / i <= 50) {
+					ret += i * 11;
+				}
+				if (i != sqrt) {
+					int ni = n / i;
+					if (n / ni <= 50) {
+						ret += (n / i) * 11;
+					}
 				}
 			}
 		}

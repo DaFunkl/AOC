@@ -57,7 +57,6 @@ public class Y15D19 extends Day {
 			int tries = 0;
 			while (tries < 100) {
 				prev = new String(msg);
-
 				var rpl = gamble.get(random(0, gamble.size()));
 				if (msg.contains(rpl.first)) {
 					msg = msg.replaceFirst(rpl.first, rpl.second);
@@ -71,12 +70,10 @@ public class Y15D19 extends Day {
 				}
 			}
 			if (!msg.equals("e")) {
-				System.out.println("!E: " + msg);
 				count = 0;
 				msg = new String(molecule);
 			}
 		}
-		System.out.println("MSG: " + msg);
 		return count;
 	}
 
@@ -112,7 +109,6 @@ public class Y15D19 extends Day {
 	}
 
 	Random random = new Random();
-
 	public int random(int min, int max) {
 		return random.nextInt(max - min) + min;
 	}
