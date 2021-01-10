@@ -34,7 +34,7 @@ Status: on hold
 | [Day 5](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D5.java) | [Day 10](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D10.java) | [Day 15](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D15.java) | [Day 20](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D20.java) | [Day 25](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D25.java)  |
 
 ## [AOC: 2018](https://adventofcode.com/2018)  
-Status: Status: on hold  
+Status: on hold  
 
 | Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
