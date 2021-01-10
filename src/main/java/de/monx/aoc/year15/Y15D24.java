@@ -1,7 +1,6 @@
 package de.monx.aoc.year15;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +9,6 @@ import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
 import de.monx.aoc.util.common.pairs.IntPair;
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Y15D24 extends Day {
 	List<Integer> data = getInputList().stream() //
 			.map(Integer::valueOf) //
