@@ -12,7 +12,7 @@ Status: done
 | [Day 5](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year15/Y15D5.java) | [Day 10](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year15/Y15D10.java) | [Day 15](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year15/Y15D15.java) | [Day 20](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year15/Y15D20.java) | [Day 25](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year15/Y15D25.java)  |
 
 ## [AOC: 2016](https://adventofcode.com/2016)  
-Status: wokring on  
+Status: work in progress  
 
 | Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |

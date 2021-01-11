@@ -4,7 +4,11 @@ import de.monx.aoc.util.common.Pair;
 
 public class IntPair extends Pair<Integer, Integer> {
 
-	public IntPair(Integer first, Integer second) {
+	public IntPair() {
+		super(0, 0);
+	}
+
+	public IntPair(int first, int second) {
 		super(first, second);
 	}
 
@@ -21,6 +25,11 @@ public class IntPair extends Pair<Integer, Integer> {
 		this.second += o.second;
 	}
 
+	public void subi(IntPair o) {
+		this.first -= o.first;
+		this.second -= o.second;
+	}
+
 	public void addi(IntPair o, int a) {
 		this.first += o.first * a;
 		this.second += o.second * a;
@@ -28,5 +37,14 @@ public class IntPair extends Pair<Integer, Integer> {
 
 	public int manhattenDistance() {
 		return Math.abs(first) + Math.abs(second);
+	}
+
+	@Override
+	public IntPair clone() {
+		return new IntPair(first, second);
+	}
+
+	public String strHash() {
+		return first + "|" + second;
 	}
 }
