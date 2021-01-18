@@ -12,6 +12,10 @@ public class IntPair extends Pair<Integer, Integer> {
 		super(first, second);
 	}
 
+	public IntPair(String first, String second) {
+		super(Integer.valueOf(first), Integer.valueOf(second));
+	}
+
 	public IntPair add(IntPair o) {
 		return new IntPair(o.first + this.first, o.second + this.second);
 	}
