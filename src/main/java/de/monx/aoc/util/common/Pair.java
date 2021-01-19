@@ -14,4 +14,9 @@ public class Pair<T, K> {
 	public Pair<T, K> clone() {
 		return new Pair<T, K>(first, second);
 	}
+
+	public void set(T first, K second) {
+		this.first = first;
+		this.second = second;
+	}
 }
