@@ -24,9 +24,27 @@ public class IntPair extends Pair<Integer, Integer> {
 		return new IntPair(o.first * a + this.first, o.second * a + this.second);
 	}
 
+	public IntPair add(int a, int b) {
+		return new IntPair(a + this.first, b + this.second);
+	}
+
+	public IntPair add(int a) {
+		return add(a, a);
+	}
+
 	public void addi(IntPair o) {
 		this.first += o.first;
 		this.second += o.second;
+	}
+
+	public void addi(int o) {
+		this.first += o;
+		this.second += o;
+	}
+
+	public void addi(int a, int b) {
+		this.first += a;
+		this.second += b;
 	}
 
 	public void subi(IntPair o) {
