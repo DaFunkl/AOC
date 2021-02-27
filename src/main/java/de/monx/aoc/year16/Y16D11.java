@@ -10,7 +10,6 @@ import java.util.Set;
 import de.monx.aoc.util.Day;
 import lombok.Data;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Y16D11 extends Day {
 
 	static final int _PAIR = 0;
@@ -88,9 +87,8 @@ public class Y16D11 extends Day {
 				}
 			}
 			//@formatter:on
-				
-			}
 
+			}
 
 		}
 

@@ -3,6 +3,7 @@ package de.monx.aoc.util.common;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class Directions<T, K> {
 	private final Map<T, K> map = new HashMap<>();
 

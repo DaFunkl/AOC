@@ -1,8 +1,5 @@
 package de.monx.aoc.year15;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.pairs.IntPair;
 

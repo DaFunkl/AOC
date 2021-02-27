@@ -52,7 +52,6 @@ public class Y15D13 extends Day {
 		return vals[i][j] + vals[j][i];
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	void parse() {
 		int id = 0;
 		for (String s : getInputList()) {

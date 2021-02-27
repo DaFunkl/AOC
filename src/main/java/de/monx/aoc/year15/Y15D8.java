@@ -30,7 +30,6 @@ public class Y15D8 extends Day {
 
 	static Character hexToChar(String s) {
 		try {
-			var t = (char) Integer.parseInt(s, 16);
 			return '?';
 		} catch (Exception e) {
 			return null;

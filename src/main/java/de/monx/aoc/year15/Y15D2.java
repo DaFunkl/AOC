@@ -1,6 +1,5 @@
 package de.monx.aoc.year15;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

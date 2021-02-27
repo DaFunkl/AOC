@@ -1,7 +1,6 @@
 package de.monx.aoc.year15;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 
 public class Y15D11 extends Day {
 	char[] letters = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',

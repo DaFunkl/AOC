@@ -9,6 +9,7 @@ import java.util.Map;
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Y16D14 extends Day {
 
 	String salt = //

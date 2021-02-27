@@ -1,7 +1,6 @@
 package de.monx.aoc.year15;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,7 @@ import java.util.Map;
 import de.monx.aoc.util.Day;
 import lombok.Data;
 
-@SuppressWarnings({ "serial", "unchecked", "rawtypes" })
+@SuppressWarnings("serial")
 public class Y15D22 extends Day {
 
 	Player boss = fetchBoss();

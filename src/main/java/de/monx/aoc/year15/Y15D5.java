@@ -1,12 +1,11 @@
 package de.monx.aoc.year15;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
 
+@SuppressWarnings("serial")
 public class Y15D5 extends Day {
 
 	final Set<String> badStr = new HashSet<>() { //@formatter:off

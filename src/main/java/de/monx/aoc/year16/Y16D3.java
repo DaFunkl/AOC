@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 
 public class Y16D3 extends Day {
 

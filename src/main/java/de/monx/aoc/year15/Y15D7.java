@@ -11,6 +11,7 @@ import de.monx.aoc.util.common.pairs.IntPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class Y15D7 extends Day {
 	//@formatter:off
 	enum Operator { AND, OR, LSHIFT, RSHIFT, NOT, ASSIGN }
