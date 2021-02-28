@@ -4,7 +4,7 @@ import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.LinkList;
 
 public class Y16D19 extends Day {
-	int max = 5;// Integer.valueOf(getInputString());
+	int max = Integer.valueOf(getInputString());
 
 	@Override
 	public Object part1() {
@@ -28,16 +28,25 @@ public class Y16D19 extends Day {
 		for (int i = 0; i < amt / 2; i++) {
 			rem = rem.next;
 		}
-		int remIdx = (amt / 2) - 1;
+		int remIdx = (amt / 2);
 		int dIdx = 0;
 		while (data.value != data.next.value) {
 			int nRem = (dIdx + (amt / 2)) % amt;
+			remIdx = remIdx % amt;
+			while (nRem != remIdx) {
+				remIdx = (remIdx + 1) % amt;
+				rem = rem.next;
+			}
 
 			rem = rem.remove().next;
+			if (dIdx < remIdx) {
+				dIdx++;
+			}
 			amt--;
-
+			if (dIdx >= amt) {
+				dIdx = 0;
+			}
 			data = data.next;
-			dIdx = (dIdx + 1) % amt;
 		}
 		return data.value;
 	}
