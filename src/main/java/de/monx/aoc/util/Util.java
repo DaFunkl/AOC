@@ -51,4 +51,12 @@ public class Util {
 			return null;
 		}
 	}
+
+	public static String leftrotate(String str, int d) {
+		return str.substring(d) + str.substring(0, d);
+	}
+
+	public static String rightrotate(String str, int d) {
+		return leftrotate(str, str.length() - d);
+	}
 }
