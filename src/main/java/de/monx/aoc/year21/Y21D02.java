@@ -1,12 +1,10 @@
 package de.monx.aoc.year21;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
 
 public class Y21D02 extends Day {
-	List<String> in = new ArrayList<>();
 	long sol1 = 0;
 	long sol2 = 0;
 
@@ -22,7 +20,7 @@ public class Y21D02 extends Day {
 	}
 
 	void solve() {
-		in = getInputList();
+		List<String> in = getInputList();
 		long horizontalPosition = 0;
 		long depth = 0;
 		long aim = 0;
