@@ -36,8 +36,8 @@ public class Y21D02 extends Day {
 				depth = depth + (x * aim);
 				break;
 				
-			case "down": 	aim += x; break;
-			case "up": 		aim -= x; break;
+			case "down":	aim += x; break;
+			case "up":		aim -= x; break;
 			default: throw new IllegalArgumentException("Unexpected value: " + sar[0]);
 			}
 		} //@formatter:on
