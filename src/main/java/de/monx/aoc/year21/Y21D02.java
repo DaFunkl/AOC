@@ -21,35 +21,27 @@ public class Y21D02 extends Day {
 		return sol2;
 	}
 
-	
 	void solve() {
 		in = getInputList();
 		long horizontalPosition = 0;
-		long depth1 = 0;
-		long depth2 = 0;
+		long depth = 0;
 		long aim = 0;
 
 		for (var s : in) {
 			var sar = s.split(" ");
 			long x = Long.valueOf(sar[1]);
-			switch (sar[0]) {
+			switch (sar[0]) { //@formatter:off
 			case "forward":
 				horizontalPosition += x;
-				depth2 = Math.max(0, depth2 + (x * aim));
+				depth = depth + (x * aim);
 				break;
-			case "down":
-				depth1 += x;
-				aim += x;
-				break;
-			case "up":
-				depth1 = Math.max(0, depth1 - x);
-				aim -= x;
-				break;
-			default:
-				throw new IllegalArgumentException("Unexpected value: " + sar[0]);
+				
+			case "down": 	aim += x; break;
+			case "up": 		aim -= x; break;
+			default: throw new IllegalArgumentException("Unexpected value: " + sar[0]);
 			}
-		}
-		sol1 = depth1 * horizontalPosition;
-		sol2 = depth2 * horizontalPosition;
+		} //@formatter:on
+		sol1 = aim * horizontalPosition;
+		sol2 = depth * horizontalPosition;
 	}
 }
