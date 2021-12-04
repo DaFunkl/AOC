@@ -33,31 +33,21 @@ public class Y21D04 extends Day {
 		init();
 		Set<Integer> drawn = new HashSet<>();
 		Set<Integer> winners = new HashSet<>();
-		int card = 0;
-		int score = 0;
-		for (int d : drawing) {
+		int card = 0, score = 0;
+		for (int d : drawing) { // @formatter:off
 			card = d;
 			drawn.add(d);
-			if (drawn.size() < 5) {
-				continue;
-			}
-			var drawWinners = findWinner(drawn, d);
-			for (var winner : drawWinners) {
-				if (winner >= 0) {
-					if (winners.contains(winner)) {
-						continue;
-					}
-					winners.add(winner);
-					score = calcWinner(winner, drawn) * card;
-					if (sol1 < 0) { // Part1, first Score ever seen
-						sol1 = score;
-					}
-					if (!(winners.size() < boards.size())) {
-						sol2 = score; // Part2, last Board winning
-						return;
-					}
+			if (drawn.size() < 5) continue;
+			for (var winner : findWinner(drawn, d)) {
+				if (winners.contains(winner)) continue;
+				winners.add(winner);
+				score = calcWinner(winner, drawn) * card;
+				if (sol1 < 0) sol1 = score; 				// Part1, first Score ever seen
+				if (!(winners.size() < boards.size())) {	// Part2, last Board winning
+					sol2 = score; 
+					return;
 				}
-			}
+			} // @formatter:on
 		}
 	}
 
