@@ -68,12 +68,9 @@ public class Y21D04 extends Day {
 
 	int calcWinner(int winner, Set<Integer> drawn) {
 		var board = boards.get(winner);
-		int ret = 0;
-		for (var arr : board)
-			for (var x : arr)
-				if (!drawn.contains(x))
-					ret += x;
-		return ret;
+		int ret = 0;// @formatter:off 	// Stream performce worse --> Streaming over Arrays ain't good
+		for (var arr : board) for (var x : arr) if (!drawn.contains(x)) ret += x;
+		return ret;// @formatter:on
 	}
 
 	void init() {
