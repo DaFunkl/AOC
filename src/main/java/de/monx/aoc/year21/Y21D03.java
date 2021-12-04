@@ -8,12 +8,10 @@ import de.monx.aoc.util.common.Pair;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Y21D03 extends Day {
-	List<String> in = new ArrayList<>();
+	List<String> in = getInputList();
 
 	@Override
 	public Object part1() {
-		in = getInputList();
-
 		int[] counter = new int[in.get(0).length()];
 		for (var s : in) {
 			var sar = s.toCharArray();
@@ -23,12 +21,10 @@ public class Y21D03 extends Day {
 				}
 			}
 		}
-
-		int half = in.size() / 2;
 		String gammaStr = "";
 		String epsilonStr = "";
 		for (var x : counter) {
-			if (x >= half) {
+			if (x >= in.size() / 2) {
 				gammaStr += "1";
 				epsilonStr += "0";
 			} else {
@@ -36,10 +32,7 @@ public class Y21D03 extends Day {
 				epsilonStr += "1";
 			}
 		}
-
-		int g = Integer.parseInt(gammaStr, 2);
-		int e = Integer.parseInt(epsilonStr, 2);
-		return g * e;
+		return Integer.parseInt(gammaStr, 2) * Integer.parseInt(epsilonStr, 2);
 	}
 
 	@Override
@@ -54,9 +47,7 @@ public class Y21D03 extends Day {
 			oxStr = fetchP2Var(spl.first, true);
 			scStr = fetchP2Var(spl.second, false);
 		}
-		int o = Integer.parseInt(oxStr, 2);
-		int s = Integer.parseInt(scStr, 2);
-		return o * s;
+		return Integer.parseInt(oxStr, 2) * Integer.parseInt(scStr, 2);
 	}
 
 	String fetchP2Var(List<String> in, boolean upper) {
