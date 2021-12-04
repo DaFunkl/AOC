@@ -15,67 +15,22 @@ public class Y21D04 extends Day {
 	List<int[][]> boards = new ArrayList<>();
 	Map<Integer, List<int[]>> numRef = new HashMap<>();
 
+	int sol1 = -1;
+	int sol2 = -1;
+
 	@Override
 	public Object part1() {
-		init();
-		Set<Integer> drawn = new HashSet<>();
-		int winner = -1;
-		int card = 0;
-		for (int d : drawing) {
-			card = d;
-			drawn.add(d);
-			if (drawn.size() > 4) {
-				var winners = findWinner(drawn, d);
-				if (winners.size() > 0) {
-					winner = winners.get(0);
-				}
-			}
-			if (winner >= 0) {
-				break;
-			}
-		}
-		return calcWinner(winner, drawn) * card;
-	}
-
-	List<Integer> findWinner(Set<Integer> drawn, int card) {
-		List<Integer> ret = new ArrayList<>();
-		for (var ref : numRef.get(card)) {
-			var board = boards.get(ref[0]);
-			boolean a = true;
-			boolean b = true;
-			for (int i = 0; i < 5; i++) {
-				if (a && !drawn.contains(board[ref[1]][i])) {
-					a = false;
-				}
-				if (b && !drawn.contains(board[i][ref[2]])) {
-					b = false;
-				}
-				if (!a && !b) {
-					break;
-				}
-			}
-			if (a || b) {
-				ret.add(ref[0]);
-			}
-		}
-		return ret;
-	}
-
-	int calcWinner(int winner, Set<Integer> drawn) {
-		int ret = 0;
-		var board = boards.get(winner);
-		for (var arr : board) {
-			for (var x : arr) {
-				if (!drawn.contains(x)) {
-					ret += x;
-				}
-			}
-		}
-		return ret;
+		solve();
+		return sol1;
 	}
 
 	@Override
 	public Object part2() {
+		return sol2;
+	}
+
+	void solve() {
+		init();
 		Set<Integer> drawn = new HashSet<>();
 		Set<Integer> winners = new HashSet<>();
 		int card = 0;
@@ -83,23 +38,52 @@ public class Y21D04 extends Day {
 		for (int d : drawing) {
 			card = d;
 			drawn.add(d);
-			if (drawn.size() > 4) {
-				var drawWinners = findWinner(drawn, d);
-				for (var winner : drawWinners) {
-					if (winner >= 0) {
-						if (winners.contains(winner)) {
-							continue;
-						}
-						winners.add(winner);
-						score = calcWinner(winner, drawn) * card;
-						if (!(winners.size() < boards.size())) {
-							break;
-						}
+			if (drawn.size() < 5) {
+				continue;
+			}
+			var drawWinners = findWinner(drawn, d);
+			for (var winner : drawWinners) {
+				if (winner >= 0) {
+					if (winners.contains(winner)) {
+						continue;
+					}
+					winners.add(winner);
+					score = calcWinner(winner, drawn) * card;
+					if (sol1 < 0) { // Part1, first Score ever seen
+						sol1 = score;
+					}
+					if (!(winners.size() < boards.size())) {
+						sol2 = score; // Part2, last Board winning
+						return;
 					}
 				}
 			}
 		}
-		return score;
+	}
+
+	List<Integer> findWinner(Set<Integer> drawn, int card) {
+		List<Integer> ret = new ArrayList<>();
+		for (var ref : numRef.get(card)) {
+			var board = boards.get(ref[0]);
+			boolean v = true, h = true;
+			for (int i = 0; i < 5; i++) { // @formatter:off
+				if (v && !drawn.contains(board[ref[1]][i])) v = false;
+				if (h && !drawn.contains(board[i][ref[2]])) h = false;
+				if (!v && !h) break;
+			} 
+			if (v || h) ret.add(ref[0]);
+		} // @formatter:on
+		return ret;
+	}
+
+	int calcWinner(int winner, Set<Integer> drawn) {
+		var board = boards.get(winner);
+		int ret = 0;
+		for (var arr : board)
+			for (var x : arr)
+				if (!drawn.contains(x))
+					ret += x;
+		return ret;
 	}
 
 	void init() {
