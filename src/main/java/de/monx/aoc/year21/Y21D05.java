@@ -4,18 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_21_05;
 
 public class Y21D05 extends Day {
 	List<int[]> dLines = new ArrayList<>();
 	List<int[]> sLines = new ArrayList<>();
-	boolean wasInit = init();
+//	boolean wasInit = init();
 
-	final int girdSize = 1000;
-	int[][] grid = new int[girdSize][girdSize];
+	final int gridSize = 1000;
+	int[][] grid = new int[gridSize][gridSize];
 	int sol1 = -1;
+	boolean activatedAnim = false;
+	Animation anim = null;
+
+	void drawGrid() {
+		if (activatedAnim) {
+			if (anim == null) {
+				anim = new Animation(gridSize + 20, gridSize + 20, new DP_21_05());
+			}
+			((DP_21_05) anim.pane).drawGrid(grid);
+		}
+	}
 
 	@Override
 	public Object part1() {
+		init();
 		int count = 0;
 		for (var l : sLines) {
 			int y1 = Math.min(l[1], l[3]);
@@ -30,6 +44,7 @@ public class Y21D05 extends Day {
 					}
 				}
 			}
+			drawGrid();
 		}
 		sol1 = count;
 		return count;
@@ -47,6 +62,7 @@ public class Y21D05 extends Day {
 					count++;
 				}
 			}
+			drawGrid();
 		}
 		return count + sol1;
 	}

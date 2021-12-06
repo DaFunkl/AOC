@@ -14,12 +14,35 @@ public class Y21D06 extends Day {
 
 	@Override
 	public Object part1() {
-		return solve(80);
+//		return solve(80);
+		return solve2(80);
 	}
 
 	@Override
 	public Object part2() {
-		return solve(256);
+//		return solve(256);
+		return solve2(256);
+	}
+
+	long solve2(int days) {
+		long[] arr = new long[9];
+		for (int i : in) {
+			arr[i]++;
+		}
+		for (int d = 0; d < days; d++) {
+			long[] t = new long[9];
+			t[6] = arr[0];
+			t[8] = arr[0];
+			for (int i = 0; i < 8; i++) {
+				t[i] += arr[i + 1];
+			}
+			arr = t;
+		}
+		long ret = 0;
+		for (long l : arr) {
+			ret += l;
+		}
+		return ret;
 	}
 
 	long solve(int days) {
