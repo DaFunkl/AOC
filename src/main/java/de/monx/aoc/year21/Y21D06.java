@@ -3,29 +3,24 @@ package de.monx.aoc.year21;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.monx.aoc.util.Day;
 
 public class Y21D06 extends Day {
-
 	List<Integer> in = Arrays.stream(getInputString().split(",")).map(Integer::valueOf).toList();
+	Map<Integer, Long> vals = new HashMap<>();
 
 	@Override
 	public Object part1() {
 		return solve(80);
-//		return 0;
 	}
 
 	@Override
 	public Object part2() {
 		return solve(256);
 	}
-
-	Map<Integer, Long> vals = new HashMap<>();
 
 	long solve(int days) {
 		days++;
