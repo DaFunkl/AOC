@@ -24,19 +24,19 @@ public class Y21D06 extends Day {
 		return solve2(256);
 	}
 
+	// after getting hint about array approach
 	long solve2(int days) {
 		long[] arr = new long[9];
 		for (int i : in) {
 			arr[i]++;
 		}
 		for (int d = 0; d < days; d++) {
-			long[] t = new long[9];
-			t[6] = arr[0];
-			t[8] = arr[0];
+			long t = arr[0];
 			for (int i = 0; i < 8; i++) {
-				t[i] += arr[i + 1];
+				arr[i] = arr[i + 1];
 			}
-			arr = t;
+			arr[6] += t;
+			arr[8] = t;
 		}
 		long ret = 0;
 		for (long l : arr) {
@@ -45,6 +45,7 @@ public class Y21D06 extends Day {
 		return ret;
 	}
 
+	// own approach:
 	long solve(int days) {
 		days++;
 		vals = new HashMap<>();
