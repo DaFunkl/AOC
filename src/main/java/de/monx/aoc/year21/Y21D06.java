@@ -25,20 +25,20 @@ public class Y21D06 extends Day {
 	}
 
 	// after getting hint about array approach
-long solve2(int days) {
-	long[] arr = new long[9];
-	for (int i : in) {
-		arr[i]++;
+	long solve2(int days) {
+		long[] arr = new long[9];
+		for (int i : in) {
+			arr[i]++;
+		}
+		for (int d = 0; d < days; d++) {
+			arr[(7 + d) % arr.length] += arr[d % arr.length];
+		}
+		long ret = 0;
+		for (long l : arr) {
+			ret += l;
+		}
+		return ret;
 	}
-	for (int d = 0; d < days; d++) {
-		arr[(7 + d) % arr.length] += arr[d % arr.length];
-	}
-	long ret = 0;
-	for (long l : arr) {
-		ret += l;
-	}
-	return ret;
-}
 
 	// own approach:
 	long solve(int days) {
