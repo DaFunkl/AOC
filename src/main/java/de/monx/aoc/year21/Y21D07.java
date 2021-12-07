@@ -24,7 +24,7 @@ public class Y21D07 extends Day {
 			else 		f = in.stream().reduce(0, (a, b) -> a + Math.abs(b - x));
 			
 			if (f < minFuel) minFuel = f;
-			else if (f > minFuel) break;
+			else break;
 		}
 		return minFuel;
 	}
