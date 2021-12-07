@@ -10,20 +10,17 @@ public class Y21D07 extends Day {
 
 	@Override
 	public Object part1() {
-		return in.stream().reduce(0, (a, b) -> a + Math.abs(b - in.get(in.size() / 2)));
+		int m = in.get(in.size() / 2);
+		return in.stream().reduce(0, (a, b) -> a + Math.abs(b - m));
 	}
 
 	@Override
 	public Object part2() {
-		int minFuel = Integer.MAX_VALUE;
-		for (int i = in.get(0); i <= in.get(in.size() - 1); i++) {
-			int f = 0, x = i; // @formatter:off 
-			f = in.stream().reduce(0, (a, b) -> a + dreieckszahl(Math.abs(b - x)));
-			if (f < minFuel) minFuel = f;
-			else break;
-		}
-		return minFuel;
+		int m = in.stream().reduce(Integer::sum).get() / in.size();
+		return in.stream().reduce(0, (a, b) -> a + dreieckszahl(Math.abs(b - m)));
 	}
 
-	int dreieckszahl(int n) { return (n * (n + 1)) / 2; }
-} // @formatter:off
+	int dreieckszahl(int n) {
+		return (n * (n + 1)) / 2;
+	}
+}
