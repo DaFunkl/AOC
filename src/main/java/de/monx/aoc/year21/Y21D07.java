@@ -5,24 +5,20 @@ import java.util.List;
 
 import de.monx.aoc.util.Day;
 
-//@formatter:off what if java looked more like kotlin?
-public class Y21D07 extends Day { 
+public class Y21D07 extends Day {
 	List<Integer> in = Arrays.stream(getInputString().split(",")).map(Integer::valueOf).sorted().toList();
 
 	@Override
-	public Object part1() { return solve(false);}
+	public Object part1() {
+		return in.stream().reduce(0, (a, b) -> a + Math.abs(b - in.get(in.size() / 2)));
+	}
 
 	@Override
-	public Object part2() { return solve(true); }
-
-	int solve(boolean p2) {
+	public Object part2() {
 		int minFuel = Integer.MAX_VALUE;
 		for (int i = in.get(0); i <= in.get(in.size() - 1); i++) {
-			int f = 0, x = i;
-			
-			if (p2)  	f = in.stream().reduce(0, (a, b) -> a + dreieckszahl(Math.abs(b - x)));
-			else 		f = in.stream().reduce(0, (a, b) -> a + Math.abs(b - x));
-			
+			int f = 0, x = i; // @formatter:off 
+			f = in.stream().reduce(0, (a, b) -> a + dreieckszahl(Math.abs(b - x)));
 			if (f < minFuel) minFuel = f;
 			else break;
 		}
@@ -30,4 +26,4 @@ public class Y21D07 extends Day {
 	}
 
 	int dreieckszahl(int n) { return (n * (n + 1)) / 2; }
-} //@formatter:on
+} // @formatter:off

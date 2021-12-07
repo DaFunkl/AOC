@@ -10,7 +10,7 @@ import de.monx.aoc.year21.Y21;
 
 public class App {
 	static int year = 21;
-	static int day = 07;
+	static int day = 7;
 
 	public static void main(String[] args) {
 		System.out.println("Year: " + year + ", Day: " + day);
