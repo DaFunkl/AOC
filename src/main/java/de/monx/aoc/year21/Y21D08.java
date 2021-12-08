@@ -45,17 +45,17 @@ public class Y21D08 extends Day {
 
 	Map<String, Integer> fetchMapping(String line) {
 		Map<String, Integer> mapping = new HashMap<>();
-		String[] dm = new String[10];
+		String s1 = "", s4 = "";
 		List<String> todosL5 = new ArrayList<>();
 		List<String> todosL6 = new ArrayList<>();
 
 		for (var str : line.split(" ")) { // 7, 8, 1, 4
 			String s = Util.sortString(str);
-			switch (s.length()) { // @formatter:off
-				case 2: mapping.put(s, 1); dm[1] = s; break;
-				case 3: mapping.put(s, 7); dm[7] = s; break;
-				case 4: mapping.put(s, 4); dm[4] = s; break;
-				case 7: mapping.put(s, 8); dm[8] = s; break;
+			switch (s.length()) { // @formatter:off 	´°`_´°` formatting to reduce rows? 
+				case 2: mapping.put(s, 1); s1 = s; 	break;
+				case 3: mapping.put(s, 7); 			break;
+				case 4: mapping.put(s, 4); s4 = s; 	break;
+				case 7: mapping.put(s, 8);  		break;
 				
 				case 5: todosL5.add(s); break;	// 2, 3, 5
 				case 6: todosL6.add(s); break;	// 0, 6, 9
@@ -64,24 +64,16 @@ public class Y21D08 extends Day {
 		}
 
 		for (var s : todosL5) { // 2, 3, 5
-			if (matches(s, dm[4]) == 2) {
-				mapping.put(s, 2); dm[2] = s;
-			} else  if (matches(s, dm[7]) == 3) {
-				mapping.put(s, 3); dm[3] = s;
-			} else {
-				mapping.put(s, 5); dm[5] = s;
-			}
+			if 		(matches(s, s1) == 2) 	mapping.put(s, 3);
+			else if (matches(s, s4) == 2)	mapping.put(s, 2);
+			else  							mapping.put(s, 5);
 		}
 
 		for (var s : todosL6) { // 0, 6, 9
-			if (matches(s, dm[5]) == 5 && matches(s, dm[1]) == 1) {
-				mapping.put(s, 6); dm[6] = s;
-			} else  if (matches(s, dm[4]) == 4 && matches(s, dm[1]) == 2) {
-				mapping.put(s, 9); dm[9] = s;
-			} else {
-				mapping.put(s, 0); dm[0] = s;
-			}// @formatter:on
-		}
+			if 		(matches(s, s4) == 4)	mapping.put(s, 9);
+			else if (matches(s, s1) == 1)	mapping.put(s, 6); 
+			else 							mapping.put(s, 0); 
+		} // @formatter:on
 		return mapping;
 	}
 
