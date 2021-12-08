@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,12 @@ public class Util {
 
 	public static String readLine() {
 		return scan.nextLine();
+	}
+
+	public static String sortString(String s) {
+		char[] car = s.toCharArray();
+		Arrays.sort(car);
+		return new String(car);
 	}
 
 	public static <T> List<T> shallowCopy(List<T> l) {
