@@ -44,10 +44,9 @@ public class Y21D08 extends Day {
 	}
 
 	Map<String, Integer> fetchMapping(String line) {
+		List<String> l5 = new ArrayList<>(), l6 = new ArrayList<>();
 		Map<String, Integer> mapping = new HashMap<>();
 		String s1 = "", s4 = "";
-		List<String> todosL5 = new ArrayList<>();
-		List<String> todosL6 = new ArrayList<>();
 
 		for (var str : line.split(" ")) { // 7, 8, 1, 4
 			String s = Util.sortString(str);
@@ -57,19 +56,19 @@ public class Y21D08 extends Day {
 				case 4: mapping.put(s, 4); s4 = s; 	break;
 				case 7: mapping.put(s, 8);  		break;
 				
-				case 5: todosL5.add(s); break;	// 2, 3, 5
-				case 6: todosL6.add(s); break;	// 0, 6, 9
+				case 5: l5.add(s); break;	// 2, 3, 5
+				case 6: l6.add(s); break;	// 0, 6, 9
 				default: System.err.println("Unknown digit: " + s);
 			}
 		}
 
-		for (var s : todosL5) { // 2, 3, 5
+		for (var s : l5) { // 2, 3, 5
 			if 		(matches(s, s1) == 2) 	mapping.put(s, 3);
 			else if (matches(s, s4) == 2)	mapping.put(s, 2);
 			else  							mapping.put(s, 5);
 		}
 
-		for (var s : todosL6) { // 0, 6, 9
+		for (var s : l6) { // 0, 6, 9
 			if 		(matches(s, s4) == 4)	mapping.put(s, 9);
 			else if (matches(s, s1) == 1)	mapping.put(s, 6); 
 			else 							mapping.put(s, 0); 
