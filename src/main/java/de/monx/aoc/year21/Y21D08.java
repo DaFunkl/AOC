@@ -38,6 +38,7 @@ public class Y21D08 extends Day {
 		for (var str : spl[1].split(" ")) {
 			ret = ret * 10 + map.get(Util.sortString(str));
 		}
+		System.out.println(ret);
 		return ret;
 	}
 
@@ -63,19 +64,23 @@ public class Y21D08 extends Day {
 
 		for (var s : todosL5) { // 2, 3, 5
 			if (matches(s, dm[4]) == 2) {
-					mapping.put(s, 2);	dm[2] = s;;
-			} else if (matches(s, dm[7]) == 3) {
-					mapping.put(s, 3);	dm[3] = s;
-			} else 	mapping.put(s, 5);	dm[5] = s;;
+				mapping.put(s, 2); dm[2] = s;
+			} else  if (matches(s, dm[7]) == 3) {
+				mapping.put(s, 3); dm[3] = s;
+			} else {
+				mapping.put(s, 5); dm[5] = s;
+			}
 		}
 
 		for (var s : todosL6) { // 0, 6, 9
 			if (matches(s, dm[5]) == 5 && matches(s, dm[1]) == 1) {
-					mapping.put(s, 6);	dm[6] = s;
-			} else if (matches(s, dm[4]) == 4 && matches(s, dm[1]) == 2) {
-					mapping.put(s, 9); 	dm[9] = s;
-			} else  mapping.put(s, 0); 	dm[0] = s;
-		}// @formatter:on
+				mapping.put(s, 6); dm[6] = s;
+			} else  if (matches(s, dm[4]) == 4 && matches(s, dm[1]) == 2) {
+				mapping.put(s, 9); dm[9] = s;
+			} else {
+				mapping.put(s, 0); dm[0] = s;
+			}// @formatter:on
+		}
 		return mapping;
 	}
 
