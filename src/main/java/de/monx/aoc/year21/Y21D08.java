@@ -10,12 +10,19 @@ import de.monx.aoc.util.Util;
 
 public class Y21D08 extends Day {
 
+	List<String> in = getInputList();
+
 	@Override
 	public Object part1() {
-		return getInputList().stream().map(x -> solveP1(x)).reduce(0, (a, b) -> a + b);
+		return in.stream().map(x -> solve1(x)).reduce(0, (a, b) -> a + b);
 	}
 
-	static int solveP1(String l) {
+	@Override
+	public Object part2() {
+		return in.stream().map(x -> solve2(x)).reduce(0, (a, b) -> a + b);
+	}
+
+	static int solve1(String l) {
 		int ret = 0;
 		for (var s : l.split("\\| ")[1].split(" ")) {
 			int b = s.length();
@@ -26,12 +33,7 @@ public class Y21D08 extends Day {
 		return ret;
 	}
 
-	@Override
-	public Object part2() {
-		return getInputList().stream().map(x -> solveP2(x)).reduce(0, (a, b) -> a + b);
-	}
-
-	int solveP2(String s) {
+	int solve2(String s) {
 		String[] spl = s.split(" \\| ");
 		var map = fetchMapping(spl[0]);
 		int ret = 0;
