@@ -38,7 +38,6 @@ public class Y21D08 extends Day {
 		for (var str : spl[1].split(" ")) {
 			ret = ret * 10 + map.get(Util.sortString(str));
 		}
-		System.out.println(ret);
 		return ret;
 	}
 
