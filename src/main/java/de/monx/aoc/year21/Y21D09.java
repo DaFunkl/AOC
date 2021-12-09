@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_21_09;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y21D09 extends Day {
@@ -14,9 +16,23 @@ public class Y21D09 extends Day {
 	int[][] in = init();
 	List<IntPair> lowPoints = new ArrayList<>();
 
+	boolean isAnim = true;
+	Animation anim = null;
+	int animScale = 6;
+
+	void drawAnim() {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(animScale * in.length + 50, animScale * in[0].length + 70, new DP_21_09());
+		}
+		((DP_21_09) anim.pane).drawGrid(in);
+	}
+
 	@Override
 	public Object part1() {
-		in = init();
+		drawAnim();
 		long ret = 0;
 		for (int i = 0; i < in.length; i++) {
 			for (int j = 0; j < in[i].length; j++) {
@@ -61,6 +77,7 @@ public class Y21D09 extends Day {
 		Set<IntPair> seen = new HashSet<>();
 		todos.add(lp);
 		while (!todos.isEmpty()) {
+			drawAnim();
 			var p = todos.get(0);
 			todos.remove(0);
 			if (seen.contains(p)) {
