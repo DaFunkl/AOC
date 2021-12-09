@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
 import de.monx.aoc.util.anim.Animation;
 import de.monx.aoc.util.anim.DP_21_09;
 import de.monx.aoc.util.common.pairs.IntPair;
@@ -14,6 +15,7 @@ import de.monx.aoc.util.common.pairs.IntPair;
 public class Y21D09 extends Day {
 
 	int[][] in = init();
+	int[][] animGrid = null;
 	List<IntPair> lowPoints = new ArrayList<>();
 
 	boolean isAnim = true;
@@ -27,12 +29,11 @@ public class Y21D09 extends Day {
 		if (anim == null) {
 			anim = new Animation(animScale * in.length + 50, animScale * in[0].length + 70, new DP_21_09());
 		}
-		((DP_21_09) anim.pane).drawGrid(in);
+		((DP_21_09) anim.pane).drawGrid(animGrid);
 	}
 
 	@Override
 	public Object part1() {
-		drawAnim();
 		long ret = 0;
 		for (int i = 0; i < in.length; i++) {
 			for (int j = 0; j < in[i].length; j++) {
@@ -64,6 +65,9 @@ public class Y21D09 extends Day {
 
 	@Override
 	public Object part2() {
+		drawAnim();
+		Util.readLine();
+		animGrid = new int[in.length][in[0].length];
 		return lowPoints.stream() //
 				.map(this::fetchBasin) // get size of all basins
 				.sorted(Collections.reverseOrder()) // sort reversed
@@ -77,12 +81,13 @@ public class Y21D09 extends Day {
 		Set<IntPair> seen = new HashSet<>();
 		todos.add(lp);
 		while (!todos.isEmpty()) {
-			drawAnim();
 			var p = todos.get(0);
 			todos.remove(0);
 			if (seen.contains(p)) {
 				continue;
 			}
+			animGrid[p.first][p.second] = in[p.first][p.second] + 1;
+			drawAnim();
 			seen.add(p);
 			ret++;
 			IntPair[] ips = { p.add(-1, 0), p.add(1, 0), p.add(0, -1), p.add(0, 1) };
@@ -90,6 +95,7 @@ public class Y21D09 extends Day {
 				if (!seen.contains(ip) && ip.first >= 0 && ip.first < in.length && ip.second >= 0
 						&& ip.second < in[0].length) {
 					if (in[ip.first][ip.second] >= 9) {
+						animGrid[ip.first][ip.second] = in[ip.first][ip.second] + 1;
 						seen.add(ip);
 						continue;
 					}

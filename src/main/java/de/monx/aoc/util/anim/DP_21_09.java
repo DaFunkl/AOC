@@ -5,13 +5,27 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import javax.swing.JPanel;
+import javax.swing.text.AttributeSet.ColorAttribute;
 
 @SuppressWarnings("serial")
 public class DP_21_09 extends JPanel {
 	Random rand = new Random();
 	int[][] grid = null;
 	int scale = 6;
-	Color[] colorArray = initColor(10);
+	Color[] colorArray = { //
+			Color.black, // 0
+			new Color(255, 255, 255), // 1
+			new Color(227, 250, 217), // 2
+			new Color(212, 250, 195), // 3
+			new Color(197, 252, 172), // 4
+			new Color(154, 219, 125), // 5
+			new Color(133, 204, 102), // 6
+			new Color(99, 171, 68), // 7
+			new Color(70, 125, 46), // 8
+			new Color(54, 102, 34), // 9
+			new Color(38, 82, 20) // 10
+	};
+	// initColor(10);
 
 	Color[] initColor(int n) {
 		Color[] colorArray = new Color[n];
@@ -44,12 +58,12 @@ public class DP_21_09 extends JPanel {
 	}
 
 	public void drawGrid(int[][] grid) {
-		colorArray = initColor(10);
+//		colorArray = initColor(10);
 		this.grid = grid;
 		revalidate();
 		repaint();
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
