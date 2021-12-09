@@ -49,7 +49,7 @@ public class Y21D09 extends Day {
 	@Override
 	public Object part2() {
 		return lowPoints.stream() //
-				.map(x -> fetchBasin(x)) // get size of all basins
+				.map(this::fetchBasin) // get size of all basins
 				.sorted(Collections.reverseOrder()) // sort reversed
 				.limit(3) // limit to three biggest
 				.reduce(1, (a, b) -> a * b); // get the product of those three
