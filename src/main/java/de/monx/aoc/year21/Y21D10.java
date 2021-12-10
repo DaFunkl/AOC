@@ -1,6 +1,7 @@
 package de.monx.aoc.year21;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -11,16 +12,30 @@ public class Y21D10 extends Day {
 	List<String> in = getInputList();
 	List<long[]> scores = new ArrayList<>();
 
+	List<Long> p2 = new ArrayList<>();
+	long p1 = 0;
+
 	@Override
 	public Object part1() {
-		scores = in.stream().map(this::fetchScores).toList();
-		return scores.stream().map(a -> a[0]).reduce(0l, (a, b) -> a + b);
+		solve();
+		return p1;
 	}
 
 	@Override
 	public Object part2() {
-		var scores = this.scores.stream().filter(x -> x[0] == 0).map(x -> x[1]).sorted().toList();
-		return scores.get(scores.size() / 2);
+		Collections.sort(p2);
+		return p2.get(p2.size() / 2);
+	}
+
+	void solve() {
+		for (var line : in) {
+			var score = fetchScores(line);
+			if (score[0] != 0) {
+				p1 += score[0];
+			} else {
+				p2.add(score[1]);
+			}
+		}
 	}
 
 	long[] fetchScores(String line) {
@@ -29,10 +44,10 @@ public class Y21D10 extends Day {
 			if (c == '(' || c == '[' || c == '{' || c == '<') {
 				stack.push(c); //@formatter:off
 			} else switch (c) { 
-				case ')': if(stack.pop() != '(') return new long[] {3,0}; break;
-				case ']': if(stack.pop() != '[') return new long[] {57,0}; break;
-				case '}': if(stack.pop() != '{') return new long[] {1197,0}; break;
-				case '>': if(stack.pop() != '<') return new long[] {25137,0}; break;
+				case ')': if(stack.pop() != '(') return new long[] { 3, 0 }; break;
+				case ']': if(stack.pop() != '[') return new long[] { 57, 0 }; break;
+				case '}': if(stack.pop() != '{') return new long[] { 1197, 0 }; break;
+				case '>': if(stack.pop() != '<') return new long[] { 25137, 0 }; break;
 				default: System.err.println("unexpected char: " + c);
 			}//@formatter:on
 		}
