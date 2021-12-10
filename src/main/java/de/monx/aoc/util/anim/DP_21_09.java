@@ -12,20 +12,21 @@ public class DP_21_09 extends JPanel {
 	Random rand = new Random();
 	int[][] grid = null;
 	int scale = 6;
-	Color[] colorArray = { //
-			Color.black, // 0
-			new Color(255, 255, 255), // 1
-			new Color(227, 250, 217), // 2
-			new Color(212, 250, 195), // 3
-			new Color(197, 252, 172), // 4
-			new Color(154, 219, 125), // 5
-			new Color(133, 204, 102), // 6
-			new Color(99, 171, 68), // 7
-			new Color(70, 125, 46), // 8
-			new Color(54, 102, 34), // 9
-			new Color(38, 82, 20) // 10
-	};
-	// initColor(10);
+	Color[] colorArray = //
+//		{ //
+//			Color.black, // 0
+//			new Color(255, 255, 255), // 1
+//			new Color(227, 250, 217), // 2
+//			new Color(212, 250, 195), // 3
+//			new Color(197, 252, 172), // 4
+//			new Color(154, 219, 125), // 5
+//			new Color(133, 204, 102), // 6
+//			new Color(99, 171, 68), // 7
+//			new Color(70, 125, 46), // 8
+//			new Color(54, 102, 34), // 9
+//			new Color(38, 82, 20) // 10
+//	};
+			initColor(11);
 
 	Color[] initColor(int n) {
 		Color[] colorArray = new Color[n];
@@ -57,8 +58,15 @@ public class DP_21_09 extends JPanel {
 
 	}
 
+	int count = 0;
+
 	public void drawGrid(int[][] grid) {
-//		colorArray = initColor(10);
+		if (count++ > 25) {
+			count = 0;
+			colorArray = initColor(11);
+			colorArray[0] = Color.black;
+			colorArray[10] = new Color(38, 82, 20);
+		}
 		this.grid = grid;
 		revalidate();
 		repaint();

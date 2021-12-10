@@ -57,6 +57,11 @@ public class IntPair extends Pair<Integer, Integer> {
 		this.second += o.second * a;
 	}
 
+	public void muli(int o) {
+		this.first *= o;
+		this.second *= o;
+	}
+
 	public int manhattenDistance() {
 		return Math.abs(first) + Math.abs(second);
 	}
