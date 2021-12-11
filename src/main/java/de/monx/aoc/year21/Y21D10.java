@@ -10,8 +10,6 @@ import de.monx.aoc.util.Day;
 public class Y21D10 extends Day {
 
 	List<String> in = getInputList();
-	List<long[]> scores = new ArrayList<>();
-
 	List<Long> p2 = new ArrayList<>();
 	long p1 = 0;
 
