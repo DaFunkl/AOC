@@ -4,9 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_21_11;
 
 public class Y21D11 extends Day {
 	long sol1 = 0, sol2 = 0;
+	int[][] grid = init();
+
+	boolean isAnim = true;
+	Animation anim = null;
+	int animScale = 75;
+
+	void drawAnim(int[][] grid) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(animScale * grid.length + 50, animScale * grid[0].length + 70, new DP_21_11());
+		}
+		((DP_21_11) anim.pane).drawGrid(grid);
+	}
 
 	@Override
 	public Object part1() {
@@ -20,10 +38,12 @@ public class Y21D11 extends Day {
 	}
 
 	void solve() {
-		int[][] grid = init();
+		drawAnim(grid);
+		Util.readLine();
 		long flashes = 0;
 		boolean p1 = false, p2 = false;
 		for (int steps = 1; steps < Long.MAX_VALUE; steps++) {
+			drawAnim(grid);
 			if (p1 && p2) {
 				break;
 			}
@@ -75,6 +95,7 @@ public class Y21D11 extends Day {
 					}
 					grid[ii][jj]++;
 					if (grid[ii][jj] > 9) {
+						drawAnim(grid);
 						grid[ii][jj] = 0;
 						flashes++;
 						todos.add(new int[] { ii, jj });
