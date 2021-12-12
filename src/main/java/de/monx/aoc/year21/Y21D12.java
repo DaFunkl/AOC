@@ -2,47 +2,15 @@ package de.monx.aoc.year21;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.Util;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 public class Y21D12 extends Day {
 
 	Map<String, List<String>> graph = null;
-
-	@Data
-	@EqualsAndHashCode(of = "path")
-	static class GV {
-		public String current;
-		public String path;
-		public String specialSmall = null;
-
-		public GV(String c) {
-			current = c;
-			path = c;
-		}
-
-		public GV next(String s) {
-			return next(s, specialSmall);
-		}
-
-		public GV next(String s, String specialSmall) {
-			GV ret = new GV(s);
-			ret.path = path + "|" + s;
-			ret.specialSmall = specialSmall;
-			return ret;
-		}
-
-		public boolean hasSeen(String s) {
-			return path.contains(s);
-		}
-	}
 
 	@Override
 	public Object part1() {
@@ -55,32 +23,30 @@ public class Y21D12 extends Day {
 		return solve(true);
 	}
 
-	int solve(boolean p2) {
-		List<GV> todos = new ArrayList<>();
-		todos.add(new GV("start"));
-		Set<String> solutions = new HashSet<>();
-
+	int solve(boolean isPart2) {
+		List<String[]> todos = new ArrayList<>();
+		todos.add(new String[] { "start", "", null });
+		int ret = 0;
 		while (!todos.isEmpty()) {
-			var p = todos.get(0);
+			var currentPath = todos.get(0);
 			todos.remove(0);
-			for (var n : graph.get(p.current)) { // end
-				if (n.equals("end")) {
-					solutions.add(p.path + "end");
-				} else if (n.equals("start")) {
+			for (var nextNode : graph.get(currentPath[0])) { // end
+				if (nextNode.equals("end")) {
+					ret++;
+				} else if (nextNode.equals("start")) {
 					continue;
-				} else if (Util.isLoweCase(n)) { // small cave
-					if (!p.hasSeen(n)) {
-						todos.add(p.next(n));
-					} else if (p2 && p.specialSmall == null) {
-						todos.add(p.next(n, n));
+				} else if (Util.isLoweCase(nextNode)) { // small cave
+					if (!currentPath[1].contains(nextNode)) {
+						todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
+					} else if (isPart2 && currentPath[2] == null) {
+						todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, nextNode });
 					}
 				} else { // big cave
-					todos.add(p.next(n));
+					todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
 				}
 			}
 		}
-		return solutions.size();
-
+		return ret;
 	}
 
 	Map<String, List<String>> init() {
