@@ -66,4 +66,13 @@ public class Util {
 	public static String rightrotate(String str, int d) {
 		return leftrotate(str, str.length() - d);
 	}
+
+	public static boolean isLoweCase(String s) {
+		for (var c : s.toCharArray()) {
+			if (!Character.isLowerCase(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

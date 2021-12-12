@@ -11,6 +11,7 @@ public class DP_21_11 extends JPanel {
 	Random rand = new Random();
 	int[][] grid = null;
 	int scale = 75;
+	int gb = 20;
 	Color[] colorArray = //
 //			{ //
 //					new Color(255, 255, 255), // 1
@@ -26,17 +27,17 @@ public class DP_21_11 extends JPanel {
 //					new Color(227, 250, 217), // 2
 //			};
 			{ //
-					Color.black, // 0
-					Color.white, // 0
-					Color.yellow, // 0
-					Color.blue, // 0
-					Color.red, // 0
-					Color.PINK, // 0
-					Color.MAGENTA, // 0
-					Color.cyan, // 0
-					Color.orange, // 0
-					Color.GREEN, // 0
-					Color.LIGHT_GRAY, // 0
+					new Color(255, 255, 200), // 0
+					new Color(25, gb, gb), // 1
+					new Color(51, gb, gb), // 2
+					new Color(76, gb, gb), // 3
+					new Color(102, gb, gb), // 4
+					new Color(127, gb, gb), // 5
+					new Color(153, gb, gb), // 6
+					new Color(178, gb, gb), // 7
+					new Color(204, gb, gb), // 8
+					new Color(229, gb, gb), // 9
+					new Color(255, gb, gb), // 10
 			};
 
 //			initColor(11);
@@ -65,7 +66,7 @@ public class DP_21_11 extends JPanel {
 		for (int y = 0; y < grid.length; y++) {
 			for (int x = 0; x < grid[0].length; x++) {
 				g.setColor(colorArray[grid[y][x]]);
-				g.fillRect(x * scale + 20, y * scale + 20, scale, scale); // Draw on g here e.g.
+				g.fillRect(x * scale + 20, y * scale + 20, scale - 2, scale - 2); // Draw on g here e.g.
 			}
 		}
 
@@ -73,7 +74,7 @@ public class DP_21_11 extends JPanel {
 
 	int count = 0;
 
-	public void drawGrid(int[][] grid) {
+	public void drawGrid(int[][] grid, long sleep) {
 //		if (count++ > 25) {
 //			count = 0;
 //			colorArray = initColor(11);
@@ -84,7 +85,7 @@ public class DP_21_11 extends JPanel {
 		revalidate();
 		repaint();
 		try {
-			Thread.sleep(1);
+			Thread.sleep(sleep * 10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

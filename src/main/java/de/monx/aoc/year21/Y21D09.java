@@ -20,16 +20,24 @@ public class Y21D09 extends Day {
 
 	boolean isAnim = true;
 	Animation anim = null;
-	int animScale = 6;
+	int animScale = 8;
+	Set<IntPair> seen = new HashSet<>();
 
-	void drawAnim() {
+	void drawAnim(String state) {
 		if (!isAnim) {
 			return;
 		}
 		if (anim == null) {
 			anim = new Animation(animScale * in.length + 50, animScale * in[0].length + 70, new DP_21_09());
 		}
-		((DP_21_09) anim.pane).drawGrid(animGrid);
+
+		if (state.equals("grid")) {
+			((DP_21_09) anim.pane).drawGrid(animGrid);
+//			((DP_21_09) anim.pane).drawGrid(animGrid);
+		} else {
+			((DP_21_09) anim.pane).patch(seen, animGrid);
+		}
+
 	}
 
 	@Override
@@ -65,7 +73,7 @@ public class Y21D09 extends Day {
 
 	@Override
 	public Object part2() {
-		drawAnim();
+		drawAnim("grid");
 		Util.readLine();
 		animGrid = new int[in.length][in[0].length];
 		return lowPoints.stream() //
@@ -87,8 +95,11 @@ public class Y21D09 extends Day {
 				continue;
 			}
 			animGrid[p.first][p.second] = in[p.first][p.second] + 1;
-			drawAnim();
 			seen.add(p);
+			
+			this.seen = seen;
+			drawAnim("patch");
+			
 			ret++;
 			IntPair[] ips = { p.add(-1, 0), p.add(1, 0), p.add(0, -1), p.add(0, 1) };
 			for (var ip : ips) {
@@ -97,12 +108,17 @@ public class Y21D09 extends Day {
 					if (in[ip.first][ip.second] >= 9) {
 						animGrid[ip.first][ip.second] = in[ip.first][ip.second] + 1;
 						seen.add(ip);
+						
+						this.seen = seen;
+						drawAnim("patch");
+						
 						continue;
 					}
 					todos.add(ip);
 				}
 			}
 		}
+//		drawAnim("grid");
 		return ret;
 	}
 

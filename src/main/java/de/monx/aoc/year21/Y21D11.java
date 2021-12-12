@@ -16,14 +16,14 @@ public class Y21D11 extends Day {
 	Animation anim = null;
 	int animScale = 75;
 
-	void drawAnim(int[][] grid) {
+	void drawAnim(int[][] grid, long sleep) {
 		if (!isAnim) {
 			return;
 		}
 		if (anim == null) {
 			anim = new Animation(animScale * grid.length + 50, animScale * grid[0].length + 70, new DP_21_11());
 		}
-		((DP_21_11) anim.pane).drawGrid(grid);
+		((DP_21_11) anim.pane).drawGrid(grid, sleep);
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class Y21D11 extends Day {
 	}
 
 	void solve() {
-		drawAnim(grid);
+		drawAnim(grid, 0);
 		Util.readLine();
 		long flashes = 0;
 		boolean p1 = false, p2 = false;
 		for (int steps = 1; steps < Long.MAX_VALUE; steps++) {
-			drawAnim(grid);
+			System.out.println(steps);
 			if (p1 && p2) {
 				break;
 			}
@@ -56,9 +56,11 @@ public class Y21D11 extends Day {
 			for (int i = 0; i < grid.length; i++) {
 				for (int j = 0; j < grid[i].length; j++) {
 					grid[i][j]++;
+					drawAnim(grid, 0);
 					if (grid[i][j] > 9) { // flash
 						grid[i][j] = 0;
 						flashes++;
+						drawAnim(grid, 2);
 						fp.add(new int[] { i, j });
 					}
 				}
@@ -70,6 +72,7 @@ public class Y21D11 extends Day {
 				p2 = true;
 			}
 		}
+		drawAnim(grid, 1);
 	}
 
 	long flash(int[][] grid, List<int[]> todos) {
@@ -95,7 +98,7 @@ public class Y21D11 extends Day {
 					}
 					grid[ii][jj]++;
 					if (grid[ii][jj] > 9) {
-						drawAnim(grid);
+						drawAnim(grid, 8);
 						grid[ii][jj] = 0;
 						flashes++;
 						todos.add(new int[] { ii, jj });
