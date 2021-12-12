@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.Util;
@@ -24,12 +25,11 @@ public class Y21D12 extends Day {
 	}
 
 	int solve(boolean isPart2) {
-		List<String[]> todos = new ArrayList<>();
-		todos.add(new String[] { "start", "", null });
+		Stack<String[]> todos = new Stack<>();
+		todos.push(new String[] { "start", "", null });
 		int ret = 0;
 		while (!todos.isEmpty()) {
-			var currentPath = todos.get(0);
-			todos.remove(0);
+			var currentPath = todos.pop();
 			for (var nextNode : graph.get(currentPath[0])) { // end
 				if (nextNode.equals("end")) {
 					ret++;
@@ -37,12 +37,12 @@ public class Y21D12 extends Day {
 					continue;
 				} else if (Util.isLoweCase(nextNode)) { // small cave
 					if (!currentPath[1].contains(nextNode)) {
-						todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
+						todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
 					} else if (isPart2 && currentPath[2] == null) {
-						todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, nextNode });
+						todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, nextNode });
 					}
 				} else { // big cave
-					todos.add(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
+					todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
 				}
 			}
 		}
