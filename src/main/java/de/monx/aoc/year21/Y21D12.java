@@ -37,12 +37,12 @@ public class Y21D12 extends Day {
 					continue;
 				} else if (Util.isLoweCase(nextNode)) { // small cave
 					if (!currentPath[1].contains(nextNode)) {
-						todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
+						todos.push(new String[] { nextNode, currentPath[1] + nextNode, currentPath[2] });
 					} else if (isPart2 && currentPath[2] == null) {
-						todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, nextNode });
+						todos.push(new String[] { nextNode, currentPath[1] + nextNode, nextNode });
 					}
 				} else { // big cave
-					todos.push(new String[] { nextNode, currentPath[1] + "|" + nextNode, currentPath[2] });
+					todos.push(new String[] { nextNode, currentPath[1] + nextNode, currentPath[2] });
 				}
 			}
 		}
@@ -51,20 +51,11 @@ public class Y21D12 extends Day {
 
 	Map<String, List<String>> init() {
 		Map<String, List<String>> graph = new HashMap<>();
-
 		for (var s : getInputList()) {
 			var spl = s.split("-");
-			if (!graph.containsKey(spl[0])) {
-				graph.put(spl[0], new ArrayList<>());
-			}
-			graph.get(spl[0]).add(spl[1]);
-
-			if (!graph.containsKey(spl[1])) {
-				graph.put(spl[1], new ArrayList<>());
-			}
-			graph.get(spl[1]).add(spl[0]);
+			graph.computeIfAbsent(spl[0], k -> new ArrayList<>()).add(spl[1]);
+			graph.computeIfAbsent(spl[1], k -> new ArrayList<>()).add(spl[0]);
 		}
-
 		return graph;
 	}
 }

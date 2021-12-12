@@ -15,6 +15,21 @@ public class App {
 	public static void main(String[] args) {
 		System.out.println("Year: " + year + ", Day: " + day);
 
+//		use for warmup
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println("Iteration: " + i);
+//			switch (year) { // @formatter:off
+//			case 15: new Y15(day);break;
+//			case 16: new Y16(day);break;
+//			case 17: new Y17(day);break;
+//			case 18: new Y18(day);break;
+//			case 19: new Y19(day);break;
+//			case 20: new Y20(day);break;
+//			case 21: new Y21(day);break;
+//			default: break;
+//			} // @formatter:on
+//		}
+
 		switch (year) { // @formatter:off
 		case 15: new Y15(day);break;
 		case 16: new Y16(day);break;
