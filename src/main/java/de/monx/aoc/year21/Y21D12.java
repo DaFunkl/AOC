@@ -14,19 +14,17 @@ import lombok.EqualsAndHashCode;
 
 public class Y21D12 extends Day {
 
-	Map<String, List<String>> graph = init();
+	Map<String, List<String>> graph = null;
 
 	@Data
 	@EqualsAndHashCode(of = "path")
 	static class GV {
 		public String current;
-		public Set<String> seen = new HashSet<>();
 		public String path;
 		public String specialSmall = null;
 
 		public GV(String c) {
 			current = c;
-			seen.add(c);
 			path = c;
 		}
 
@@ -36,15 +34,19 @@ public class Y21D12 extends Day {
 
 		public GV next(String s, String specialSmall) {
 			GV ret = new GV(s);
-			ret.seen.addAll(seen);
-			ret.path = path + s;
+			ret.path = path + "|" + s;
 			ret.specialSmall = specialSmall;
 			return ret;
+		}
+
+		public boolean hasSeen(String s) {
+			return path.contains(s);
 		}
 	}
 
 	@Override
 	public Object part1() {
+		graph = init();
 		return solve(false);
 	}
 
@@ -67,7 +69,7 @@ public class Y21D12 extends Day {
 				} else if (n.equals("start")) {
 					continue;
 				} else if (Util.isLoweCase(n)) { // small cave
-					if (!p.seen.contains(n)) {
+					if (!p.hasSeen(n)) {
 						todos.add(p.next(n));
 					} else if (p2 && p.specialSmall == null) {
 						todos.add(p.next(n, n));
