@@ -69,8 +69,12 @@ public class Y21D12 extends Day {
 		Map<String, List<String>> graph = new HashMap<>();
 		for (var s : getInputList()) {
 			var spl = s.split("-");
-			graph.computeIfAbsent(spl[0], k -> new ArrayList<>()).add(spl[1]);
-			graph.computeIfAbsent(spl[1], k -> new ArrayList<>()).add(spl[0]);
+			if (!spl[1].equals("start") && !spl[0].equals("end")) {
+				graph.computeIfAbsent(spl[0], k -> new ArrayList<>()).add(spl[1]);
+			}
+			if (!spl[1].equals("end") && !spl[0].equals("start")) {
+				graph.computeIfAbsent(spl[1], k -> new ArrayList<>()).add(spl[0]);
+			}
 		}
 		return graph;
 	}
