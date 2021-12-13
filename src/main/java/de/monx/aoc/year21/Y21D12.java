@@ -46,7 +46,7 @@ public class Y21D12 extends Day {
 				} else if (nextNode.equals("start")) {
 					// start Node --> ignore
 					continue;
-				} else if (Util.isLoweCase(nextNode)) { // small cave
+				} else if (Util.isLowerCase(nextNode)) { // small cave
 					// small cave, only push small cave, if hasn't been seen before,
 					// or part2 and it's allowed to visit a small cave twice (idx 2 == null)
 					if (!currentPath[1].contains(nextNode)) {
@@ -69,8 +69,12 @@ public class Y21D12 extends Day {
 		Map<String, List<String>> graph = new HashMap<>();
 		for (var s : getInputList()) {
 			var spl = s.split("-");
-			graph.computeIfAbsent(spl[0], k -> new ArrayList<>()).add(spl[1]);
-			graph.computeIfAbsent(spl[1], k -> new ArrayList<>()).add(spl[0]);
+			if (!spl[1].equals("start") && !spl[0].equals("end")) {
+				graph.computeIfAbsent(spl[0], k -> new ArrayList<>()).add(spl[1]);
+			}
+			if (!spl[1].equals("end") && !spl[0].equals("start")) {
+				graph.computeIfAbsent(spl[1], k -> new ArrayList<>()).add(spl[0]);
+			}
 		}
 		return graph;
 	}

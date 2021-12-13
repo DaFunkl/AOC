@@ -26,14 +26,14 @@ public abstract class Day {
 		Object p1 = part1();
 		if (p1 == null)
 			p1 = "null";
-		double p1Time = (System.nanoTime() - p1TimeStart) / 10e6;
+		double p1Time = (System.nanoTime() - p1TimeStart) / 1e6;
 		System.out.println("Part1: " + p1.toString() + " \t " + p1Time + " ms");
 
 		long p2TimeStart = System.nanoTime();
 		Object p2 = part2();
 		if (p2 == null)
 			p2 = "null";
-		double p2Time = (System.nanoTime() - p2TimeStart) / 10e6;
+		double p2Time = (System.nanoTime() - p2TimeStart) / 1e6;
 		System.out.println("Part2: " + p2.toString() + " \t " + p2Time + " ms");
 
 	}
