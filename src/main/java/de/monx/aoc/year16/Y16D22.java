@@ -1,12 +1,7 @@
 package de.monx.aoc.year16;
 
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
