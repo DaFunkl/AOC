@@ -46,7 +46,7 @@ public class Y21D15 extends Day {
 				if (np[0] < 0 || np[1] < 0 || np[0] > end.first || np[1] > end.second) {
 					continue;
 				}
-				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl) {
+				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl + grid[np[0]][np[1]]) {
 					continue;
 				}
 				stack.push(np);
@@ -87,6 +87,7 @@ public class Y21D15 extends Day {
 				if (np[0] < 0 || np[1] < 0 || np[0] > bigEnd.first || np[1] > bigEnd.second) {
 					continue;
 				}
+
 				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl) {
 					continue;
 				}
@@ -94,6 +95,7 @@ public class Y21D15 extends Day {
 			}
 		}
 		return seen[bigEnd.first][bigEnd.second] - grid[0][0];
+
 	}
 
 	void init() {
