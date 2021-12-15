@@ -1,8 +1,7 @@
 package de.monx.aoc.year21;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.pairs.IntPair;
@@ -11,6 +10,7 @@ public class Y21D15 extends Day {
 
 	List<String> in = getInputList();
 	int[][] grid = null;
+	int[][] riskLvl = null;
 	IntPair start, end, bigEnd;
 
 	int[][] directions = { //
@@ -23,66 +23,46 @@ public class Y21D15 extends Day {
 	@Override
 	public Object part1() {
 		init();
-		long[][] seen = new long[grid.length][grid[0].length];
-		Deque<int[]> stack = new ArrayDeque<>();
-		stack.push(new int[] { start.first, start.second, start.first, start.second });
-		while (!stack.isEmpty()) {
-			var cur = stack.pollLast();
-			long rl = grid[cur[0]][cur[1]] + seen[cur[2]][cur[3]];
-			if (seen[cur[0]][cur[1]] > 0 && seen[cur[0]][cur[1]] <= rl) {
-				continue;
-			}
-			seen[cur[0]][cur[1]] = rl;
-			if (cur[0] == end.first && cur[1] == end.second) {
-				continue;
-			}
-			for (var dir : directions) {
-				int[] np = { //
-						dir[0] + cur[0], // new Y
-						dir[1] + cur[1], // new X
-						cur[0], // prev Y
-						cur[1] // .prev X
-				};
-				if (np[0] < 0 || np[1] < 0 || np[0] > end.first || np[1] > end.second) {
-					continue;
-				}
-				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl + grid[np[0]][np[1]]) {
-					continue;
-				}
-				stack.push(np);
-			}
-		}
-		return seen[end.first][end.second] - grid[0][0];
+		return solve(true);
 	}
 
 	@Override
 	public Object part2() {
-		long[][] seen = new long[grid.length * 5][grid[0].length * 5];
-		long[][] riskLvl = new long[grid.length * 5][grid[0].length * 5];
+		return solve(false);
+	}
 
-		// init risk Level over grid
-		for (int i = 0; i < riskLvl.length; i++) {
-			for (int j = 0; j < riskLvl[0].length; j++) {
-				riskLvl[i][j] = (grid[i % grid.length][j % grid[0].length] //
-						+ (i / grid.length) + (j / grid[0].length));
-				if (riskLvl[i][j] > 9) {
-					riskLvl[i][j] -= 9;
-				}
-			}
-		}
+//	@Data
+//	@AllArgsConstructor
+//	static class Node implements Comparable<Node> {
+//		int[] p;
+//		int v;
+//
+//		@Override
+//		public int compareTo(Node o) {
+//			return Integer.compare(v, o.v);
+//		}
+//
+//	}
 
-		Deque<int[]> stack = new ArrayDeque<>();
-		stack.push(new int[] { start.first, start.second, start.first, start.second });
+	int solve(boolean p1) {
+		int[][] seen = new int[grid.length * (p1 ? 1 : 5)][grid[0].length * (p1 ? 1 : 5)];
+
+		PriorityQueue<int[]> stack = new PriorityQueue<int[]>((a, b) -> {
+			return Integer.compare(seen[a[2]][a[3]], seen[b[2]][b[3]]);
+		});
+//		Deque<int[]> stack = new ArrayDeque<>();
+//		stack.push(new int[] { start.first, start.second, start.first, start.second });
+		stack.add(new int[] { start.first, start.second, start.first, start.second });
 		while (!stack.isEmpty()) {
-			var cur = stack.pollLast();
+//			var cur = stack.pollLast();
+			var cur = stack.poll();
 
-			long rl = seen[cur[2]][cur[3]];
-			rl += riskLvl[cur[0]][cur[1]];
+			int rl = seen[cur[2]][cur[3]] + riskLvl[cur[0]][cur[1]];
 			if (seen[cur[0]][cur[1]] > 0 && seen[cur[0]][cur[1]] <= rl) {
 				continue;
 			}
 			seen[cur[0]][cur[1]] = rl;
-			if (cur[0] == bigEnd.first && cur[1] == bigEnd.second) {
+			if (cur[0] == end.first * (p1 ? 1 : 5) && cur[1] == end.second * (p1 ? 1 : 5)) {
 				continue;
 			}
 			for (var dir : directions) {
@@ -92,17 +72,18 @@ public class Y21D15 extends Day {
 						cur[0], // prev Y
 						cur[1] // .prev X
 				};
-				if (np[0] < 0 || np[1] < 0 || np[0] > bigEnd.first || np[1] > bigEnd.second) {
+				if (np[0] < 0 || np[1] < 0 || np[0] > end.first * (p1 ? 1 : 5) || np[1] > end.second * (p1 ? 1 : 5)) {
 					continue;
 				}
 
 				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl + riskLvl[np[0]][np[1]]) {
 					continue;
 				}
-				stack.push(np);
+//				stack.push(np);
+				stack.add(np);
 			}
 		}
-		return seen[bigEnd.first][bigEnd.second] - grid[0][0];
+		return seen[end.first * (p1 ? 1 : 5)][end.second * (p1 ? 1 : 5)] - grid[0][0];
 	}
 
 	void init() {
@@ -114,6 +95,16 @@ public class Y21D15 extends Day {
 			char[] arr = in.get(i).toCharArray();
 			for (int j = 0; j < grid[i].length; j++) {
 				grid[i][j] = Character.getNumericValue(arr[j]);
+			}
+		}
+		riskLvl = new int[grid.length * 5][grid[0].length * 5];
+		for (int i = 0; i < riskLvl.length; i++) {
+			for (int j = 0; j < riskLvl[0].length; j++) {
+				riskLvl[i][j] = (grid[i % grid.length][j % grid[0].length] //
+						+ (i / grid.length) + (j / grid[0].length));
+				if (riskLvl[i][j] > 9) {
+					riskLvl[i][j] -= 9;
+				}
 			}
 		}
 	}
