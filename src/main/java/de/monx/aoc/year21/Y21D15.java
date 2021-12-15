@@ -58,18 +58,26 @@ public class Y21D15 extends Day {
 	@Override
 	public Object part2() {
 		long[][] seen = new long[grid.length * 5][grid[0].length * 5];
+		long[][] riskLvl = new long[grid.length * 5][grid[0].length * 5];
+
+		// init risk Level over grid
+		for (int i = 0; i < riskLvl.length; i++) {
+			for (int j = 0; j < riskLvl[0].length; j++) {
+				riskLvl[i][j] = (grid[i % grid.length][j % grid[0].length] //
+						+ (i / grid.length) + (j / grid[0].length));
+				if (riskLvl[i][j] > 9) {
+					riskLvl[i][j] -= 9;
+				}
+			}
+		}
+
 		Deque<int[]> stack = new ArrayDeque<>();
 		stack.push(new int[] { start.first, start.second, start.first, start.second });
 		while (!stack.isEmpty()) {
 			var cur = stack.pollLast();
 
 			long rl = seen[cur[2]][cur[3]];
-			long gridRisk = (grid[cur[0] % grid.length][cur[1] % grid[0].length] //
-					+ (cur[0] / grid.length) + (cur[1] / grid[0].length));
-			if (gridRisk > 9) {
-				gridRisk -= 9;
-			}
-			rl += gridRisk;
+			rl += riskLvl[cur[0]][cur[1]];
 			if (seen[cur[0]][cur[1]] > 0 && seen[cur[0]][cur[1]] <= rl) {
 				continue;
 			}
@@ -88,14 +96,13 @@ public class Y21D15 extends Day {
 					continue;
 				}
 
-				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl) {
+				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl + riskLvl[np[0]][np[1]]) {
 					continue;
 				}
 				stack.push(np);
 			}
 		}
 		return seen[bigEnd.first][bigEnd.second] - grid[0][0];
-
 	}
 
 	void init() {
