@@ -10,7 +10,7 @@ import de.monx.aoc.year21.Y21;
 
 public class App {
 	static int year = 21;
-	static int day = 14;
+	static int day = 15;
 
 	public static void main(String[] args) {
 		System.out.println("Year: " + year + ", Day: " + day);
@@ -31,14 +31,14 @@ public class App {
 //		}
 
 		switch (year) { // @formatter:off
-		case 15: new Y15(day);break;
-		case 16: new Y16(day);break;
-		case 17: new Y17(day);break;
-		case 18: new Y18(day);break;
-		case 19: new Y19(day);break;
-		case 20: new Y20(day);break;
-		case 21: new Y21(day);break;
-		default: break;
+			case 15: new Y15(day);break;
+			case 16: new Y16(day);break;
+			case 17: new Y17(day);break;
+			case 18: new Y18(day);break;
+			case 19: new Y19(day);break;
+			case 20: new Y20(day);break;
+			case 21: new Y21(day);break;
+			default: break;
 		} // @formatter:on
 	}
 }
