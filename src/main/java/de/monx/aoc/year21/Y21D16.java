@@ -72,8 +72,7 @@ public class Y21D16 extends Day {
 			p.type = Integer.valueOf(s.substring(idx, idx + 3), 2);
 			idx += 3;
 
-			switch (p.type) {
-			case 4: // literal Value
+			if (p.type == 4) {// literal Value
 				p.value = 0l;
 				while (true) {
 					long cv = Long.valueOf(s.substring(idx, idx + 5), 2);
@@ -87,8 +86,7 @@ public class Y21D16 extends Day {
 						break;
 					}
 				}
-				break;
-			default: // Operator
+			} else { // Operator
 				p.iLength = Character.getNumericValue(s.charAt(idx)) == 1 ? 11 : 15;
 				idx++;
 				p.subPacketsLength = Integer.valueOf(s.substring(idx, idx + p.iLength), 2);
@@ -111,8 +109,6 @@ public class Y21D16 extends Day {
 				case 7 -> p.subPackets.get(0).value == p.subPackets.get(1).value ? 1l : 0l;
 				default -> p.value;
 				};
-
-				break;
 			}
 			return new Pair(p, idx);
 		}
