@@ -31,30 +31,14 @@ public class Y21D15 extends Day {
 		return solve(false);
 	}
 
-//	@Data
-//	@AllArgsConstructor
-//	static class Node implements Comparable<Node> {
-//		int[] p;
-//		int v;
-//
-//		@Override
-//		public int compareTo(Node o) {
-//			return Integer.compare(v, o.v);
-//		}
-//
-//	}
-
 	int solve(boolean p1) {
 		int[][] seen = new int[grid.length * (p1 ? 1 : 5)][grid[0].length * (p1 ? 1 : 5)];
 
 		PriorityQueue<int[]> stack = new PriorityQueue<int[]>((a, b) -> {
 			return Integer.compare(seen[a[2]][a[3]], seen[b[2]][b[3]]);
 		});
-//		Deque<int[]> stack = new ArrayDeque<>();
-//		stack.push(new int[] { start.first, start.second, start.first, start.second });
 		stack.add(new int[] { start.first, start.second, start.first, start.second });
 		while (!stack.isEmpty()) {
-//			var cur = stack.pollLast();
 			var cur = stack.poll();
 
 			int rl = seen[cur[2]][cur[3]] + riskLvl[cur[0]][cur[1]];
@@ -79,7 +63,6 @@ public class Y21D15 extends Day {
 				if (seen[np[0]][np[1]] > 0 && seen[np[0]][np[1]] <= rl + riskLvl[np[0]][np[1]]) {
 					continue;
 				}
-//				stack.push(np);
 				stack.add(np);
 			}
 		}
