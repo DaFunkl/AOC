@@ -63,11 +63,6 @@ public class Y21D16 extends Day {
 		int subPacketsLength = -1;
 		List<Packet> subPackets = new ArrayList<>();
 
-		long operate() {
-
-			return 0l;
-		}
-
 		static Pair<Packet, Integer> parse(String s, int idx) {
 			Packet p = new Packet();
 			p.startIdx = idx;
@@ -116,15 +111,12 @@ public class Y21D16 extends Day {
 				case 7 -> p.subPackets.get(0).value == p.subPackets.get(1).value ? 1l : 0l;
 				default -> p.value;// errorCall(p);
 				};
+
 				break;
 			}
 			return new Pair(p, idx);
 		}
 
-//		static long errorCall(Packet p) {
-//			System.err.println("errorPacket: " + p);
-//			return p.value;
-//		}
 	}
 
 }
