@@ -109,7 +109,7 @@ public class Y21D16 extends Day {
 				case 5 -> p.subPackets.get(0).value > p.subPackets.get(1).value ? 1l : 0l;
 				case 6 -> p.subPackets.get(0).value < p.subPackets.get(1).value ? 1l : 0l;
 				case 7 -> p.subPackets.get(0).value == p.subPackets.get(1).value ? 1l : 0l;
-				default -> p.value;// errorCall(p);
+				default -> p.value;
 				};
 
 				break;
