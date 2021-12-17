@@ -39,11 +39,9 @@ public class Y21D17 extends Day {
 			for (int y = target[1][1]; y <= (-1 * target[1][1]); y++) {
 				int cx = 0;
 				int cy = 0;
-				int cmy = 0;
 				for (int step = 0; cx <= target[0][1] && cy >= target[1][1]; step++) {
 					cx += Math.max(x - step, 0);
 					cy += y - step;
-					cmy = Math.max(cy, cmy);
 					if (target[0][0] <= cx && cx <= target[0][1] && //
 							target[1][0] >= cy && cy >= target[1][1] //
 					) {
