@@ -1,5 +1,8 @@
 package de.monx.aoc.util;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,7 +11,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+
 public class Util {
+	public static final Gson gson = new Gson().newBuilder().setPrettyPrinting().create();
 	static Scanner scan = new Scanner(System.in);
 
 	public static String readLine() {
@@ -83,5 +90,26 @@ public class Util {
 			}
 		}
 		return true;
+	}
+
+	public static boolean mkParentDirs(String path) {
+		File parentFile = new File(path).getParentFile();
+		if (parentFile != null && !parentFile.exists()) {
+			return parentFile.mkdirs();
+		}
+		return true;
+	}
+
+	public static <T> boolean saveJsonToFile(String path, T obj) {
+		try {
+			mkParentDirs(path);
+			gson.toJson(obj, new FileWriter(path));
+			return true;
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

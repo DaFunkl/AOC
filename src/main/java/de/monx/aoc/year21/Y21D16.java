@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
 import de.monx.aoc.util.common.Pair;
 import lombok.Data;
 
@@ -49,23 +50,26 @@ public class Y21D16 extends Day {
 
 	@Override
 	public Object part2() {
+//		Util.saveJsonToFile("./out/y21d16.json", solution);
+//		System.out.println(Util.gson.toJson(solution));
 		return solution.value;
 	}
 
 	@Data
 	static class Packet {
 		long versionSum = 0;
-		int startIdx = 0;
 		int version = -1;
 		int type = -1;
 		long value = 0l;
 		int iLength = -1;
 		int subPacketsLength = -1;
-		List<Packet> subPackets = new ArrayList<>();
+
+		List<Long> subPacketsValues = new ArrayList<>();
+
+//		List<Packet> subPackets = new ArrayList<>();
 
 		static Pair<Packet, Integer> parse(String s, int idx) {
 			Packet p = new Packet();
-			p.startIdx = idx;
 			p.version = Integer.valueOf(s.substring(idx, idx + 3), 2);
 			p.versionSum = p.version;
 			idx += 3;
@@ -95,18 +99,32 @@ public class Y21D16 extends Day {
 				int count = 0;
 				while (p.iLength == 15 ? idx < endIdx : count++ < p.subPacketsLength) {
 					var sp = Packet.parse(s, idx);
+
 					p.versionSum += sp.first.versionSum;
-					p.subPackets.add(sp.first);
+
+					p.subPacketsValues.add(sp.first.value);
+//					p.subPackets.add(sp.first);
+
 					idx = sp.second;
 				}
 				p.value = switch (p.type) {
-				case 0 -> p.subPackets.stream().map(x -> x.value).reduce(0l, (a, b) -> a + b);
-				case 1 -> p.subPackets.stream().map(x -> x.value).reduce(1l, (a, b) -> a * b);
-				case 2 -> p.subPackets.stream().map(x -> x.value).min(Long::compare).get();
-				case 3 -> p.subPackets.stream().map(x -> x.value).max(Long::compare).get();
-				case 5 -> p.subPackets.get(0).value > p.subPackets.get(1).value ? 1l : 0l;
-				case 6 -> p.subPackets.get(0).value < p.subPackets.get(1).value ? 1l : 0l;
-				case 7 -> p.subPackets.get(0).value == p.subPackets.get(1).value ? 1l : 0l;
+
+				case 0 -> p.subPacketsValues.stream().reduce(0l, (a, b) -> a + b);
+				case 1 -> p.subPacketsValues.stream().reduce(1l, (a, b) -> a * b);
+				case 2 -> p.subPacketsValues.stream().min(Long::compare).get();
+				case 3 -> p.subPacketsValues.stream().max(Long::compare).get();
+				case 5 -> p.subPacketsValues.get(0) > p.subPacketsValues.get(1) ? 1l : 0l;
+				case 6 -> p.subPacketsValues.get(0) < p.subPacketsValues.get(1) ? 1l : 0l;
+				case 7 -> p.subPacketsValues.get(0) == p.subPacketsValues.get(1) ? 1l : 0l;
+
+//				case 0 -> p.subPackets.stream().map(x -> x.value).reduce(0l, (a, b) -> a + b);
+//				case 1 -> p.subPackets.stream().map(x -> x.value).reduce(1l, (a, b) -> a * b);
+//				case 2 -> p.subPackets.stream().map(x -> x.value).min(Long::compare).get();
+//				case 3 -> p.subPackets.stream().map(x -> x.value).max(Long::compare).get();
+//				case 5 -> p.subPackets.get(0).value > p.subPackets.get(1).value ? 1l : 0l;
+//				case 6 -> p.subPackets.get(0).value < p.subPackets.get(1).value ? 1l : 0l;
+//				case 7 -> p.subPackets.get(0).value == p.subPackets.get(1).value ? 1l : 0l;
+
 				default -> p.value;
 				};
 			}
