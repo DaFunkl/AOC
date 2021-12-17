@@ -3,12 +3,6 @@ package de.monx.aoc.year21;
 import de.monx.aoc.util.Day;
 
 public class Y21D17 extends Day {
-	static final int X_IDX = 0;
-	static final int X_MIN_IDX = 0;
-	static final int X_MAX_IDX = 1;
-	static final int Y_IDX = 1;
-	static final int Y_MIN_IDX = 0;
-	static final int Y_MAX_IDX = 1;
 
 	int[][] target = getTarget();
 	int[] xRange = { 0, 0 };
