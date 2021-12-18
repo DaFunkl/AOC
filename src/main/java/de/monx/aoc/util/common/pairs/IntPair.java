@@ -32,6 +32,10 @@ public class IntPair extends Pair<Integer, Integer> {
 		return add(a, a);
 	}
 
+	public boolean bothEQ(int o) {
+		return first == o && second == o;
+	}
+
 	public void addi(IntPair o) {
 		this.first += o.first;
 		this.second += o.second;
@@ -73,5 +77,10 @@ public class IntPair extends Pair<Integer, Integer> {
 
 	public String strHash() {
 		return first + "|" + second;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + first + "," + second + "]";
 	}
 }

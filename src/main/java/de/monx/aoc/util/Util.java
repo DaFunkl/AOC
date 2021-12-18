@@ -15,7 +15,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
 public class Util {
-	public static final Gson gson = new Gson().newBuilder().setPrettyPrinting().create();
+	public static final Gson gsonPretty = new Gson().newBuilder().setPrettyPrinting().create();
+	public static final Gson gson = new Gson();
 	static Scanner scan = new Scanner(System.in);
 
 	public static String readLine() {
@@ -103,7 +104,7 @@ public class Util {
 	public static <T> boolean saveJsonToFile(String path, T obj) {
 		try {
 			mkParentDirs(path);
-			gson.toJson(obj, new FileWriter(path));
+			gsonPretty.toJson(obj, new FileWriter(path));
 			return true;
 		} catch (JsonIOException e) {
 			e.printStackTrace();
