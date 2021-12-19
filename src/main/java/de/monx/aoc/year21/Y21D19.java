@@ -2,9 +2,16 @@ package de.monx.aoc.year21;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 public class Y21D19 extends Day {
 
@@ -18,45 +25,76 @@ public class Y21D19 extends Day {
 
 	static final int[] _SIDES = { 0, 4, 8, 12, 16, 20 };
 
+	Set<IAW> merged = new HashSet<>();
+	Map<Integer, int[]> scanPos = new HashMap<>();
+	Map<Integer, Integer> scanRots = new HashMap<>();
+
+	@Data
+	@EqualsAndHashCode
+	@AllArgsConstructor
+	class IAW {
+		int[] p;
+	}
+
 	@Override
 	public Object part1() {
 		init();
-		var overlaps = findOverlaps();
-
-		for (var ov : overlaps) {
-			System.out.println(Arrays.toString(ov[0]) + " | " + Arrays.toString(ov[1]));
-		}
-		int ret = 0;
-		for (var scan : scans) {
-			ret += scan.size();
-		}
-		ret -= (overlaps.size() * 12);
-		return ret;
+		findOverlaps();
+//		merge = mergeOverlaps(overlaps);
+		return merged.size();
 	}
 
 	@Override
 	public Object part2() {
-
-		return null;
+		int ret = 0;
+		for (int i = 0; i < scanPos.size(); i++) {
+			for (int j = i + 1; j < scanPos.size(); j++) {
+				ret = Math.max(ret, vertDist(subVert(scanPos.get(i), scanPos.get(j))));
+			}
+		}
+		return ret;
 	}
 
-	List<int[][]> findOverlaps() {
-		List<int[][]> overlaps = new ArrayList<>();
-		for (int i = 0; i < scans.size(); i++) {
-			System.out.println(i + "/" + scans.size());
-			for (int j = i + 1; j < scans.size(); j++) {
-				var dove = doOverlap(i, j);
-				if (dove != null) {
-					overlaps.add(dove);
+	void findOverlaps() {
+		scanPos.put(0, new int[] { 0, 0, 0 });
+		scanRots.put(0, 0);
+		Map<Integer, Set<Integer>> tries = new HashMap<>();
+		for (var s : scans.get(0)) {
+			merged.add(new IAW(s[0]));
+		}
+		int fin = scans.size() - 1;
+		while (scanPos.size() < scans.size()) {
+			System.out.println(scanPos.size() + "/" + fin);
+			for (int i = 1; i < scans.size(); i++) {
+				if (scanPos.containsKey(i)) {
 					continue;
 				}
-				dove = doOverlap(j, i);
+				tries.putIfAbsent(i, new HashSet<>());
+				Set<Integer> keys = new HashSet<>(scanPos.keySet());
+				int[][] dove = null;
+				for (int j : keys) {
+					if (tries.get(i).contains(j)) {
+						continue;
+					}
+					dove = doOverlap(i, j);
+					if (dove != null) {
+						var jPos = scanPos.get(j);
+						var iOff = addVert(jPos, dove[3]);
+						scanPos.put(i, iOff);
+						scanRots.put(i, dove[1][0]);
+						for (var s : scans.get(i)) {
+							merged.add(new IAW(addVert(s[dove[1][0]], iOff)));
+						}
+						break;
+					} else {
+						tries.get(i).add(j);
+					}
+				}
 				if (dove != null) {
-					overlaps.add(dove);
+					break;
 				}
 			}
 		}
-		return overlaps;
 	}
 
 	int[][] doOverlap(int aIdx, int bIdx) {
@@ -67,39 +105,21 @@ public class Y21D19 extends Day {
 			for (int aBeaconIdx = 0; aBeaconIdx < scanA.size(); aBeaconIdx++) { // decide a guiding beacon from A
 				int[] aBeacon = scanA.get(aBeaconIdx)[rotationA];
 				for (int bBeaconIdx = 0; bBeaconIdx < scanB.size(); bBeaconIdx++) { // decide a guiding beacon from B
-					int[] bBeacon = scanB.get(bBeaconIdx)[0];
-
-					var bOffset = subVert(aBeacon, bBeacon); // <-- offset A -> B
-
-					// todo: check this out
-//					var bOffsetInv = subVert(bBeacon, aBeacon);
-//					if (vertDist(bOffsetInv) < vertDist(bOffset)) {
-//						bOffset = bOffsetInv;
-//					}
-
-					int overlaps = 1; // count overlaps
-					for (int va = 0; va < scanA.size(); va++) { // search in A more overlaps
-						if (va == aBeaconIdx) {
-							continue;
-						}
-						int[] aSubBeacon = scanA.get(va)[rotationA];
-						// convert A-Beacon into B-Beacon coords, and look for it in B-Beacons
-						int[] bSubBeaconSearch = subVert(aSubBeacon, bOffset);
-//						System.out.println(Arrays.toString(aSubBeacon));
-//						System.out.println(Arrays.toString(bOffset));
-//						System.out.println(Arrays.toString(bSubBeaconSearch));
-						for (int i = 0; i < scanB.size(); i++) {
-							if (i == bBeaconIdx) {
-								continue;
-							}
-//							System.out.println(Arrays.toString(bSubBeaconSearch));
-//							System.out.println(Arrays.toString(scanB.get(i)[0]));
-							if (equalVert(bSubBeaconSearch, scanB.get(i)[0])) {
+					int[] bBeacon = scanB.get(bBeaconIdx)[scanRots.get(bIdx)];
+					var aOffset = subVert(bBeacon, aBeacon); // <-- offset B -> A
+					int overlaps = 0; // count overlaps
+					for (int vb = 0; vb < scanB.size() - (11 - overlaps); vb++) { // search in A more overlaps
+						int[] bSubBeacon = scanB.get(vb)[scanRots.get(bIdx)];
+						int[] aSubBeaconSearch = subVert(bSubBeacon, aOffset);
+						for (int i = 0; i < scanA.size(); i++) {
+							if (equalVert(aSubBeaconSearch, scanA.get(i)[rotationA])) {
 								overlaps++; // overlap was found
 								if (overlaps == 12) {
 									return new int[][] { //
 											{ aIdx, bIdx }, //
-											{ rotationA, 0 } //
+											{ rotationA, scanRots.get(bIdx) }, //
+											{ aBeaconIdx, bBeaconIdx }, //
+											{ aOffset[0], aOffset[1], aOffset[2] }, //
 									};
 								}
 								break;
