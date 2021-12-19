@@ -15,19 +15,12 @@ import lombok.EqualsAndHashCode;
 
 public class Y21D19 extends Day {
 
+	static final int _X = 0, _Y = 1, _Z = 2;
 	List<List<int[][]>> scans = new ArrayList<>();
 	List<int[][]> scansMM = new ArrayList<>();
-	static final int _DIST = 1000;
-
-	static final int _X = 0;
-	static final int _Y = 1;
-	static final int _Z = 2;
-
-	static final int[] _SIDES = { 0, 4, 8, 12, 16, 20 };
 
 	Set<IAW> merged = new HashSet<>();
-	Map<Integer, int[]> scanPos = new HashMap<>();
-	Map<Integer, Integer> scanRots = new HashMap<>();
+	Map<Integer, int[]> scanNorm = new HashMap<>();
 
 	@Data
 	@EqualsAndHashCode
@@ -39,65 +32,61 @@ public class Y21D19 extends Day {
 	@Override
 	public Object part1() {
 		init();
-		findOverlaps();
-//		merge = mergeOverlaps(overlaps);
+		placeScanners();
 		return merged.size();
 	}
 
 	@Override
 	public Object part2() {
 		int ret = 0;
-		for (int i = 0; i < scanPos.size(); i++) {
-			for (int j = i + 1; j < scanPos.size(); j++) {
-				ret = Math.max(ret, vertDist(subVert(scanPos.get(i), scanPos.get(j))));
+		for (int i = 0; i < scanNorm.size(); i++) {
+			for (int j = i + 1; j < scanNorm.size(); j++) {
+				ret = Math.max(ret, vertDist(subVert(scanNorm.get(i), scanNorm.get(j))));
 			}
 		}
 		return ret;
 	}
 
-	void findOverlaps() {
-		scanPos.put(0, new int[] { 0, 0, 0 });
-		scanRots.put(0, 0);
+	void placeScanners() {
+		scanNorm.put(0, new int[] { 0, 0, 0, 0 });
 		Map<Integer, Set<Integer>> tries = new HashMap<>();
 		for (var s : scans.get(0)) {
 			merged.add(new IAW(s[0]));
 		}
 		int fin = scans.size() - 1;
-		while (scanPos.size() < scans.size()) {
-			System.out.println(scanPos.size() + "/" + fin);
+		while (scanNorm.size() < scans.size()) { //  search untill all Scanners have been placed
+			System.out.println(scanNorm.size() + "/" + fin);
 			for (int i = 1; i < scans.size(); i++) {
-				if (scanPos.containsKey(i)) {
+				if (scanNorm.containsKey(i)) {
 					continue;
-				}
+				} // tries is used to skips failed tries
 				tries.putIfAbsent(i, new HashSet<>());
-				Set<Integer> keys = new HashSet<>(scanPos.keySet());
-				int[][] dove = null;
-				for (int j : keys) {
+				int[][] overlap = null;
+				for (int j : scanNorm.keySet()) {
 					if (tries.get(i).contains(j)) {
 						continue;
 					}
-					dove = doOverlap(i, j);
-					if (dove != null) {
-						var jPos = scanPos.get(j);
-						var iOff = addVert(jPos, dove[3]);
-						scanPos.put(i, iOff);
-						scanRots.put(i, dove[1][0]);
+					overlap = findOverlap(i, j);
+					if (overlap != null) {
+						var jNorm = scanNorm.get(j);
+						var iOff = addVert(jNorm, overlap[3]);
+						scanNorm.put(i, new int[] { iOff[0], iOff[1], iOff[2], overlap[1][0] });
 						for (var s : scans.get(i)) {
-							merged.add(new IAW(addVert(s[dove[1][0]], iOff)));
+							merged.add(new IAW(addVert(s[overlap[1][0]], iOff)));
 						}
 						break;
 					} else {
 						tries.get(i).add(j);
 					}
 				}
-				if (dove != null) {
+				if (overlap != null) {
 					break;
 				}
 			}
 		}
 	}
 
-	int[][] doOverlap(int aIdx, int bIdx) {
+	int[][] findOverlap(int aIdx, int bIdx) {
 		List<int[][]> scanA = scans.get(aIdx);
 		List<int[][]> scanB = scans.get(bIdx);
 
@@ -105,11 +94,11 @@ public class Y21D19 extends Day {
 			for (int aBeaconIdx = 0; aBeaconIdx < scanA.size(); aBeaconIdx++) { // decide a guiding beacon from A
 				int[] aBeacon = scanA.get(aBeaconIdx)[rotationA];
 				for (int bBeaconIdx = 0; bBeaconIdx < scanB.size(); bBeaconIdx++) { // decide a guiding beacon from B
-					int[] bBeacon = scanB.get(bBeaconIdx)[scanRots.get(bIdx)];
+					int[] bBeacon = scanB.get(bBeaconIdx)[scanNorm.get(bIdx)[3]];
 					var aOffset = subVert(bBeacon, aBeacon); // <-- offset B -> A
 					int overlaps = 0; // count overlaps
 					for (int vb = 0; vb < scanB.size() - (11 - overlaps); vb++) { // search in A more overlaps
-						int[] bSubBeacon = scanB.get(vb)[scanRots.get(bIdx)];
+						int[] bSubBeacon = scanB.get(vb)[scanNorm.get(bIdx)[3]];
 						int[] aSubBeaconSearch = subVert(bSubBeacon, aOffset);
 						for (int i = 0; i < scanA.size(); i++) {
 							if (equalVert(aSubBeaconSearch, scanA.get(i)[rotationA])) {
@@ -117,7 +106,7 @@ public class Y21D19 extends Day {
 								if (overlaps == 12) {
 									return new int[][] { //
 											{ aIdx, bIdx }, //
-											{ rotationA, scanRots.get(bIdx) }, //
+											{ rotationA, scanNorm.get(bIdx)[3] }, //
 											{ aBeaconIdx, bBeaconIdx }, //
 											{ aOffset[0], aOffset[1], aOffset[2] }, //
 									};
