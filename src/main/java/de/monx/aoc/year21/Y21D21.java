@@ -62,7 +62,6 @@ public class Y21D21 extends Day {
 		long[] wins = { 0, 0 };
 		Deque<GS> stack = new ArrayDeque<>();
 		stack.push(new GS(ps, true, 1));
-		long maxStackAmt = 0;
 		while (!stack.isEmpty()) {
 			var newStates = stack.pop().play();
 			wins[0] += newStates.second[0];
@@ -70,7 +69,6 @@ public class Y21D21 extends Day {
 			for (var ns : newStates.first) {
 				stack.push(ns);
 			}
-			maxStackAmt = Math.max(maxStackAmt, stack.size());
 		}
 		return Math.max(wins[0], wins[1]);
 	}
