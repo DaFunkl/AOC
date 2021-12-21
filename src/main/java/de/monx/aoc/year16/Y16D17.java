@@ -1,7 +1,6 @@
 package de.monx.aoc.year16;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +10,6 @@ import de.monx.aoc.util.common.pairs.IntPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@SuppressWarnings("serial")
 public class Y16D17 extends Day {
 
 	final static int _U_IDX = 0;

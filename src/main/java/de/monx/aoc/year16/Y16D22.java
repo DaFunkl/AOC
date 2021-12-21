@@ -1,117 +1,113 @@
 package de.monx.aoc.year16;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.common.Pair;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y16D22 extends Day {
-
-	List<List<int[]>> data = parse();
-	final int _SIZE = 0;
-	final int _USED = 1;
-	final int _AVAIL = 2;
-	final int _USE = 3;
+	List<String> in = getInputList();
+	List<List<int[]>> data = new ArrayList<>();
+	IntPair zero = null;
+	static final int _SIZE = 0;
+	static final int _Used = 1;
+	static final int _AVAIL = 2;
+	static final int _USE = 3;
 
 	@Override
 	public Object part1() {
-		int count = 0;
-		for (int i = 0; i < data.size(); i++) {
-			for (int j = 0; j < data.get(i).size(); j++) {
-				var cData = data.get(i).get(j);
-				if (cData[1] == 0) {
-					continue;
+		init();
+		Map<Integer, Set<IntPair>> availMap = new HashMap<>();
+		Map<Integer, Set<IntPair>> usedMap = new HashMap<>();
+		for (int x = 0; x < data.size(); x++) {
+			var xData = data.get(x);
+			for (int y = 0; y < data.get(x).size(); y++) {
+				var yData = xData.get(y);
+				IntPair ip = new IntPair(x, y);
+				availMap.computeIfAbsent(yData[_AVAIL], k -> new HashSet<>()).add(ip);
+				usedMap.computeIfAbsent(yData[_Used], k -> new HashSet<>()).add(ip);
+				if (yData[_Used] == 0) {
+					zero = new IntPair(x, y);
 				}
-				for (int ig = 0; ig < data.size(); ig++) {
-					for (int jg = 0; jg < data.get(ig).size(); jg++) {
-						var gData = data.get(ig).get(jg);
-						if (i == ig && j == jg) {
-							continue;
-						}
-						if (cData[_USED] < gData[_AVAIL]) {
-							count++;
+			}
+		}
+		int ret = 0;
+		for (var um : usedMap.entrySet()) {
+			for (var am : availMap.entrySet()) {
+				if (um.getKey() > 0 && um.getKey() <= am.getKey()) {
+					for (var us : um.getValue()) {
+						ret += am.getValue().size();
+						if (am.getValue().contains(us)) {
+							ret--;
 						}
 					}
 				}
 			}
 		}
-
-		return count;
+		return ret;
 	}
 
 	@Override
 	public Object part2() {
-		int x_size = data.size();
-		int y_size = data.get(0).size();
-		IntPair wStart = null, hole = null;
-		for (int x = 0; x < x_size; x++) {
-			for (int y = 0; y < y_size; y++) {
-				var ip = new IntPair(x, y);
-				var n = data.get(x).get(y);
-				if (x == 0 && y == 0)
-					System.out.print("S");
-				else if (x == x_size - 1 && y == 0)
-					System.out.print("G");
-				else if (n[_USED] == 0) {
-					hole = ip;
-					System.out.print("_");
-				} else if (n[_SIZE] > 250) {
-					if (wStart == null) {
-						wStart = new IntPair(x - 1, y);
-						System.out.print("Q");
-					} else {
-						System.out.print("#");
-					}
-				} else
-					System.out.print(".");
+		// get access to
+		// /dev/grid/node-x34-y0 88T 69T 19T 78%
+		IntPair goal = new IntPair(data.size() - 1, 0);
+		int steps = 0;
+		while (!zero.equals(goal)) {
+			if (zero.second == 0) {
+				zero.addi(1, 0);
+			} else if (data.get(zero.first).get(zero.second - 1)[_Used] > 100) {
+				zero.addi(-1, 0);
+			} else {
+				zero.addi(0, -1);
 			}
-			System.out.println();
+			steps++;
 		}
-//		int result = hole.manhattenDistance() - wStart.manhattenDistance();
-		int result = Math.abs(hole.first - wStart.first) + Math.abs(hole.second - wStart.second);
-		result += x_size - wStart.first + wStart.second;
-		return result + 5 * (x_size - 1);
+		steps += 5 * (data.size() - 2);
+		return steps;
 	}
 
-	List<List<int[]>> parse() {
-		List<List<int[]>> ret = new ArrayList<>();
-		List<int[]> current = null;
-		var il = getInputList();
-		for (int i = 2; i < il.size(); i++) {
-			var pl = parseLine(il.get(i));
-			if (pl.first == 0) {
-				if (current != null) {
-					ret.add(current);
+	void printData() {
+		for (var xData : data) {
+			StringBuilder sb = new StringBuilder();
+			for (var yData : xData) {
+				sb.append(String.format("%03d", yData[_Used])).append(" / ").append(String.format("%03d", yData[_SIZE]))
+						.append("\t");
+//				sb.append(Arrays.toString(yData)).append("\t");
+			}
+			System.out.println(sb.toString());
+		}
+	}
+
+	void init() {
+		List<int[]> yList = new ArrayList<>();
+		for (int i = 2; i < in.size(); i++) {
+			// /dev/grid/node-x0-y0 94T 65T 29T 69%
+			// /dev/grid/node-x19-y22 87T 72T 15T 82%
+			String s = in.get(i);
+			int[] suau = { //
+					Integer.valueOf(s.substring(24, 27).trim()), //
+					Integer.valueOf(s.substring(30, 33).trim()), //
+					Integer.valueOf(s.substring(37, 40).trim()), //
+					Integer.valueOf(s.substring(43, 46).trim()), //
+			};
+			var sar = s.substring(16, 23).trim().replace("y", "").split("-");
+			int y = Integer.valueOf(sar[1]);
+			if (y == 0) {
+				if (!yList.isEmpty()) {
+					data.add(yList);
 				}
-				current = new ArrayList<>();
+				yList = new ArrayList<>();
 			}
-			current.add(pl.second);
+			yList.add(suau);
 		}
-		ret.add(current);
-		return ret;
-	}
-
-	Pair<Integer, int[]> parseLine(String s) {
-		s = s//
-				.replace("/dev/grid/node-", "") //
-				.replace("x", "") //
-				.replace("y", "") //
-				.replace("T", "") //
-				.replace("%", "") //
-				.replace("-", " ");
-		while (s.contains("  ")) {
-			s = s.replace("  ", " ");
+		if (!yList.isEmpty()) {
+			data.add(yList);
 		}
-		var spl = s.split(" ");
-		return new Pair<Integer, int[]>(//
-				Integer.valueOf(spl[1]), //
-				new int[] { //
-						Integer.valueOf(spl[2]), //
-						Integer.valueOf(spl[3]), //
-						Integer.valueOf(spl[4]), //
-						Integer.valueOf(spl[5]) //
-				});
 	}
 }
