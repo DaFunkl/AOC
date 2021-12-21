@@ -1,6 +1,5 @@
 package de.monx.aoc.year21;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 import de.monx.aoc.util.anim.Animation;
 import de.monx.aoc.util.anim.DP_21_20;
 import de.monx.aoc.util.common.pairs.IntPair;
