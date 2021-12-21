@@ -1,8 +1,9 @@
 package de.monx.aoc.year21;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
@@ -59,7 +60,7 @@ public class Y21D21 extends Day {
 	public Object part2() {
 		init();
 		long[] wins = { 0, 0 };
-		Stack<GS> stack = new Stack<>();
+		Deque<GS> stack = new ArrayDeque<>();
 		stack.push(new GS(ps, true, 1));
 		long maxStackAmt = 0;
 		while (!stack.isEmpty()) {
