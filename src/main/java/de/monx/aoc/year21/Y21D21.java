@@ -60,7 +60,7 @@ public class Y21D21 extends Day {
 		init();
 		long[] wins = { 0, 0 };
 		Stack<GS> stack = new Stack<>();
-		stack.push(new GS(ps));
+		stack.push(new GS(ps, true, 1));
 		long maxStackAmt = 0;
 		while (!stack.isEmpty()) {
 			var newStates = stack.pop().play();
@@ -78,10 +78,6 @@ public class Y21D21 extends Day {
 		long universes = 1;
 		int[][] ps = new int[2][2];
 		boolean turn = true;
-
-		public GS(int[][] nps) {
-			ps = new int[][] { { nps[0][0], nps[0][1] }, { nps[1][0], nps[1][1] } };
-		}
 
 		public GS(int[][] nps, boolean turn, long universes) {
 			ps = new int[][] { { nps[0][0], nps[0][1] }, { nps[1][0], nps[1][1] } };
