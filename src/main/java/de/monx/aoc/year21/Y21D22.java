@@ -28,24 +28,27 @@ public class Y21D22 extends Day {
 		boolean skip = true;
 
 		long[][] a = { //
-				{ 0, 1 }, //
-				{ 0, 0 }, //
+				{ 0, 2 }, //
+				{ 0, 2 }, //
 				{ 0, 0 }, //
 		};
 
 		long[][] b = { //
-				{ 1, 1 }, //
-				{ 0, 0 }, //
+				{ 0, 1 }, //
+				{ 0, 2 }, //
 				{ 0, 0 }, //
 		};
 
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+		print(a);
+		print(b);
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 		var cut = cut(a, b);
-		for (var cc : cut) {
-			System.out.println("=====");
-			for (var c : cc) {
-				System.out.println(Arrays.toString(c));
-			}
+		System.out.println("##-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-##");
+		for (var c : cut) {
+			print(c);
 		}
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
 		if (skip) {
 			return null;
@@ -170,32 +173,26 @@ public class Y21D22 extends Day {
 		boolean xe = a[0][0] == b[0][0] && a[0][1] == b[0][1];
 		boolean ye = a[1][0] == b[1][0] && a[1][1] == b[1][1];
 		boolean ze = a[2][0] == b[2][0] && a[2][1] == b[2][1];
-		if (xe && ye) {
-			if (a[2][0] <= b[2][0] && a[2][1] + 1 <= b[2][0]) {
-				return new long[][] { //
-						{ a[0][0], a[0][1] }, //
-						{ a[1][0], a[1][1] }, //
-						{ a[2][0], b[2][1] },//
-				};
-			}
+		if (xe && ye && a[2][0] <= b[2][0] && b[2][0] <= a[2][1] + 1) {
+			return new long[][] { //
+					{ a[0][0], a[0][1] }, //
+					{ a[1][0], a[1][1] }, //
+					{ a[2][0], b[2][1] },//
+			};
 		}
-		if (ye && ze) {
-			if (a[0][0] <= b[0][0] && a[0][1] + 1 <= b[0][0]) {
-				return new long[][] { //
-						{ a[0][0], b[0][1] }, //
-						{ a[1][0], a[1][1] }, //
-						{ a[2][0], a[2][1] }, //
-				};
-			}
+		if (ye && ze && a[0][0] <= b[0][0] && b[0][0] <= a[0][1] + 1) {
+			return new long[][] { //
+					{ a[0][0], b[0][1] }, //
+					{ a[1][0], a[1][1] }, //
+					{ a[2][0], a[2][1] }, //
+			};
 		}
-		if (ze && xe) {
-			if (a[1][0] <= b[1][0] && a[1][1] + 1 <= b[1][0]) {
-				return new long[][] { //
-						{ a[0][0], a[0][1] }, //
-						{ a[1][0], b[1][1] }, //
-						{ a[2][0], a[2][1] }, //
-				};
-			}
+		if (ze && xe && a[1][0] <= b[1][0] && b[0][0] <= a[1][1] + 1) {
+			return new long[][] { //
+					{ a[0][0], a[0][1] }, //
+					{ a[1][0], b[1][1] }, //
+					{ a[2][0], a[2][1] }, //
+			};
 		}
 		return null;
 	}
@@ -209,41 +206,51 @@ public class Y21D22 extends Day {
 		return true;
 	}
 
+	long[] fetchMM(long[][] a, long[][] b, int i, int d) {
+		return switch (i) {
+		case 0 -> new long[] { //
+				a[d][0], // --> always a 0
+				Math.max(a[d][0], (b[d][0] - 1)) //
+			};
+		case 1 -> new long[] { //
+				b[d][0], // --> always d0
+				b[d][1] // --> always d1
+			};
+		case 2 -> new long[] { //
+				Math.min(a[d][1], (b[d][1] + 1)), //
+				a[d][1] // --> always a 1
+			};
+		default -> null;
+		};
+	}
+
 	List<long[][]> cut(long[][] a, long[][] b) {
 		List<long[][]> ret = new ArrayList<>();
 		if (same(a, b)) {
 			return null;
 		}
+
 		for (int z = 0; z < 3; z++) {
+			long[] zz = fetchMM(a, b, z, 2);
 			for (int y = 0; y < 3; y++) {
+				long[] yy = fetchMM(a, b, y, 1);
 				for (int x = 0; x < 3; x++) {
-					long[][] cut = new long[3][2];
-					cut[0][0] = x == 0 ? a[0][0] : x == 1 ? b[0][0] : b[0][1] + (b[0][1] == b[0][0] ? 0 : 1);
-					cut[0][1] = x == 0 ? b[0][1] - (b[0][1] == b[0][0] ? 0 : 1) : x == 1 ? b[0][1] : a[0][1];
+					if (z == 1 && y == 1 && x == 1) {
+						continue;
+					}
+					long[] xx = fetchMM(a, b, x, 0);
 
-					cut[1][0] = y == 0 ? a[1][0] : y == 1 ? b[1][0] : b[1][1] + (b[1][1] == b[1][0] ? 0 : 1);
-					cut[1][1] = y == 0 ? b[1][1] - (b[1][1] == b[1][0] ? 0 : 1) : y == 1 ? b[1][1] : a[1][1];
+					long[][] cut = { { xx[0], xx[1] }, { yy[0], yy[1] }, { zz[0], zz[1] } };
 
-					cut[2][0] = z == 0 ? a[2][0] : z == 1 ? b[2][0] : b[2][1] + (b[2][1] == b[2][0] ? 0 : 1);
-					cut[2][1] = z == 0 ? b[2][1] - (b[2][1] == b[2][0] ? 0 : 1) : z == 1 ? b[2][1] : a[2][1];
-
-//					long[][] cut = new long[][] { //
-//							{ //
-//									x == 0 ? a[0][0] : (x == 2 ? 1 : 0) + b[0][x == 1 ? 0 : 1], //
-//									x == 2 ? a[0][1] : (x == 0 ? -1 : 0) + b[0][x == 0 ? 0 : 1]//
-//							}, { //
-//									y == 0 ? a[1][0] : (y == 2 ? 1 : 0) + +b[1][y == 1 ? 0 : 1], //
-//									y == 2 ? a[1][1] : (y == 0 ? -1 : 0) + b[1][y == 0 ? 0 : 1] //
-//							}, { //
-//									z == 0 ? a[1][0] : (z == 2 ? 1 : 0) + +b[2][z == 1 ? 0 : 1], //
-//									z == 2 ? a[2][1] : (z == 0 ? -1 : 0) + b[2][z == 0 ? 0 : 1] //
-//							} //
-//					};
 					boolean ignoreCut = false;
-					for (int i = 0; i < 3; i++) {
-						if (cut[i][0] > cut[i][1]) {
-							ignoreCut = true;
-							break;
+					if (intersect(b, cut) != null) {
+						ignoreCut = true;
+					} else {
+						for (var r : ret) {
+							if (same(r, cut)) {
+								ignoreCut = true;
+								break;
+							}
 						}
 					}
 					if (!ignoreCut) {
@@ -252,14 +259,15 @@ public class Y21D22 extends Day {
 				}
 			}
 		}
-		for (int i = 0; i < ret.size(); i++) {
-			if (null != intersect(b, ret.get(i))) {
-				ret.remove(i);
-				i--;
-			}
-		}
 		merge(ret);
 		return ret;
+	}
+
+	void print(long[][] arr) {
+		System.out.println("=======================");
+		for (var a : arr) {
+			System.out.println(Arrays.toString(a));
+		}
 	}
 
 	boolean same(long[][] a, long[][] b) {
