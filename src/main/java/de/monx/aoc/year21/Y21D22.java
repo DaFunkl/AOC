@@ -2,83 +2,65 @@ package de.monx.aoc.year21;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 public class Y21D22 extends Day {
 	List<String> in = getInputList();
 	List<Pair<Boolean, long[][]>> ops = new ArrayList<>();
 
-	@Override
-	public Object part2() {
-
-		return null;
-	}
+	long p1, p2;
 
 	@Override
 	public Object part1() {
+		solve();
+		return p1;
+	}
+
+	@Override
+	public Object part2() {
+		return p2;
+	}
+
+	void solve() {
 		init();
-
-		boolean skip = true;
-
-		long[][] a = { //
-				{ 0, 2 }, //
-				{ 0, 2 }, //
-				{ 0, 0 }, //
-		};
-
-		long[][] b = { //
-				{ 0, 1 }, //
-				{ 0, 2 }, //
-				{ 0, 0 }, //
-		};
-
-		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-		print(a);
-		print(b);
-		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-		var cut = cut(a, b);
-		System.out.println("##-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-##");
-		for (var c : cut) {
-			print(c);
-		}
-		System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-
-		if (skip) {
-			return null;
-		}
 
 		List<long[][]> ons = new ArrayList<>();
 		int cc = 0;
+
+		long[][] irange = { //
+				{ -50, 50 }, //
+				{ -50, 50 }, //
+				{ -50, 50 } //
+		};
 		for (var opp : ops) {
-			System.out.println(cc++);
-			System.out.println(ons.stream().map(x -> cubes(x)).reduce(Long::sum));
+			System.out.println(cc++ + "/" + (ops.size() - 1));
 			Deque<Pair<Boolean, long[][]>> stack = new ArrayDeque<>();
 			stack.push(opp);
 			while (!stack.isEmpty()) {
 				var op = stack.pop();
 				long[][] opCube = null;
 				opCube = op.second;
-				for (int i = 0; i < ons.size(); i++) {
+				if (opCube == null) {
+					continue;
+				}
+				int endIter = ons.size();
+				for (int i = 0; i < endIter; i++) {
 					var on = ons.get(i);
 					long[][] intersect = intersect(opCube, on);
 					if (intersect == null) {
 						continue;
 					} else {
+
 						if (!op.first) {
-							ons.remove(i--);
+							ons.remove(i);
+							endIter--;
+							i--;
 							if (!same(on, intersect)) {
 								var onCut = cut(on, intersect);
-
-								if (onCut.isEmpty()) { // bug
-									continue;
-								}
 
 								ons.add(onCut.get(0));
 								for (int c = 1; c < onCut.size(); c++) {
@@ -86,15 +68,11 @@ public class Y21D22 extends Day {
 								}
 							}
 						}
-						if (same(opCube, intersect)) { // bug
+						if (same(opCube, intersect)) {
 							opCube = null;
 							break;
 						}
 						var cuts = cut(opCube, intersect);
-						if (cuts.isEmpty()) {
-							cuts = cut(opCube, intersect);
-							continue;
-						}
 						opCube = cuts.get(0);
 						for (int c = 1; c < cuts.size(); c++) {
 							stack.push(new Pair<Boolean, long[][]>(op.first, cuts.get(c)));
@@ -102,17 +80,23 @@ public class Y21D22 extends Day {
 
 					}
 				}
-				if (opCube != null) {
+				if (opCube != null && op.first) {
 					ons.add(opCube);
 				}
 				merge(ons);
 			}
 		}
-		return ons.stream().map(x -> cubes(x)).reduce(Long::sum).get();
+		p1 = ons.stream().map(x -> cubes(intersect(x, irange))).reduce(Long::sum).get();
+		p2 = ons.stream().map(x -> cubes(x)).reduce(Long::sum).get();
 	}
 
 	long cubes(long[][] arr) {
-		return Math.abs((arr[0][1] - arr[0][0]) * (arr[1][1] - arr[1][0]) * (arr[2][1] - arr[2][0]));
+		if (arr == null) {
+			return 0l;
+		}
+		return (1 + Math.abs(arr[0][1] - arr[0][0])) //
+				* (1 + Math.abs(arr[1][1] - arr[1][0])) //
+				* (1 + Math.abs(arr[2][1] - arr[2][0]));
 	}
 
 	long[][] intersect(long[][] a, long[][] b) {
@@ -134,21 +118,26 @@ public class Y21D22 extends Day {
 			changed = false;
 			for (int i = 0; i < in.size(); i++) {
 				var a = in.get(i);
+//				print(a);
 				for (int j = i + 1; j < in.size(); j++) {
 					var b = in.get(j);
+//					print(b);
 					if (isInside(a, b)) {
+//						System.out.println("isInside(a, b)");
 						in.remove(j);
-						j--;
+						i--;
 						changed = true;
-						continue;
+						break;
 					}
 					if (isInside(b, a)) {
+//						System.out.println("isInside(b, a)");
 						in.remove(i);
 						i--;
 						changed = true;
 						break;
 					}
 					var append = tryAppend(a, b);
+//					System.out.println("tryAppend(a, b)");
 					if (append != null) {
 						in.set(i, append);
 						in.remove(j);
@@ -157,6 +146,7 @@ public class Y21D22 extends Day {
 						break;
 					}
 					append = tryAppend(b, a);
+//					System.out.println("tryAppend(b, a)");
 					if (append != null) {
 						in.set(i, append);
 						in.remove(j);
@@ -187,7 +177,7 @@ public class Y21D22 extends Day {
 					{ a[2][0], a[2][1] }, //
 			};
 		}
-		if (ze && xe && a[1][0] <= b[1][0] && b[0][0] <= a[1][1] + 1) {
+		if (ze && xe && a[1][0] <= b[1][0] && b[1][0] <= a[1][1] + 1) {
 			return new long[][] { //
 					{ a[0][0], a[0][1] }, //
 					{ a[1][0], b[1][1] }, //
@@ -264,10 +254,14 @@ public class Y21D22 extends Day {
 	}
 
 	void print(long[][] arr) {
-		System.out.println("=======================");
+//		System.out.println("=======================");
 		for (var a : arr) {
-			System.out.println(Arrays.toString(a));
+			for (var i : a) {
+				System.out.print(i + ", ");
+			}
+//			System.out.println(Arrays.toString(a));
 		}
+		System.out.println();
 	}
 
 	boolean same(long[][] a, long[][] b) {
@@ -277,17 +271,6 @@ public class Y21D22 extends Day {
 			}
 		}
 		return true;
-	}
-
-	@ToString
-	@EqualsAndHashCode
-	static class Arr<T> {
-		T[] ay;
-
-		@SafeVarargs
-		public Arr(T... v) {
-			ay = v;
-		}
 	}
 
 	void init() {
