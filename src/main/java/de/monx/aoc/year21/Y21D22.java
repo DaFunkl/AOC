@@ -37,7 +37,7 @@ public class Y21D22 extends Day {
 				{ -50, 50 } //
 		};
 		for (var opp : ops) {
-			System.out.println(cc++ + "/" + (ops.size() - 1));
+//			System.out.println(cc++ + "/" + (ops.size() - 1));
 			Deque<Pair<Boolean, long[][]>> stack = new ArrayDeque<>();
 			stack.push(opp);
 			while (!stack.isEmpty()) {
@@ -83,7 +83,7 @@ public class Y21D22 extends Day {
 				if (opCube != null && op.first) {
 					ons.add(opCube);
 				}
-				merge(ons);
+//				merge(ons);
 			}
 		}
 		p1 = ons.stream().map(x -> cubes(intersect(x, irange))).reduce(Long::sum).get();
@@ -118,26 +118,21 @@ public class Y21D22 extends Day {
 			changed = false;
 			for (int i = 0; i < in.size(); i++) {
 				var a = in.get(i);
-//				print(a);
 				for (int j = i + 1; j < in.size(); j++) {
 					var b = in.get(j);
-//					print(b);
 					if (isInside(a, b)) {
-//						System.out.println("isInside(a, b)");
 						in.remove(j);
 						i--;
 						changed = true;
 						break;
 					}
 					if (isInside(b, a)) {
-//						System.out.println("isInside(b, a)");
 						in.remove(i);
 						i--;
 						changed = true;
 						break;
 					}
 					var append = tryAppend(a, b);
-//					System.out.println("tryAppend(a, b)");
 					if (append != null) {
 						in.set(i, append);
 						in.remove(j);
@@ -146,7 +141,6 @@ public class Y21D22 extends Day {
 						break;
 					}
 					append = tryAppend(b, a);
-//					System.out.println("tryAppend(b, a)");
 					if (append != null) {
 						in.set(i, append);
 						in.remove(j);
@@ -251,17 +245,6 @@ public class Y21D22 extends Day {
 		}
 		merge(ret);
 		return ret;
-	}
-
-	void print(long[][] arr) {
-//		System.out.println("=======================");
-		for (var a : arr) {
-			for (var i : a) {
-				System.out.print(i + ", ");
-			}
-//			System.out.println(Arrays.toString(a));
-		}
-		System.out.println();
 	}
 
 	boolean same(long[][] a, long[][] b) {
