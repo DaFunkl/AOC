@@ -266,12 +266,6 @@ public class Y16D11 extends Day {
 
 		String hash() {
 			return pairs.size() + ";" + gens.size() + ";" + mics.size();
-
-//			return Arrays.toString(pairs.toArray(new String[0])) + ";" //
-
-//			return pairs.size() + ";" //
-//					+ Arrays.toString(gens.toArray(new String[0])) + ";"//
-//					+ Arrays.toString(mics.toArray(new String[0]));//
 		}
 
 		public Stage clone() {

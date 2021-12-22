@@ -22,6 +22,8 @@ public class Y21D19 extends Day {
 	Set<IAW> merged = new HashSet<>();
 	Map<Integer, int[]> scanNorm = new HashMap<>();
 
+	Map<Integer, Set<Integer>> matches = new HashMap<>();
+
 	@Data
 	@EqualsAndHashCode
 	@AllArgsConstructor
@@ -33,6 +35,17 @@ public class Y21D19 extends Day {
 	public Object part1() {
 		init();
 		placeScanners();
+		System.out.println("Matches: ");
+		for (var ms : matches.entrySet()) {
+			var sn = scanNorm.get(ms.getKey());
+			System.out.println(
+					ms.getKey() + " - " + Arrays.toString(sn) + " -> " + Arrays.toString(ms.getValue().toArray()));
+			System.out.println("Scanner: " + ms.getKey() + " rotated[" + sn[3] + "] beacons: ");
+			for (var b : scans.get(ms.getKey())) {
+				System.out.println(Arrays.toString(b[sn[3]]));
+			}
+			System.out.println();
+		}
 		return merged.size();
 	}
 
@@ -54,7 +67,7 @@ public class Y21D19 extends Day {
 			merged.add(new IAW(s[0]));
 		}
 		int fin = scans.size() - 1;
-		while (scanNorm.size() < scans.size()) { //  search untill all Scanners have been placed
+		while (scanNorm.size() < scans.size()) { // search untill all Scanners have been placed
 			System.out.println(scanNorm.size() + "/" + fin);
 			for (int i = 1; i < scans.size(); i++) {
 				if (scanNorm.containsKey(i)) {
@@ -68,6 +81,9 @@ public class Y21D19 extends Day {
 					}
 					overlap = findOverlap(i, j);
 					if (overlap != null) {
+						matches.computeIfAbsent(i, k -> new HashSet<>()).add(j);
+						matches.computeIfAbsent(j, k -> new HashSet<>()).add(i);
+
 						var jNorm = scanNorm.get(j);
 						var iOff = addVert(jNorm, overlap[3]);
 						scanNorm.put(i, new int[] { iOff[0], iOff[1], iOff[2], overlap[1][0] });

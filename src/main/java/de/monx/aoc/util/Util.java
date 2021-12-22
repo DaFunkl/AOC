@@ -19,8 +19,23 @@ public class Util {
 	public static final Gson gson = new Gson();
 	static Scanner scan = new Scanner(System.in);
 
+	public static final int[][] _DIRS4 = { //
+			{ -1, 0 }, //
+			{ 1, 0 }, //
+			{ 0, -1 }, //
+			{ 0, 1 } //
+	};
+
 	public static String readLine() {
 		return scan.nextLine();
+	}
+
+	public static Integer isInteger(String s) {
+		try {
+			return Integer.valueOf(s);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public static String sortString(String s) {

@@ -32,6 +32,10 @@ public class IntPair extends Pair<Integer, Integer> {
 		return add(a, a);
 	}
 
+	public int[] arr() {
+		return new int[] { first, second };
+	}
+
 	public boolean bothEQ(int o) {
 		return first == o && second == o;
 	}
