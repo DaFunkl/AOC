@@ -29,7 +29,6 @@ public class Y21D22 extends Day {
 		init();
 
 		List<long[][]> ons = new ArrayList<>();
-		int cc = 0;
 
 		long[][] irange = { //
 				{ -50, 50 }, //
