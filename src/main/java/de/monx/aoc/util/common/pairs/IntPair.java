@@ -87,4 +87,5 @@ public class IntPair extends Pair<Integer, Integer> {
 	public String toString() {
 		return "[" + first + "," + second + "]";
 	}
+
 }
