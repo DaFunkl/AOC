@@ -4,6 +4,7 @@ import de.monx.aoc.util.Day;
 
 public class Y21D24 extends Day {
 
+	
 	@Override
 	public Object part1() {
 		
