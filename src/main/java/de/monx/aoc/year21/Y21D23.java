@@ -23,7 +23,7 @@ public class Y21D23 extends Day {
 	public Object part1() {
 		init();
 		print(iState);
-		return solve(2);
+		return solve(grid.length - 3);
 //		return null;
 	}
 
@@ -67,6 +67,8 @@ public class Y21D23 extends Day {
 			if (minEnergy <= energy || (map.containsKey(state) && map.get(state) <= energy)) {
 				continue;
 			}
+//			print(state);
+//			Util.readLine();
 			map.put(state, energy);
 			if (state.isFinished()) {
 				minEnergy = Math.min(minEnergy, energy);
@@ -110,55 +112,57 @@ public class Y21D23 extends Day {
 				}
 				var lp = np.add(-1, 0); // try left
 				if (!stps.containsKey(lp)) {
-					ret.add(st.move(pos, lp, energy, steps + 1));
-//					walkHallWay(st, energy, depth, ret, stps, pos, idx, false);
+					var lState = st.move(pos, lp, energy, steps + 1);
+					ret.add(lState);
+					walkHallWay(lState.first.copy(), lState.second, depth, ret, stps, lp, idx, false, false);
 				}
 				var rp = np.add(1, 0); // try right
 				if (!stps.containsKey(rp)) {
-					ret.add(st.move(pos, rp, energy, steps + 1));
-//					walkHallWay(st, energy, depth, ret, stps, pos, idx, true);
+					var rState = st.move(pos, rp, energy, steps + 1);
+					ret.add(rState);
+					walkHallWay(rState.first.copy(), rState.second, depth, ret, stps, rp, idx, true, false);
 				}
 			} else {
-				walkHallWay(st, energy, depth, ret, stps, pos, idx, true);
-				walkHallWay(st, energy, depth, ret, stps, pos, idx, false);
+				walkHallWay(st, energy, depth, ret, stps, pos, idx, true, true);
+				walkHallWay(st, energy, depth, ret, stps, pos, idx, false, true);
 			}
 		}
-
 		return ret;
 	}
 
 	private void walkHallWay(State st, long energy, int depth, List<Pair<State, Long>> ret, Map<IntPair, Integer> stps,
-			IntPair pos, int idx, boolean right) {
-		var rp = pos.clone();
-		int rSteps = 0;
+			IntPair pos, int idx, boolean right, boolean down) {
+		var dp = pos.clone();
+		int dSteps = 0;
 		int dir = right ? 1 : -1;
-		while (right ? rp.first < 11 : rp.first > 1) {
-			rp.addi(dir, 0);
-			rSteps++;
-			if (stps.containsKey(rp)) {
+		while (right ? dp.first < 11 : dp.first > 1) {
+			dp.addi(dir, 0);
+			dSteps++;
+			if (stps.containsKey(dp)) {
 				break;
 			}
-			if (rp.first % 2 == 0 || rp.first == 11 || rp.first == 1) { // halt
-				ret.add(st.move(pos, rp, energy, rSteps));
-			} else if ((3 + (idx * 2)) == rp.first) { // go down
-				var rpdp = rp.clone();
+			if (!down && (dp.first % 2 == 0 || dp.first == 11 || dp.first == 1)) { // halt
+				ret.add(st.move(pos, dp, energy, dSteps));
+			} else if (down && (3 + (idx * 2)) == dp.first) { // go down if is right room
+				var dpdp = dp.clone();
 				boolean isAllowed = true;
 				for (int i = 0; i < depth; i++) {
-					rpdp.addi(0, 1);
-					if (idx != stps.getOrDefault(rpdp, idx)) {
+					dpdp.addi(0, 1);
+					if (idx != stps.getOrDefault(dpdp, idx)) {
 						isAllowed = false;
 						break;
 					}
 				}
 				if (isAllowed) {
 					for (int i = depth; i > 0; i--) {
-						if (!stps.containsKey(rp.add(0, i))) {
-							ret.add(st.move(pos, rp.add(0, i), energy, rSteps + i));
+						if (!stps.containsKey(dp.add(0, i))) {
+							ret.add(st.move(pos, dp.add(0, i), energy, dSteps + i));
 							break;
 						}
 					}
 				}
 			}
+
 		}
 	}
 
