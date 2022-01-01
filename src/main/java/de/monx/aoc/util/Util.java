@@ -14,16 +14,18 @@ import java.util.Scanner;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
+import de.monx.aoc.util.common.pairs.IntPair;
+
 public class Util {
 	public static final Gson gsonPretty = new Gson().newBuilder().setPrettyPrinting().create();
 	public static final Gson gson = new Gson();
 	static Scanner scan = new Scanner(System.in);
 
-	public static final int[][] _DIRS4 = { //
-			{ -1, 0 }, //
-			{ 1, 0 }, //
-			{ 0, -1 }, //
-			{ 0, 1 } //
+	public static final IntPair[] _DIRS4 = { //
+			new IntPair(-1, 0), //
+			new IntPair(1, 0), //
+			new IntPair(0, -1), //
+			new IntPair(0, 1), //
 	};
 
 	public static String readLine() {
