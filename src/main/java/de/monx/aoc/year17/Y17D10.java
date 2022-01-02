@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.common.LinkList;
 
 public class Y17D10 extends Day {
 
 	static final int _LEN = 255;
-//	static final int _LEN = 4;
 
 	@Override
 	public Object part1() {
@@ -78,15 +76,4 @@ public class Y17D10 extends Day {
 		}
 		return ret;
 	}
-
-	LinkList<Integer> initLL(int amt) {
-		LinkList<Integer> root = new LinkList<Integer>(0);
-		LinkList<Integer> cur = root;
-		for (int i = 1; i <= amt; i++) {
-			cur = cur.add(i);
-		}
-		cur.append(root);
-		return root;
-	}
-
 }
