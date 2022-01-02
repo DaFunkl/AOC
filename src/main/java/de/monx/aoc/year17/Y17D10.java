@@ -8,8 +8,8 @@ import de.monx.aoc.util.common.LinkList;
 
 public class Y17D10 extends Day {
 
-//	static final int _LEN = 255;
-	static final int _LEN = 4;
+	static final int _LEN = 255;
+//	static final int _LEN = 4;
 
 	@Override
 	public Object part1() {
@@ -27,11 +27,29 @@ public class Y17D10 extends Day {
 		for (var c : getInputString().toCharArray()) {
 			in.add((int) c);
 		}
+		in.add(17);
+		in.add(31);
+		in.add(73);
+		in.add(47);
+		in.add(23);
+
 		int[][] state = new int[][] { init(_LEN), { 0, 0 } };
 		for (int i = 0; i < 64; i++) {
 			state = solve(in, state);
 		}
-		return state;
+		String ret = "";
+		for (int i = 0; i < 16; i++) {
+			int x = state[0][i * 16];
+			for (int j = 1; j < 16; j++) {
+				x ^= state[0][i * 16 + j];
+			}
+			String hx = Integer.toHexString(x);
+			while (hx.length() < 2) {
+				hx = "0" + hx;
+			}
+			ret += hx;
+		}
+		return ret;
 	}
 
 	static final int _CP = 0;
