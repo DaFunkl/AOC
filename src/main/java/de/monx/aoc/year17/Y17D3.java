@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y17D3 extends Day {
