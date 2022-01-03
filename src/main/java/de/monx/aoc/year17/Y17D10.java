@@ -25,14 +25,25 @@ public class Y17D10 extends Day {
 		for (var c : getInputString().toCharArray()) {
 			in.add((int) c);
 		}
+		return knotHash(in, 64);
+	}
+
+	public static String knotHash(String hash, int rounds) {
+		List<Integer> in = new ArrayList<>();
+		for (var c : hash.toCharArray()) {
+			in.add((int) c);
+		}
+		return knotHash(in, rounds);
+	}
+
+	public static String knotHash(List<Integer> in, int rounds) {
+		int[][] state = new int[][] { init(_LEN), { 0, 0 } };
 		in.add(17);
 		in.add(31);
 		in.add(73);
 		in.add(47);
 		in.add(23);
-
-		int[][] state = new int[][] { init(_LEN), { 0, 0 } };
-		for (int i = 0; i < 64; i++) {
+		for (int i = 0; i < rounds; i++) {
 			state = solve(in, state);
 		}
 		String ret = "";
@@ -48,12 +59,13 @@ public class Y17D10 extends Day {
 			ret += hx;
 		}
 		return ret;
+
 	}
 
 	static final int _CP = 0;
 	static final int _SKIP = 1;
 
-	int[][] solve(List<Integer> in, int[][] state) {
+	static int[][] solve(List<Integer> in, int[][] state) {
 
 		for (int len : in) {
 			int[] t = new int[len];
@@ -69,7 +81,7 @@ public class Y17D10 extends Day {
 		return state;
 	}
 
-	int[] init(int amt) {
+	static int[] init(int amt) {
 		int[] ret = new int[amt + 1];
 		for (int i = 0; i < ret.length; i++) {
 			ret[i] = i;
