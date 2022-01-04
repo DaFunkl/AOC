@@ -70,6 +70,12 @@ public class IntPair extends Pair<Integer, Integer> {
 		this.second *= o;
 	}
 
+	public void revi() {
+		int a = first;
+		first = second;
+		second = a;
+	}
+
 	public int manhattenDistance() {
 		return Math.abs(first) + Math.abs(second);
 	}
