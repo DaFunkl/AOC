@@ -37,6 +37,14 @@ public class LinkList<T> {
 		o.prev = this;
 	}
 
+	public LinkList<T> insert(T o) {
+		var nex = next;
+		var ins = new LinkList<>(o);
+		ins.next = nex;
+		this.next = ins;
+		return ins;
+	}
+
 	public LinkList<T> getHead() {
 		var c = this;
 		while (c.next != null) {
