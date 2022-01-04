@@ -1,7 +1,5 @@
 package de.monx.aoc.year17;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Stack;
 
 import de.monx.aoc.util.Day;
