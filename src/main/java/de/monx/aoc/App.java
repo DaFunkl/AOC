@@ -9,7 +9,7 @@ import de.monx.aoc.year20.Y20;
 import de.monx.aoc.year21.Y21;
 
 public class App {
-	static int year = 17;
+	static int year = 18;
 	static int day = 23;
 
 	public static void main(String[] args) {
