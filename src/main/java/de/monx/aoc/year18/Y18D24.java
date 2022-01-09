@@ -1,22 +1,63 @@
 package de.monx.aoc.year18;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import lombok.Data;
 
 public class Y18D24 extends Day {
 	List<String> in = getInputList();
-	Group immuneSystem = new Group();
-	Group infection = new Group();
+	Group imSys = new Group();
+	Group inFec = new Group();
 
 	@Override
 	public Object part1() {
 		init();
-		return null;
+		List<Units> winner = null;
+		int fight = 1;
+		while (winner == null) {
+			// fight:
+			System.out.println("Fight: " + fight++);
+			// target selection
+			imSys.sort(); // sort choosing order
+			inFec.sort(); // sort choosing order
+			var isAtks = imSys.chooseTargets(inFec);
+			var ifAtks = inFec.chooseTargets(imSys);
+
+			// attacking
+			int idxsa = 0, idxfa = 0;
+			while (idxsa < isAtks.size() || idxfa < ifAtks.size()) {
+				int[] atkSA = idxsa < isAtks.size() ? isAtks.get(idxsa) : null;
+				int[] atkFA = idxfa < ifAtks.size() ? ifAtks.get(idxfa) : null;
+				int isa = atkSA != null ? atkSA[3] : -1;
+				int ifa = atkFA != null ? atkFA[3] : -1;
+
+				if (isa > ifa) {
+//					inFec.units.get(atkSA[1]).receiveDmg(atkSA[2]);
+					inFec.defends(atkSA[1], imSys.units.get(atkSA[0]));
+					idxsa++;
+				} else {
+//					imSys.units.get(atkFA[1]).receiveDmg(atkFA[2]);
+					imSys.defends(atkFA[1], inFec.units.get(atkFA[0]));
+					idxfa++;
+				}
+			}
+
+			imSys.clean();
+			inFec.clean();
+			// do we have a winne?
+			if (imSys.units.isEmpty()) {
+				winner = inFec.units;
+			} else if (inFec.units.isEmpty()) {
+				winner = imSys.units;
+			}
+		}
+		return winner.stream().map(Units::getAmt).reduce(Integer::sum).get();
 	}
 
 	@Override
@@ -25,25 +66,86 @@ public class Y18D24 extends Day {
 		return null;
 	}
 
+	@Data
 	static class Group {
 		List<Units> units = new ArrayList<>();
 
-		Units selectTarget() {
-			return units.stream().max((o1, o2) -> Integer.compare(o1.power(), o2.power())).get();
+		List<int[]> chooseTargets(Group o) {
+			var ou = o.units;
+			List<int[]> ret = new ArrayList<>();
+			for (int i = 0; i < units.size(); i++) {
+				var unit = units.get(i);
+				int idx = 0;
+				int dmg = unit.simAttack(ou.get(0));
+				for (int j = 1; j < ou.size(); j++) {
+					var oUnit = ou.get(j);
+					var simDmg = unit.simAttack(oUnit);
+					if (dmg < simDmg || (dmg == simDmg && ou.get(idx).power() < oUnit.power())) {
+						dmg = simDmg;
+						idx = j;
+					}
+				}
+				ret.add(new int[] { i, idx, dmg, unit.initiative });
+			}
+			Collections.sort(ret,
+					(o1, o2) -> Integer.compare(units.get(o2[0]).initiative, units.get(o1[0]).initiative));
+			return ret;
+		}
+
+		void defends(int idx, Units o) {
+			units.get(idx).receiveDmg(o.simAttack(units.get(idx)));
+		}
+
+		void clean() {
+			for (int i = 0; i < units.size(); i++) {
+				if (units.get(i).amt <= 0) {
+					units.remove(i--);
+				}
+			}
+		}
+
+		void sort() {
+			Collections.sort(this.units, new Comparator<Units>() {
+				@Override
+				public int compare(Units o1, Units o2) {
+					int comp = Integer.compare(o1.power(), o2.power());
+					if (comp == 0) {
+						return Integer.compare(o1.initiative, o2.initiative);
+					}
+					return comp;
+				}
+			});
 		}
 	}
 
+	@Data
 	static class Units {
 		int amt;
 		int hp;
 		int initiative;
 		int dmg;
 		String dmgType;
-		Set<String> immune = new HashSet<>();
-		Set<String> weak = new HashSet<>();
+		Set<String> immunities = new HashSet<>();
+		Set<String> weaknesses = new HashSet<>();
 
 		int power() {
 			return amt * dmg;
+		}
+
+		int simAttack(Units o) {
+			int mul = 1;
+			if (o.weaknesses.contains(dmgType)) {
+				mul = 2;
+			} else if (o.immunities.contains(dmgType)) {
+				mul = 0;
+			}
+			return power() * mul;
+		}
+
+		void receiveDmg(int dmg) {
+			int unitReduction = Math.min(amt, dmg / hp);
+			System.out.println(unitReduction + " -> " + this.toString());
+			amt -= unitReduction;
 		}
 
 		public Units(String line) {
@@ -54,7 +156,12 @@ public class Y18D24 extends Day {
 			dmg = Integer.valueOf(sar[sar.length - 6]);
 			dmgType = sar[sar.length - 5];
 
-			var def = line.split("(")[1].split(")")[0].replace(",", "").replace("to", "").replace(";", "").split(" ");
+			if (!line.contains("(")) {
+				return;
+			}
+
+			var def = line.split("\\(")[1].split("\\)")[0].replace(",", "").replace(" to", "").replace(";", "")
+					.split(" ");
 			boolean immune = true;
 			for (var s : def) {
 				switch (s) {
@@ -66,9 +173,9 @@ public class Y18D24 extends Day {
 					break;
 				default:
 					if (immune) {
-						this.immune.add(s);
+						this.immunities.add(s);
 					} else {
-						weak.add(s);
+						weaknesses.add(s);
 					}
 				}
 			}
@@ -85,9 +192,9 @@ public class Y18D24 extends Day {
 				line = in.get(i);
 			}
 			if (immuneSystem) {
-				this.immuneSystem.units.add(new Units(line));
+				this.imSys.units.add(new Units(line));
 			} else {
-				this.infection.units.add(new Units(line));
+				this.inFec.units.add(new Units(line));
 			}
 		}
 	}
