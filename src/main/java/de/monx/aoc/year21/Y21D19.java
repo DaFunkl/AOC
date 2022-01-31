@@ -1,7 +1,9 @@
 package de.monx.aoc.year21;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,10 +19,11 @@ public class Y21D19 extends Day {
 
 	static final int _X = 0, _Y = 1, _Z = 2;
 	List<List<int[][]>> scans = new ArrayList<>();
-	List<int[][]> scansMM = new ArrayList<>();
+	List<Map<Integer, List<int[]>>> distances = new ArrayList<>();
 
 	Set<IAW> merged = new HashSet<>();
 	Map<Integer, int[]> scanNorm = new HashMap<>();
+	Map<Integer, Set<Integer>> possMa = new HashMap<>();
 
 	Map<Integer, Set<Integer>> matches = new HashMap<>();
 
@@ -34,18 +37,22 @@ public class Y21D19 extends Day {
 	@Override
 	public Object part1() {
 		init();
+
+		calcDistances();
+		findMatches();
+
 		placeScanners();
-		System.out.println("Matches: ");
-		for (var ms : matches.entrySet()) {
-			var sn = scanNorm.get(ms.getKey());
-			System.out.println(
-					ms.getKey() + " - " + Arrays.toString(sn) + " -> " + Arrays.toString(ms.getValue().toArray()));
-			System.out.println("Scanner: " + ms.getKey() + " rotated[" + sn[3] + "] beacons: ");
-			for (var b : scans.get(ms.getKey())) {
-				System.out.println(Arrays.toString(b[sn[3]]));
-			}
-			System.out.println();
-		}
+//		System.out.println("Matches: ");
+//		for (var ms : matches.entrySet()) {
+//			var sn = scanNorm.get(ms.getKey());
+//			System.out.println(
+//					ms.getKey() + " - " + Arrays.toString(sn) + " -> " + Arrays.toString(ms.getValue().toArray()));
+//			System.out.println("Scanner: " + ms.getKey() + " rotated[" + sn[3] + "] beacons: ");
+//			for (var b : scans.get(ms.getKey())) {
+//				System.out.println(Arrays.toString(b[sn[3]]));
+//			}
+//			System.out.println();
+//		}
 		return merged.size();
 	}
 
@@ -60,47 +67,77 @@ public class Y21D19 extends Day {
 		return ret;
 	}
 
-	void placeScanners() {
-		scanNorm.put(0, new int[] { 0, 0, 0, 0 });
-		Map<Integer, Set<Integer>> tries = new HashMap<>();
-		for (var s : scans.get(0)) {
-			merged.add(new IAW(s[0]));
-		}
-		int fin = scans.size() - 1;
-		while (scanNorm.size() < scans.size()) { // search untill all Scanners have been placed
-			System.out.println(scanNorm.size() + "/" + fin);
-			for (int i = 1; i < scans.size(); i++) {
-				if (scanNorm.containsKey(i)) {
-					continue;
-				} // tries is used to skips failed tries
-				tries.putIfAbsent(i, new HashSet<>());
-				int[][] overlap = null;
-				for (int j : scanNorm.keySet()) {
-					if (tries.get(i).contains(j)) {
-						continue;
-					}
-					overlap = findOverlap(i, j);
-					if (overlap != null) {
-						matches.computeIfAbsent(i, k -> new HashSet<>()).add(j);
-						matches.computeIfAbsent(j, k -> new HashSet<>()).add(i);
-
-						var jNorm = scanNorm.get(j);
-						var iOff = addVert(jNorm, overlap[3]);
-						scanNorm.put(i, new int[] { iOff[0], iOff[1], iOff[2], overlap[1][0] });
-						for (var s : scans.get(i)) {
-							merged.add(new IAW(addVert(s[overlap[1][0]], iOff)));
-						}
-						break;
-					} else {
-						tries.get(i).add(j);
-					}
+	void calcDistances() {
+		for (var scan : scans) {
+			Map<Integer, List<int[]>> scanDis = new HashMap<>();
+			for (int i = 0; i < scan.size(); i++) {
+				for (int j = i + 1; j < scan.size(); j++) {
+					int dis = vertDist(subVert(scan.get(i)[0], scan.get(j)[0]));
+					scanDis.computeIfAbsent(dis, k -> new ArrayList<>()).add(new int[] { i, j });
 				}
-				if (overlap != null) {
-					break;
+			}
+			distances.add(scanDis);
+		}
+	}
+
+	void findMatches() {
+//		possMa
+		for (int i = 0; i < distances.size(); i++) {
+			var di = distances.get(i);
+			for (int j = i + 1; j < distances.size(); j++) {
+				var dj = distances.get(j);
+				int matches = 0;
+				for (var dis : di.keySet()) {
+					if (dj.containsKey(dis)) {
+						matches += Math.min(di.get(dis).size(), dj.get(dis).size());
+					}
+					if (matches >= 66) {
+						possMa.computeIfAbsent(i, k -> new HashSet<>()).add(j);
+						possMa.computeIfAbsent(j, k -> new HashSet<>()).add(i);
+						break;
+					}
 				}
 			}
 		}
 	}
+
+	void placeScanners() {
+		scanNorm.put(0, new int[] { 0, 0, 0, 0 });
+		Deque<Integer> nextScanners = new ArrayDeque<>();
+		nextScanners.add(0);
+		Set<Integer> seen = new HashSet<>();
+		for (var s : scans.get(0)) {
+			merged.add(new IAW(s[0]));
+		}
+		while (scanNorm.size() < scans.size() && !nextScanners.isEmpty()) {
+			int nextScanSearch = nextScanners.pop();
+			if (seen.contains(nextScanSearch)) {
+				continue;
+			}
+			seen.add(nextScanSearch);
+			for (var pm : possMa.get(nextScanSearch)) {
+				if (seen.contains(pm)) {
+					continue;
+				}
+
+				int[][] overlap = findOverlap(pm, nextScanSearch);
+				if (overlap == null) {
+					continue;
+				}
+				matches.computeIfAbsent(pm, k -> new HashSet<>()).add(nextScanSearch);
+				matches.computeIfAbsent(nextScanSearch, k -> new HashSet<>()).add(pm);
+
+				var jNorm = scanNorm.get(nextScanSearch);
+				var iOff = addVert(jNorm, overlap[3]);
+				scanNorm.put(pm, new int[] { iOff[0], iOff[1], iOff[2], overlap[1][0] });
+				for (var s : scans.get(pm)) {
+					merged.add(new IAW(addVert(s[overlap[1][0]], iOff)));
+				}
+				nextScanners.add(pm);
+			}
+		}
+	}
+
 
 	int[][] findOverlap(int aIdx, int bIdx) {
 		List<int[][]> scanA = scans.get(aIdx);
@@ -173,18 +210,11 @@ public class Y21D19 extends Day {
 
 	void init() {
 		List<int[][]> l = new ArrayList<>();
-		int[][] mm = null;
 		for (var str : getInputList()) {
 			if (str.startsWith("---")) {
 				l = new ArrayList<>();
-				mm = new int[][] { //
-						{ Integer.MAX_VALUE, Integer.MIN_VALUE }, // mm x
-						{ Integer.MAX_VALUE, Integer.MIN_VALUE }, // mm y
-						{ Integer.MAX_VALUE, Integer.MIN_VALUE } // mm z
-				};
 			} else if (str.isBlank()) {
 				scans.add(l);
-				scansMM.add(mm);
 			} else {
 				var sar = str.split(",");
 				int[] coords = new int[] { //
@@ -218,15 +248,9 @@ public class Y21D19 extends Day {
 					lr[21 + x] = Arrays.copyOf(coords, 3);
 				}
 				l.add(lr);
-
-				for (int i = 0; i < 3; i++) {
-					mm[i][0] = Math.min(mm[i][0], coords[i]);
-					mm[i][1] = Math.max(mm[i][1], coords[i]);
-				}
 			}
 		}
 		scans.add(l);
-		scansMM.add(mm);
 
 	}
 }

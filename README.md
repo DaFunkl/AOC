@@ -2,7 +2,7 @@
 
 
 ## [AOC: 2021](https://adventofcode.com/2021)  
-Status: work in progress 
+Status: done 
 
 | Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
@@ -47,7 +47,7 @@ Status: on hold
 
 
 ## [AOC: 2017](https://adventofcode.com/2017)  
-Status: on hold  
+Status: done  
 
 | Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
@@ -58,7 +58,7 @@ Status: on hold
 | [Day 5](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D5.java) | [Day 10](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D10.java) | [Day 15](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D15.java) | [Day 20](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D20.java) | [Day 25](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year17/Y17D25.java)  |
 
 ## [AOC: 2016](https://adventofcode.com/2016)  
-Status: work in progress  
+Status: done  
 
 | Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
