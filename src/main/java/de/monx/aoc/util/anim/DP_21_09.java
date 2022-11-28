@@ -7,7 +7,6 @@ import java.util.Random;
 import java.util.Set;
 
 import javax.swing.JPanel;
-import javax.swing.text.AttributeSet.ColorAttribute;
 
 import de.monx.aoc.util.common.pairs.IntPair;
 

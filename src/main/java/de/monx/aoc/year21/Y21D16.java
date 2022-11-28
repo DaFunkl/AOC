@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 import de.monx.aoc.util.common.Pair;
 import lombok.Data;
 

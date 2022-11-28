@@ -13,6 +13,7 @@ public class Y15D12 extends Day {
 //		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public Object part2() {
 		var parser = new JsonParser();

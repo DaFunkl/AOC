@@ -13,10 +13,19 @@ import lombok.Data;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Y15D7 extends Day {
-	//@formatter:off
-	enum Operator { AND, OR, LSHIFT, RSHIFT, NOT, ASSIGN }
-	@Data @AllArgsConstructor class Gate { public Operator op; public Pair<Pair<Integer, String>, Pair<Integer, String>> args; }
-	//@formatter:on
+	static final int AND = 0;
+	static final int OR = 1;
+	static final int LSHIFT = 2;
+	static final int RSHIFT = 3;
+	static final int NOT = 4;
+	static final int ASSIGN = 5;
+
+	@Data
+	@AllArgsConstructor
+	class Gate {
+		public int op;
+		public Pair<Pair<Integer, String>, Pair<Integer, String>> args;
+	}
 
 	Map<String, Integer> values = new HashMap<>();
 	Map<String, Gate> gates = new HashMap<>();
@@ -136,21 +145,21 @@ public class Y15D7 extends Day {
 			String g = spl[0];
 			spl = g.split(" ");
 			if (g.contains(" AND ")) {
-				gates.put(des, new Gate(Operator.AND, makeArgs(spl[0], spl[2])));
+				gates.put(des, new Gate(AND, makeArgs(spl[0], spl[2])));
 			} else if (g.contains(" OR ")) {
-				gates.put(des, new Gate(Operator.OR, makeArgs(spl[0], spl[2])));
+				gates.put(des, new Gate(OR, makeArgs(spl[0], spl[2])));
 			} else if (g.contains(" LSHIFT ")) {
-				gates.put(des, new Gate(Operator.LSHIFT, makeArgs(spl[0], spl[2])));
+				gates.put(des, new Gate(LSHIFT, makeArgs(spl[0], spl[2])));
 			} else if (g.contains(" RSHIFT ")) {
-				gates.put(des, new Gate(Operator.RSHIFT, makeArgs(spl[0], spl[2])));
+				gates.put(des, new Gate(RSHIFT, makeArgs(spl[0], spl[2])));
 			} else if (g.startsWith("NOT ")) {
-				gates.put(des, new Gate(Operator.NOT, makeArgs(spl[1], null)));
+				gates.put(des, new Gate(NOT, makeArgs(spl[1], null)));
 			} else {
 				var pis = pis(g);
 				if (pis.first != null) {
 					values.put(des, pis.first);
 				}
-				gates.put(des, new Gate(Operator.ASSIGN, makeArgs(g, null)));
+				gates.put(des, new Gate(ASSIGN, makeArgs(g, null)));
 
 			}
 		}

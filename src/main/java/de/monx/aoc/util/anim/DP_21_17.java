@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import de.monx.aoc.util.Util;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 @SuppressWarnings("serial")
