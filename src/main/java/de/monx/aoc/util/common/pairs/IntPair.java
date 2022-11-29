@@ -16,6 +16,10 @@ public class IntPair extends Pair<Integer, Integer> {
 		super(Integer.valueOf(first), Integer.valueOf(second));
 	}
 
+	public IntPair sub(IntPair o) {
+		return new IntPair(o.first - this.first, o.second - this.second);
+	}
+
 	public IntPair add(IntPair o) {
 		return new IntPair(o.first + this.first, o.second + this.second);
 	}
@@ -76,8 +80,16 @@ public class IntPair extends Pair<Integer, Integer> {
 		second = a;
 	}
 
+	public IntPair maxVals(IntPair o) {
+		return new IntPair(Math.max(first, o.first), Math.max(second, o.second));
+	}
+
 	public int manhattenDistance() {
 		return Math.abs(first) + Math.abs(second);
+	}
+
+	public int manhattenDistance(IntPair o) {
+		return this.sub(o).manhattenDistance();
 	}
 
 	@Override

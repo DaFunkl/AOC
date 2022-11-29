@@ -29,20 +29,14 @@ public class Y18D5 extends Day {
 	}
 
 	String solve(String str) {
-		boolean running = true;
-		while (running) {
-			running = false;
-			int prevVal = (int) str.charAt(0);
-			for (int i = 1; i < str.length(); i++) {
-				int curVal = (int) str.charAt(i);
-				if (Math.abs(prevVal - curVal) == _DELTA) {
-					String newStr = str.substring(0, i - 1);
-					newStr += str.substring(i + 1);
-					str = newStr;
-					running = true;
-					break;
-				}
-				prevVal = curVal;
+		for (int i = 1; i < str.length(); i++) {
+			int prevVal = (int) str.charAt(i - 1);
+			int curVal = (int) str.charAt(i);
+			if (Math.abs(prevVal - curVal) == _DELTA) {
+				String newStr = str.substring(0, i - 1);
+				newStr += str.substring(i + 1);
+				str = newStr;
+				i = Math.max(0, i - 2);
 			}
 		}
 		return str.trim();
