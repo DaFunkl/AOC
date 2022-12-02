@@ -3,26 +3,21 @@ package de.monx.aoc.year22;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y22D02 extends Day {
 
-	List<IntPair> in = getInputList().stream() //
-			.map(x -> x.split(" ")) //
-			.map(x -> new IntPair( //
-					(int) x[0].charAt(0) - (int) 'A', //
-					(int) x[1].charAt(0) - (int) 'X'//
-			)) //
+	List<int[]> in = getInputList().stream() //
+			.map(x -> new int[] { (int) x.charAt(0) - (int) 'A', (int) x.charAt(2) - (int) 'X' }) //
 			.toList();
 
 	@Override
 	public Object part1() {
 		int ret = 0;
 		for (var i : in) {
-			ret += i.second + 1;
-			if (i.first == i.second) {
+			ret += i[1] + 1;
+			if (i[0] == i[1]) {
 				ret += 3;
-			} else if (i.second - i.first == 1 || (i.second == 0 && i.first == 2)) {
+			} else if (i[1] - i[0] == 1 || (i[1] == 0 && i[0] == 2)) {
 				ret += 6;
 			}
 		}
@@ -32,7 +27,7 @@ public class Y22D02 extends Day {
 	@Override
 	public Object part2() {
 		return in.stream() //
-				.map(i -> i.second * 3 + 1 + (i.first + ((i.second + 2) % 3)) % 3) //
+				.map(i -> i[1] * 3 + 1 + (i[0] + ((i[1] + 2) % 3)) % 3) //
 				.reduce(0, (a, b) -> a + b);
 	}
 
