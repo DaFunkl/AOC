@@ -42,6 +42,15 @@ public abstract class Day {
 
 	public abstract Object part2();
 
+	public String getFileString() {
+		try {
+			return Files.readString(new File(fetchFilePath()).toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public String getInputString() {
 		String str = "";
 		try {
