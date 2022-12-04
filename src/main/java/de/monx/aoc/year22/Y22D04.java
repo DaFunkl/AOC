@@ -14,12 +14,11 @@ public class Y22D04 extends Day {
 
 	@Override
 	public Object part1() {
-		return in.stream().map(x -> (x[0] <= x[2] && x[3] <= x[1]) || (x[2] <= x[0] && x[1] <= x[3]) ? 1 : 0).reduce(0,
-				(a, b) -> a + b);
+		return in.stream().filter(x -> (x[0] <= x[2] && x[3] <= x[1]) || (x[2] <= x[0] && x[1] <= x[3])).count();
 	}
 
 	@Override
 	public Object part2() {
-		return in.stream().map(x -> !(x[1] < x[2] || x[3] < x[0]) ? 1 : 0).reduce(0, (a, b) -> a + b);
+		return in.stream().filter(x -> !(x[1] < x[2] || x[3] < x[0])).count();
 	}
 }
