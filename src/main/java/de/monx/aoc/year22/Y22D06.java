@@ -1,5 +1,8 @@
 package de.monx.aoc.year22;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import de.monx.aoc.util.Day;
 
 public class Y22D06 extends Day {
@@ -17,22 +20,24 @@ public class Y22D06 extends Day {
 	}
 
 	int solve(int size) {
-		int idx = 0;
-		char[] arr = new char[size];
-		while (!(allUnique(arr) && idx >= size)) {
-			arr[idx % size] = in.charAt(idx++);
-		}
-		return idx;
-	}
-
-	boolean allUnique(char[] arr) {
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = i + 1; j < arr.length; j++) {
-				if (arr[i] == arr[j]) {
-					return false;
+		int idx = size;
+		boolean[] arr = new boolean[26];
+		while (idx < in.length()) {
+			arr = new boolean[26];
+			int adder = 0;
+			for (int i = 0; i < size; i++) {
+				if (arr[(int) in.charAt(idx - i) - (int) 'a']) {
+					adder = size - i;
+					break;
+				} else {
+					arr[(int) in.charAt(idx - i) - (int) 'a'] = true;
 				}
 			}
+			if (adder == 0) {
+				return idx + 1;
+			}
+			idx += adder;
 		}
-		return true;
+		return idx;
 	}
 }
