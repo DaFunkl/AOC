@@ -1,8 +1,5 @@
 package de.monx.aoc.year22;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.monx.aoc.util.Day;
 
 public class Y22D06 extends Day {
@@ -29,11 +26,13 @@ public class Y22D06 extends Day {
 	}
 
 	boolean allUnique(char[] arr) {
-		Set<Character> s = new HashSet<>();
-		for (var c : arr) {
-			s.add(c);
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = i + 1; j < arr.length; j++) {
+				if (arr[i] == arr[j]) {
+					return false;
+				}
+			}
 		}
-		return s.size() == arr.length;
+		return true;
 	}
-
 }
