@@ -21,11 +21,17 @@ public class Y22D07 extends Day {
 	static class Dir {
 		String name;
 		int size = 0;
+		String path;
 		Map<String, Dir> dirs = new HashMap<>();
 		Map<String, Integer> files = new HashMap<>();
 
-		public Dir(String name) {
+		public Dir(String name, String path) {
 			this.name = name;
+			this.path = path;
+		}
+
+		String fullPath() {
+			return path + "/" + name;
 		}
 	}
 
@@ -37,14 +43,14 @@ public class Y22D07 extends Day {
 			String[] arr = i.split(" ");
 			if (i.startsWith("$ cd ..")) {
 				Dir pop = stack.pop();
-				dirSizes.put(pop.name, pop.size);
+				dirSizes.put(pop.fullPath(), pop.size);
 				if (pop.size <= 100000) {
 					ret += pop.size;
 				}
 				stack.peek().size += pop.size;
 			} else if (i.startsWith("$ cd")) {
 				if (root == null) {
-					root = new Dir(arr[2]);
+					root = new Dir(arr[2], "");
 					stack.push(root);
 				} else {
 					stack.push(stack.peek().getDirs().get(arr[2]));
@@ -52,7 +58,7 @@ public class Y22D07 extends Day {
 			} else if (i.startsWith("$ ls")) {
 
 			} else if (i.startsWith("dir")) {
-				stack.peek().dirs.put(arr[1], new Dir(arr[1]));
+				stack.peek().dirs.put(arr[1], new Dir(arr[1], stack.peek().fullPath()));
 			} else {
 				stack.peek().files.put(arr[1], Integer.valueOf(arr[0]));
 				stack.peek().size += stack.peek().files.get(arr[1]);
@@ -60,7 +66,7 @@ public class Y22D07 extends Day {
 		}
 		while (!stack.isEmpty()) {
 			Dir pop = stack.pop();
-			dirSizes.put(pop.name, pop.size);
+			dirSizes.put(pop.fullPath(), pop.size);
 			if (pop.size <= 100000) {
 				ret += pop.size;
 			}
