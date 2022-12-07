@@ -1,8 +1,5 @@
 package de.monx.aoc.year22;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import de.monx.aoc.util.Day;
 
 public class Y22D06 extends Day {
