@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 
 public class Y22D07 extends Day {
 
+//Year: 22, Day: 7
+//Part1: 1423358 	 5.6114 ms
+//Part2: 545729 	 0.6552 ms
+
+
 	List<String> in = getInputList();
 	Dir root = null;
 	Map<String, Integer> dirSizes = new HashMap<>();
