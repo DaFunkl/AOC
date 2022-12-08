@@ -3,14 +3,11 @@ package de.monx.aoc.year22;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
-import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y22D08 extends Day {
 
 	int max = 0;
 	int[][] grid = init();
-	static final IntPair[] _DIRS = Util._DIRS4;
 
 	@Override
 	public Object part1() {
@@ -21,19 +18,40 @@ public class Y22D08 extends Day {
 				boolean[] canBeSeen = { true, true, true, true };
 				int closedByDirs = 0;
 				for (int d = 1; d < max && closedByDirs < 4; d++) {
-					int dd = 0;
-					for (var dir : _DIRS) {
-						int ii = i + dir.first * d;
-						int jj = j + dir.second * d;
-						if (canBeSeen[dd] && ii < grid.length && ii > -1 && jj < grid[0].length && jj > -1) {
-							if (val <= grid[ii][jj]) {
-								canBeSeen[dd] = false;
-								closedByDirs++;
-							} else if (ii == grid.length - 1 || ii == 0 || jj == grid[0].length - 1 || jj == 0) {
-								break;
-							}
+					if (canBeSeen[0] && i + d < grid.length) {
+						if (val <= grid[i + d][j]) {
+							canBeSeen[0] = false;
+							closedByDirs++;
+						} else if (i + d == grid.length - 1) {
+							break;
 						}
-						dd++;
+					}
+
+					if (canBeSeen[1] && i - d > -1) {
+						if (val <= grid[i - d][j]) {
+							canBeSeen[1] = false;
+							closedByDirs++;
+						} else if (i - d == 0) {
+							break;
+						}
+					}
+
+					if (canBeSeen[2] && j + d < grid[0].length) {
+						if (val <= grid[i][j + d]) {
+							canBeSeen[2] = false;
+							closedByDirs++;
+						} else if (j + d == grid[0].length - 1) {
+							break;
+						}
+					}
+
+					if (canBeSeen[3] && j - d > -1) {
+						if (val <= grid[i][j - d]) {
+							canBeSeen[3] = false;
+							closedByDirs++;
+						} else if (j - d == 0) {
+							break;
+						}
 					}
 				}
 				if (closedByDirs < 4) {
@@ -53,24 +71,51 @@ public class Y22D08 extends Day {
 				int[] seen = new int[4];
 				int closedByDirs = 0;
 				boolean[] canBeSeen = { true, true, true, true };
-
 				for (int d = 1; d < max && closedByDirs < 4; d++) {
-					int dd = 0;
-					for (var dir : _DIRS) {
-						int ii = i + dir.first * d;
-						int jj = j + dir.second * d;
-
-						if (canBeSeen[dd] && ii < grid.length && ii > -1 && jj < grid[0].length && jj > -1) {
-							seen[dd]++;
-							if (val <= grid[ii][jj]) {
-								canBeSeen[dd] = false;
-								closedByDirs++;
-							}
-						} else {
-							canBeSeen[dd] = false;
+					int dir = 0;
+					if (canBeSeen[dir] && i + d < grid.length) {
+						seen[dir]++;
+						if (val <= grid[i + d][j]) {
+							canBeSeen[dir] = false;
+							closedByDirs++;
 						}
-						dd++;
+					} else {
+						canBeSeen[dir] = false;
 					}
+					dir++;
+
+					if (canBeSeen[dir] && i - d >= 0) {
+						seen[dir]++;
+						if (val <= grid[i - d][j]) {
+							canBeSeen[dir] = false;
+							closedByDirs++;
+						}
+					} else {
+						canBeSeen[dir] = false;
+					}
+					dir++;
+
+					if (canBeSeen[dir] && j + d < grid[0].length) {
+						seen[dir]++;
+						if (val <= grid[i][j + d]) {
+							canBeSeen[dir] = false;
+							closedByDirs++;
+						}
+					} else {
+						canBeSeen[dir] = false;
+					}
+					dir++;
+
+					if (canBeSeen[dir] && j - d >= 0) {
+						seen[dir]++;
+						if (val <= grid[i][j - d]) {
+							canBeSeen[dir] = false;
+							closedByDirs++;
+						}
+					} else {
+						canBeSeen[dir] = false;
+					}
+					dir++;
 				}
 				int score = seen[0] * seen[1] * seen[2] * seen[3];
 				ret = Math.max(score, ret);
