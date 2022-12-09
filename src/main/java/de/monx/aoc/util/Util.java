@@ -22,11 +22,16 @@ public class Util {
 	static Scanner scan = new Scanner(System.in);
 
 	public static final IntPair[] _DIRS4 = { //
-			new IntPair(-1, 0), //
-			new IntPair(1, 0), //
-			new IntPair(0, -1), //
-			new IntPair(0, 1), //
+			new IntPair(-1, 00), // U
+			new IntPair(01, 00), // D
+			new IntPair(00, -1), // L
+			new IntPair(00, 01), // R
 	};
+
+	public static final IntPair _DIR_UP = new IntPair(-1, 0);
+	public static final IntPair _DIR_DOWN = new IntPair(1, 00);
+	public static final IntPair _DIR_LEFT = new IntPair(0, -1);
+	public static final IntPair _DIR_RIGHT = new IntPair(0, 1);
 
 	public static String readLine() {
 		return scan.nextLine();

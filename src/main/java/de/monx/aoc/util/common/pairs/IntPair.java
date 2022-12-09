@@ -74,6 +74,11 @@ public class IntPair extends Pair<Integer, Integer> {
 		this.second *= o;
 	}
 
+	public void seti(IntPair o) {
+		first = o.first;
+		second = o.second;
+	}
+
 	public void revi() {
 		int a = first;
 		first = second;
