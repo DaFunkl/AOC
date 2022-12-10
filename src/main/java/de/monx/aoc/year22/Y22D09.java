@@ -1,12 +1,34 @@
 package de.monx.aoc.year22;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_22_09;
 
 public class Y22D09 extends Day {
+
+	boolean isAnim = true;
+	Animation anim = null;
+	long sleep = 10;
+
+	void drawAnim(long sleep, int[][] knots, Set<String> seen) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1000, 1000, new DP_22_09());
+			((DP_22_09) anim.pane).update(sleep, new int[2][2], seen);
+			Util.readLine();
+		}
+		((DP_22_09) anim.pane).update(sleep, knots, seen);
+	}
 
 	List<int[]> in = getInputList().stream().map(x -> x.split(" ")).map(x -> new int[] { //
 			x[0].equals("U") ? -1 : x[0].equals("D") ? 1 : 0, //
@@ -19,17 +41,20 @@ public class Y22D09 extends Day {
 
 	@Override
 	public Object part1() {
+		isAnim = false;
 		return solve(2);
 	}
 
 	@Override
 	public Object part2() {
+		isAnim = true;
 		return solve(10);
 	}
 
 	int solve(int amtKnots) {
 		Set<String> seen = new HashSet<>();
 		int[][] knots = new int[amtKnots][2];
+		int[][] mm = new int[2][2];
 		for (var x : in) {
 			for (int i = 0; i < x[2]; i++) {
 				knots[0][0] += x[0];
@@ -48,7 +73,15 @@ public class Y22D09 extends Day {
 						knots[idx][1] = d2 == 1 ? knots[idx - 1][1]//
 								: (knots[idx - 1][1] + knots[idx][1]) / 2;
 					}
+//					for (var k : knots) {
+//						mm[0][0] = Math.min(k[0], mm[0][0]);
+//						mm[0][1] = Math.max(k[0], mm[0][1]);
+//						mm[1][0] = Math.min(k[1], mm[1][0]);
+//						mm[1][1] = Math.max(k[1], mm[1][1]);
+//					}
+//					drawAnim(1, knots, seen);
 				}
+				drawAnim(15, knots, seen);
 				seen.add(knots[amtKnots - 1][0] + "," + knots[amtKnots - 1][1]);
 			}
 		}
