@@ -2,15 +2,21 @@ package de.monx.aoc.year22;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
 import lombok.Data;
 
 public class Y22D11 extends Day {
+	List<Monkey> monkeys = new ArrayList<>();
+	List<List<Long>> initialItems = new ArrayList<>();
 
 	@Override
 	public Object part1() {
+		monkeys = Arrays.stream(getFileString().split("\r\n\r\n")).map(x -> new Monkey(x)).toList();
 		return solve(20, 3);
 	}
 
@@ -20,16 +26,23 @@ public class Y22D11 extends Day {
 	}
 
 	long solve(int rounds, long div) {
-		List<Monkey> monkeys = Arrays.stream(getFileString().split("\r\n\r\n")).map(x -> new Monkey(x)).toList();
 		long mod = monkeys.stream().map(x -> x.divBy).reduce(1l, (a, b) -> a * b);
+		List<List<Long>> items = new ArrayList<>();
+		for (var i : initialItems) {
+			items.add(new ArrayList<>());
+			for (var j : i) {
+				items.get(items.size() - 1).add(j);
+			}
+		}
 		long[] inspects = new long[monkeys.size()];
 		for (int i = 0; i < rounds; i++) {
 			for (int m = 0; m < monkeys.size(); m++) {
 				var monkey = monkeys.get(m);
-				var operated = monkey.operate(div, mod);
+				var operated = monkey.operate(div, mod, items.get(monkey.idx));
+				items.set(monkey.idx, new ArrayList<>());
 				inspects[m] += operated.length;
 				for (var item : operated) {
-					monkeys.get((int) item[1]).items.add(item[0]);
+					items.get((int) item[1]).add(item[0]);
 				}
 			}
 		}
@@ -37,42 +50,44 @@ public class Y22D11 extends Day {
 		return inspects[inspects.length - 1] * inspects[inspects.length - 2];
 	}
 
+	Map<Long, Long> modCache = new HashMap<>();
+
 	@Data
-	static class Monkey {
+	class Monkey {
 		static final int _MUL = 0;
 		static final int _ADD = 1;
 		static final long _OLD = -1;
-		List<Long> items = new ArrayList<>();
+		static int idxCount = 0;
+		int idx = idxCount++;
 		int op = -1;
-		long second;
+		long isOld = 0;
+		long adder = 0;
 		long divBy;
 		long[] throwTo = new long[2];
 
-		long[][] operate(long div, long mod) {
+		long[][] operate(long div, long mod, List<Long> items) {
 			long[][] ret = new long[items.size()][2];
 			for (int i = 0; i < items.size(); i++) {
-				long sec = second;
-				if (second == _OLD) {
-					sec = items.get(i);
-				}
+				long sec = items.get(i) * isOld + adder;
 				if (op == _MUL) {
 					ret[i][0] = ((items.get(i) * sec) / div) % mod;
 				} else {
 					ret[i][0] = ((items.get(i) + sec) / div) % mod;
 				}
+
 				ret[i][1] = (ret[i][0] % divBy) == 0l //
 						? throwTo[0]
 						: throwTo[1];
 			}
-			items = new ArrayList<>();
 			return ret;
 		}
 
 		public Monkey(String str) {
+			initialItems.add(new ArrayList<>());
 			for (var l : str.split("\r\n")) {
 				if (l.charAt(2) == 'S') { // Starting Items
 					for (var i : l.split(": ")[1].split(", ")) {
-						items.add(Long.valueOf(i));
+						initialItems.get(idx).add(Long.valueOf(i));
 					}
 				} else if (l.charAt(2) == 'O') { // Operation
 					var ll = l.split(" = old ")[1].split(" ");
@@ -84,9 +99,9 @@ public class Y22D11 extends Day {
 						System.err.println("Unknown Operator: " + l);
 					}
 					if (ll[1].equals("old")) {
-						second = _OLD;
+						isOld = 1;
 					} else {
-						second = Long.valueOf(ll[1]);
+						adder = Long.valueOf(ll[1]);
 					}
 				} else if (l.charAt(2) == 'T') { // Test
 					divBy = Long.valueOf(l.split("by ")[1]);
