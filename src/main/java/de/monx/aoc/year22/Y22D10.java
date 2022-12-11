@@ -62,4 +62,5 @@ public class Y22D10 extends Day {
 		}
 		return ret.toString();
 	}
+
 }
