@@ -45,7 +45,27 @@ public class Y22D15 extends Day {
 			}
 			ranges.add(new int[] { sb[1] - dd, sb[1] + dd });
 		}
-		compact(ranges);
+		// sort
+		Collections.sort(ranges, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				return o1[0] - o2[0];
+			}
+		});
+		// compress
+		for (int i = 0; i < ranges.size(); i++) {
+			int[] r1 = ranges.get(i);
+			for (int j = i + 1; j < ranges.size(); j++) {
+				int[] r2 = ranges.get(j);
+				if ((r2[0] - 1) <= r1[1]) {
+					ranges.get(i)[0] = Math.min(r1[0], r2[0]);
+					ranges.get(i)[1] = Math.max(r1[1], r2[1]);
+					ranges.remove(j);
+					i--;
+					break;
+				}
+			}
+		}
 		return ranges.stream().map(x -> 1 + x[1] - x[0]).reduce(0, (a, b) -> a + b) - beacons.size();
 	}
 
@@ -81,31 +101,5 @@ public class Y22D15 extends Day {
 		long x = (pairs[1][1] - pairs[0][1]) / (pairs[0][0] - pairs[1][0]);
 		long y = pairs[0][0] * x + pairs[0][1];
 		return x * 4000000l + y;
-	}
-
-	public void sort(List<int[]> ranges) {
-		Collections.sort(ranges, new Comparator<int[]>() {
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				return o1[0] - o2[0];
-			}
-		});
-	}
-
-	public void compact(List<int[]> ranges) {
-		sort(ranges);
-		for (int i = 0; i < ranges.size(); i++) {
-			int[] r1 = ranges.get(i);
-			for (int j = i + 1; j < ranges.size(); j++) {
-				int[] r2 = ranges.get(j);
-				if ((r2[0] - 1) <= r1[1]) {
-					ranges.get(i)[0] = Math.min(r1[0], r2[0]);
-					ranges.get(i)[1] = Math.max(r1[1], r2[1]);
-					ranges.remove(j);
-					i--;
-					break;
-				}
-			}
-		}
 	}
 }
