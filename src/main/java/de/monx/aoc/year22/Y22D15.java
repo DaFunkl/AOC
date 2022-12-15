@@ -1,10 +1,13 @@
 package de.monx.aoc.year22;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
@@ -21,6 +24,10 @@ public class Y22D15 extends Day {
 
 	int md(int[] arr) {
 		return Math.abs(arr[0] - arr[2]) + Math.abs(arr[1] - arr[3]);
+	}
+
+	int md(int[] arr, int[] arr2) {
+		return Math.abs(arr[0] - arr2[0]) + Math.abs(arr[1] - arr2[1]);
 	}
 
 	@Override
@@ -44,22 +51,36 @@ public class Y22D15 extends Day {
 
 	@Override
 	public Object part2() {
-		int max = 4000000;
-		for (int cr = max; cr >= 0; cr--) {
-			List<int[]> ranges = new ArrayList<>();
-			for (var sb : in) {
-				int dd = md(sb) - Math.abs(cr - sb[0]);
-				if (dd < 0) {
-					continue;
+		int[][] pairs = new int[2][];
+		int found = 0;
+		for (int i = 0; i < in.size() && found < 2; i++) {
+			var sb1 = in.get(i);
+			int md1 = md(sb1);
+			for (int j = i + 1; j < in.size() && found < 2; j++) {
+				var sb2 = in.get(j);
+				int md2 = md(in.get(j));
+				int mdij = md(sb1, sb2);
+				if (md1 + md2 + 2 == mdij) {
+					int[] mm = new int[2];
+					mm[0] = 1;
+					if (sb1[0] < sb2[0] && sb1[1] < sb2[1]) {
+						mm[0] = -1;
+						mm[1] = sb1[0] + md1 + 1 + sb1[1];
+					} else if (sb1[0] > sb2[0] && sb1[1] > sb2[1]) {
+						mm[0] = -1;
+						mm[1] = sb2[0] + md2 + 1 + sb2[1];
+					} else if (sb1[0] < sb2[0] && sb1[1] > sb2[1]) {
+						mm[1] = sb2[0] - md2 - 1 - sb2[1];
+					} else {
+						mm[1] = sb1[0] - md1 - 1 - sb1[1];
+					}
+					pairs[found++] = mm;
 				}
-				ranges.add(new int[] { sb[1] - dd, sb[1] + dd });
-				compact(ranges);
-			}
-			if (ranges.size() > 1) {
-				return ((long) ranges.get(1)[0] - 1) * 4000000l + cr;
 			}
 		}
-		return -1;
+		long x = (pairs[1][1] - pairs[0][1]) / (pairs[0][0] - pairs[1][0]);
+		long y = pairs[0][0] * x + pairs[0][1];
+		return x * 4000000l + y;
 	}
 
 	public void sort(List<int[]> ranges) {
