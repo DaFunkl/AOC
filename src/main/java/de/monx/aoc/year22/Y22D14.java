@@ -1,6 +1,9 @@
 package de.monx.aoc.year22;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_22_14;
 
 public class Y22D14 extends Day {
 	int[][] mm = { //
@@ -21,12 +24,29 @@ public class Y22D14 extends Day {
 
 	@Override
 	public Object part1() {
-		return solve(true);
+//		return solve(true);
+		return null;
 	}
 
 	@Override
 	public Object part2() {
 		return solve(false);
+	}
+
+	boolean isAnim = true;
+	Animation anim = null;
+	long sleep = 1;
+
+	void drawAnim(long sleep) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1500, 700, new DP_22_14());
+			((DP_22_14) anim.pane).update(sleep, grid);
+			Util.readLine();
+		}
+		((DP_22_14) anim.pane).update(sleep, grid);
 	}
 
 	int solve(boolean p1) {
@@ -37,8 +57,10 @@ public class Y22D14 extends Day {
 			boolean stable = false;
 			while (!stable) {
 				grid[sand[0]][sand[1]] = _SAND;
+				drawAnim(0);
 				stable = true;
 				for (int i = 0; i < 3; i++) {
+					drawAnim(0);
 					if (grid[sand[0] + _DIR_DLR[i][0]][sand[1] + _DIR_DLR[i][1]] == _AIR) {
 						grid[sand[0]][sand[1]] = _AIR;
 						sand[0] += _DIR_DLR[i][0];
@@ -53,7 +75,13 @@ public class Y22D14 extends Day {
 				if (stable) {
 					stables++;
 					grid[sand[0]][sand[1]] = _STABLE;
+					drawAnim(0);
 				}
+			}
+			if (stables % 8 == 0) {
+				drawAnim(1);
+			} else {
+				drawAnim(0);
 			}
 			if ((p1 && sand[0] > mm[0][1]) || (!p1 && grid[_SAND_HOLE[0]][_SAND_HOLE[1]] == _STABLE)) {
 				break;

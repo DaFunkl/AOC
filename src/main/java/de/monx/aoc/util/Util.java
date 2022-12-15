@@ -1,5 +1,6 @@
 package de.monx.aoc.util;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ public class Util {
 	public static final Gson gsonPretty = new Gson().newBuilder().setPrettyPrinting().create();
 	public static final Gson gson = new Gson();
 	static Scanner scan = new Scanner(System.in);
+	static Random rando = new Random();
 
 	public static final IntPair[] _DIRS4 = { //
 			new IntPair(-1, 00), // U
@@ -134,5 +137,9 @@ public class Util {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public static Color randoColor() {
+		return new Color(rando.nextInt(0, 255), rando.nextInt(0, 255), rando.nextInt(0, 255));
 	}
 }

@@ -55,10 +55,6 @@ public class Y22D12 extends Day {
 		return pois;
 	}
 
-//	Year: 22, Day: 12
-//	Part1: 481 	 9.9025 ms
-//	Part2: 480 	 4.3 ms
-
 	boolean isAnim = true;
 	Animation anim = null;
 	long sleep = 1;
