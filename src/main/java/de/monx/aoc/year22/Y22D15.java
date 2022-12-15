@@ -26,31 +26,26 @@ public class Y22D15 extends Day {
 	@Override
 	public Object part1() {
 		int row = 2000000;
-		Set<Integer> counter = new HashSet<>();
 		Set<Integer> beacons = new HashSet<>();
+		List<int[]> ranges = new ArrayList<>();
 		for (var sb : in) {
-			int md = md(sb);
-			int del = Math.abs(row - sb[0]);
-			int dd = md - del;
+			int dd = md(sb) - Math.abs(row - sb[0]);
 			if (dd < 0) {
 				continue;
 			}
 			if (sb[2] == row) {
 				beacons.add(sb[3]);
 			}
-			for (int i = (sb[1] - dd); i <= (sb[1] + dd); i++) {
-				if (!beacons.contains(i)) {
-					counter.add(i);
-				}
-			}
+			ranges.add(new int[] { sb[1] - dd, sb[1] + dd });
 		}
-		return counter.size();
+		compact(ranges);
+		return ranges.stream().map(x -> 1 + x[1] - x[0]).reduce(0, (a, b) -> a + b) - beacons.size();
 	}
 
 	@Override
 	public Object part2() {
-		long max = 4000000;
-		for (int cr = 0; cr < max; cr++) {
+		int max = 4000000;
+		for (int cr = max; cr >= 0; cr--) {
 			List<int[]> ranges = new ArrayList<>();
 			for (var sb : in) {
 				int dd = md(sb) - Math.abs(cr - sb[0]);
@@ -58,31 +53,38 @@ public class Y22D15 extends Day {
 					continue;
 				}
 				ranges.add(new int[] { sb[1] - dd, sb[1] + dd });
-				Collections.sort(ranges, new Comparator<int[]>() {
-					@Override
-					public int compare(int[] o1, int[] o2) {
-						return o1[0] - o2[0];
-					}
-				});
-				for (int i = 0; i < ranges.size(); i++) {
-					int[] r1 = ranges.get(i);
-					for (int j = i + 1; j < ranges.size(); j++) {
-						int[] r2 = ranges.get(j);
-						if ((r2[0] - 1) <= r1[1]) {
-							ranges.get(i)[0] = Math.min(r1[0], r2[0]);
-							ranges.get(i)[1] = Math.max(r1[1], r2[1]);
-							ranges.remove(j);
-							i--;
-							break;
-						}
-					}
-				}
-
+				compact(ranges);
 			}
 			if (ranges.size() > 1) {
 				return ((long) ranges.get(1)[0] - 1) * 4000000l + cr;
 			}
 		}
 		return -1;
+	}
+
+	public void sort(List<int[]> ranges) {
+		Collections.sort(ranges, new Comparator<int[]>() {
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				return o1[0] - o2[0];
+			}
+		});
+	}
+
+	public void compact(List<int[]> ranges) {
+		sort(ranges);
+		for (int i = 0; i < ranges.size(); i++) {
+			int[] r1 = ranges.get(i);
+			for (int j = i + 1; j < ranges.size(); j++) {
+				int[] r2 = ranges.get(j);
+				if ((r2[0] - 1) <= r1[1]) {
+					ranges.get(i)[0] = Math.min(r1[0], r2[0]);
+					ranges.get(i)[1] = Math.max(r1[1], r2[1]);
+					ranges.remove(j);
+					i--;
+					break;
+				}
+			}
+		}
 	}
 }
