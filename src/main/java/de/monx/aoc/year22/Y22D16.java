@@ -92,7 +92,8 @@ public class Y22D16 extends Day {
 			var key = hash(state, 3);
 			if (weights.containsKey(key)) {
 				var weight = weights.get(key);
-				if (weight[_ITIM] >= state[_ITIM] && weight[_PRES] >= state[_PRES]) {
+//				if (weight[_ITIM] >= state[_ITIM] && weight[_PRES] >= state[_PRES]) {
+				if ((weight[_ITIM] >= state[_ITIM] || weight[_ETIM] >= state[_ETIM]) && weight[_PRES] >= state[_PRES]) {
 					continue;
 				}
 			}
@@ -135,8 +136,6 @@ public class Y22D16 extends Day {
 		return max;
 	}
 
-//	Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
-//	Valve BB has flow rate=13; tunnels lead to valves CC, AA
 	int[][] init() {
 		Map<String, Integer> idx = new HashMap<>();
 		Map<Integer, Integer> vGates = new HashMap<>();
