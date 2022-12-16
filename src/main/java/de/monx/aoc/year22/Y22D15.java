@@ -79,8 +79,7 @@ public class Y22D15 extends Day {
 			for (int j = i + 1; j < in.size() && found < 2; j++) {
 				var sb2 = in.get(j);
 				int md2 = md(in.get(j));
-				int mdij = md(sb1, sb2);
-				if (md1 + md2 + 2 == mdij) {
+				if (md1 + md2 + 2 == md(sb1, sb2)) {
 					int[] mm = new int[2];
 					mm[0] = 1;
 					if (sb1[0] < sb2[0] && sb1[1] < sb2[1]) {
