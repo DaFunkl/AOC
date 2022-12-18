@@ -28,11 +28,11 @@ public class Y22D18 extends Day {
 	static final int _L = 1;
 	static final int _E = 2;
 	static final int _A = 2;
+	int max = 0;
 
 	@Override
 	public Object part1() {
 		int ret = 0;
-		int max = 0;
 		for (var dot : dots) {
 			grid[dot[0]][dot[1]][dot[2]] = _L;
 			max = Math.max(max, dot[0]);
@@ -46,20 +46,21 @@ public class Y22D18 extends Day {
 				}
 			}
 		}
+		max += 2;
 		return ret;
 	}
 
 	@Override
 	public Object part2() {
-		boolean[][][] seen = new boolean[size][size][size];
+		boolean[][][] seen = new boolean[max][max][max];
 		ArrayDeque<int[]> stack = new ArrayDeque<>();
 		stack.add(new int[] { 0, 0, 0 });
 		List<int[]> exposed = new ArrayList<>();
 		while (!stack.isEmpty()) {
-			var dot = stack.pop();
-			if (dot[0] < 0 || 25 <= dot[0] //
-					|| dot[1] < 0 || 25 <= dot[1] //
-					|| dot[2] < 0 || 25 <= dot[2] //
+			var dot = stack.pollLast();
+			if (dot[0] < 0 || max <= dot[0] //
+					|| dot[1] < 0 || max <= dot[1] //
+					|| dot[2] < 0 || max <= dot[2] //
 			) {
 				continue;
 			}
