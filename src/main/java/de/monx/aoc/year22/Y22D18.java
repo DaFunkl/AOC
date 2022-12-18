@@ -24,24 +24,22 @@ public class Y22D18 extends Day {
 	};
 
 	int size = 25;
-	int[][][] grid = new int[size][size][size];
+	boolean[][][] grid = new boolean[size][size][size];
 	static final int _L = 1;
-	static final int _E = 2;
-	static final int _A = 2;
 	int max = 0;
 
 	@Override
 	public Object part1() {
 		int ret = 0;
 		for (var dot : dots) {
-			grid[dot[0]][dot[1]][dot[2]] = _L;
+			grid[dot[0]][dot[1]][dot[2]] = true;
 			max = Math.max(max, dot[0]);
 			max = Math.max(max, dot[1]);
 			max = Math.max(max, dot[2]);
 		}
 		for (var dot : dots) {
 			for (var dir : _DIRS) {
-				if (1 != grid[dir[0] + dot[0]][dir[1] + dot[1]][dir[2] + dot[2]]) {
+				if (!grid[dir[0] + dot[0]][dir[1] + dot[1]][dir[2] + dot[2]]) {
 					ret++;
 				}
 			}
@@ -68,8 +66,7 @@ public class Y22D18 extends Day {
 				continue;
 			}
 			seen[dot[0]][dot[1]][dot[2]] = true;
-			int gv = grid[dot[0]][dot[1]][dot[2]];
-			if (gv == _L) {
+			if (grid[dot[0]][dot[1]][dot[2]]) {
 				exposed.add(dot);
 				continue;
 			}
@@ -80,7 +77,7 @@ public class Y22D18 extends Day {
 		int ret = 0;
 		for (var dot : exposed) {
 			for (var dir : _DIRS) {
-				if (1 != grid[dir[0] + dot[0]][dir[1] + dot[1]][dir[2] + dot[2]]
+				if (!grid[dir[0] + dot[0]][dir[1] + dot[1]][dir[2] + dot[2]]
 						&& seen[dir[0] + dot[0]][dir[1] + dot[1]][dir[2] + dot[2]]) {
 					ret++;
 				}
