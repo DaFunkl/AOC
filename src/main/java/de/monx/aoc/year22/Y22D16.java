@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 
 public class Y22D16 extends Day {
 	List<String> in = getInputList();
