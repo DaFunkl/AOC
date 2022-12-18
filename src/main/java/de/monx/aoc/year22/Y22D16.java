@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
 
 public class Y22D16 extends Day {
 	List<String> in = getInputList();
@@ -38,7 +39,7 @@ public class Y22D16 extends Day {
 		stack.add(iState);
 		int max = 0;
 		while (!stack.isEmpty()) {
-			var state = stack.pop(); // 160
+			var state = stack.pop(); // 58
 			if (state[_ITIM] <= 0) {
 				continue;
 			}
@@ -51,21 +52,17 @@ public class Y22D16 extends Day {
 			}
 			weights.put(key, state);
 			int cp = state[_IPOS];
-			if (state[cp + ofs] != 1) {
-				int[] nState = Arrays.copyOf(state, state.length);
-				nState[cp + ofs] = 1;
-				nState[_ITIM]--;
-				nState[_PRES] += nState[_ITIM] * matrix[cp][cp];
-				max = Math.max(max, nState[_PRES]);
-				stack.add(nState);
-			}
 			for (int i = 1; i < matrix.length; i++) {
-				if (i == cp || matrix[cp][i] == 0 || (state[_ITIM] - matrix[cp][i] <= 0)) {
+				if (i == cp || (state[_ITIM] - matrix[cp][i] <= 1) || state[i + ofs] == 1) {
 					continue;
 				}
 				int[] nState = Arrays.copyOf(state, state.length);
 				nState[_ITIM] -= matrix[cp][i];
 				nState[_IPOS] = i;
+				nState[_ITIM]--;
+				nState[_PRES] += nState[_ITIM] * matrix[i][i];
+				nState[i + ofs] = 1;
+				max = Math.max(max, nState[_PRES]);
 				stack.add(nState);
 			}
 		}
@@ -85,43 +82,30 @@ public class Y22D16 extends Day {
 		stack.add(iState);
 		int max = 0;
 		while (!stack.isEmpty()) {
-			var state = stack.pop(); // 160
+			var state = stack.pop(); // 69
 			if (state[_ITIM] <= 0) {
 				continue;
 			}
 			var key = hash(state, 3);
 			if (weights.containsKey(key)) {
 				var weight = weights.get(key);
-//				if (weight[_ITIM] >= state[_ITIM] && weight[_PRES] >= state[_PRES]) {
 				if ((weight[_ITIM] >= state[_ITIM] || weight[_ETIM] >= state[_ETIM]) && weight[_PRES] >= state[_PRES]) {
 					continue;
 				}
 			}
 			weights.put(key, state);
 			int cp = state[_IPOS];
-			if (state[cp + ofs] != 1) {
-				int[] nState = Arrays.copyOf(state, state.length);
-				nState[cp + ofs] = 1;
-				nState[_ITIM]--;
-				nState[_PRES] += nState[_ITIM] * matrix[cp][cp];
-				max = Math.max(max, nState[_PRES]);
-				if (nState[_ITIM] < nState[_ETIM]) {
-					int t1 = nState[_ITIM];
-					nState[_ITIM] = nState[_ETIM];
-					nState[_ETIM] = t1;
-					t1 = nState[_IPOS];
-					nState[_IPOS] = nState[_EPOS];
-					nState[_EPOS] = t1;
-				}
-				stack.add(nState);
-			}
 			for (int i = 1; i < matrix.length; i++) {
-				if (i == cp || matrix[cp][i] == 0 || (state[_ITIM] - matrix[cp][i] <= 0)) {
+				if (i == cp || (state[_ITIM] - matrix[cp][i] <= 1) || state[i + ofs] == 1) {
 					continue;
 				}
 				int[] nState = Arrays.copyOf(state, state.length);
 				nState[_ITIM] -= matrix[cp][i];
 				nState[_IPOS] = i;
+				nState[i + ofs] = 1;
+				nState[_ITIM]--;
+				nState[_PRES] += nState[_ITIM] * matrix[i][i];
+				max = Math.max(max, nState[_PRES]);
 				if (nState[_ITIM] < nState[_ETIM]) {
 					int t1 = nState[_ITIM];
 					nState[_ITIM] = nState[_ETIM];
@@ -168,7 +152,7 @@ public class Y22D16 extends Day {
 		int dis = 1;
 		while (changed) {
 			changed = false;
-			for (var zv : zGates) {
+			for (int zv = 0; zv < matrix.length; zv++) {
 				List<Integer> comp = new ArrayList<>();
 				for (int i = 0; i < matrix.length; i++) {
 					if (i == zv || matrix[zv][i] < dis) {
