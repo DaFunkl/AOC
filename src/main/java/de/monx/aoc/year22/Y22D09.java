@@ -51,7 +51,7 @@ public class Y22D09 extends Day {
 	int solve(int amtKnots) {
 		Set<String> seen = new HashSet<>();
 		int[][] knots = new int[amtKnots][2];
-		int[][] mm = new int[2][2];
+//		int[][] mm = new int[2][2];
 		for (var x : in) {
 			for (int i = 0; i < x[2]; i++) {
 				knots[0][0] += x[0];
