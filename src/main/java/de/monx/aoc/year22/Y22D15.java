@@ -29,7 +29,7 @@ public class Y22D15 extends Day {
 
 	@Override
 	public Object part1() {
-		int row = 2000000;
+		int row = 2_000_000;
 		Set<Integer> beacons = new HashSet<>();
 		List<int[]> ranges = new ArrayList<>();
 		for (var sb : in) {
