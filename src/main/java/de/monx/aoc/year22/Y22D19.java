@@ -103,13 +103,18 @@ public class Y22D19 extends Day {
 
 		List<int[]> buildOpts() {
 			List<int[]> ret = new ArrayList<>();
-			for (int i = 3; i >= 0; i--) {
-				if (costs[i][0] <= holding[0] && (i == 0 || costs[i][1] <= holding[i - 1])) {
-					ret.add(new int[] { i, costs[i][_ORE], costs[i][1] });
-					if (i == 3) {
-						break;
-					}
-				}
+			if (costs[3][0] <= holding[0] && costs[3][1] <= holding[2]) {
+				ret.add(new int[] { 3, costs[3][_ORE], costs[3][1] });
+				return ret;
+			}
+			if (costs[2][0] <= holding[0] && costs[2][1] <= holding[1] && bots[2] < costs[3][1]) {
+				ret.add(new int[] { 2, costs[2][_ORE], costs[2][1] });
+			}
+			if (costs[1][0] <= holding[0] && bots[1] < costs[2][1]) {
+				ret.add(new int[] { 1, costs[1][_ORE], 0 });
+			}
+			if (costs[0][0] <= holding[0] && bots[0] < maxOreCost) {
+				ret.add(new int[] { 0, costs[0][_ORE], 0 });
 			}
 			return ret;
 		}
