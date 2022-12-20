@@ -16,7 +16,6 @@ public class Y22D20 extends Day {
 		long[] ret = sim(in, in, map);
 		int zIdx = map.get(-1);
 
-		System.out.println(zIdx);
 		long num1 = ret[(zIdx + 1000) % in.length];
 		long num2 = ret[(zIdx + 2000) % in.length];
 		long num3 = ret[(zIdx + 3000) % in.length];
@@ -30,14 +29,12 @@ public class Y22D20 extends Day {
 		long[] arr = Arrays.copyOf(instr, instr.length);
 
 		for (int i = 0; i < 10; i++) {
-			System.out.println("Step: " + (i + 1));
 			arr = sim(instr, arr, map);
 		}
 		int zIdx = map.get(-1);
-		System.out.println(zIdx);
-		long num1 = instr[(zIdx + 1000) % in.length];
-		long num2 = instr[(zIdx + 2000) % in.length];
-		long num3 = instr[(zIdx + 3000) % in.length];
+		long num1 = arr[(zIdx + 1000) % in.length];
+		long num2 = arr[(zIdx + 2000) % in.length];
+		long num3 = arr[(zIdx + 3000) % in.length];
 		return num1 + num2 + num3;
 	}
 
