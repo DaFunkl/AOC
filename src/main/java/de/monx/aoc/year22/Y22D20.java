@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 
 public class Y22D20 extends Day {
 	long[] in = getInputList().stream().mapToLong(Long::valueOf).toArray();
