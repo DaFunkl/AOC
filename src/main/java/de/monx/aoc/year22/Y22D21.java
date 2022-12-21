@@ -94,7 +94,7 @@ public class Y22D21 extends Day {
 			y = switch (monk.operator) {
 			case "+" -> num1 - num2;
 			case "-" -> num1 + num2;
-			case "*" -> div(num1, num2);// y / num;
+			case "*" -> num1 / num2;
 			case "/" -> num1 * num2;
 			case "=" -> num2;
 			default -> Monkey.error(monk);
@@ -102,14 +102,6 @@ public class Y22D21 extends Day {
 			monk = monk.w1 ? monks.get(monk.name1) : monks.get(monk.name2);
 		}
 		return y;
-	}
-
-	long div(long a, long b) {
-		long r = a / b;
-		if (r * b != a) {
-			System.err.println(a + " / " + b + " = " + r + " -> floored");
-		}
-		return r;
 	}
 
 	String formular(Map<String, Monkey> map, String key) {
