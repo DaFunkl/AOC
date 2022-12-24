@@ -47,11 +47,6 @@ public class Y22D22 extends Day {
 	public Object part2() {
 		init();
 		return solve(false);
-//		int[] pos = { 199, 49 };
-//		int[] np = { 199, 50 };
-//		int cd = 0;
-//		Arrays.toString(wrapItUp2(np, pos, cd));
-//		return null;
 	}
 
 	int solve(boolean p1) {
@@ -88,7 +83,6 @@ public class Y22D22 extends Day {
 			}
 			cd = (cd + m[1]) % 4;
 		}
-		System.out.println(Arrays.toString(pos) + " | " + cd);
 		return (1000 * (pos[0] + 1)) + (4 * (pos[1] + 1)) + cd;
 	}
 
