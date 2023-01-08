@@ -9,7 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_22_24;
 import de.monx.aoc.util.common.Pair;
+import de.monx.aoc.year22.Y22D24.IP3;
+import lombok.Data;
 
 public class Y22D24 extends Day {
 	List<String> in = getInputList();
@@ -20,6 +25,22 @@ public class Y22D24 extends Day {
 			{ 1, in.size() - 2 }, //
 			{ 1, in.get(0).length() - 2 }, //
 	};
+
+	boolean isAnim = true;
+	Animation anim = null;
+	long sleep = 30;
+
+	void drawAnim(long sleep, Map<IP3, List<IP3>> state, Set<IP3> positions, IP3 start, IP3 end) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1400, 350, new DP_22_24());
+			((DP_22_24) anim.pane).update(sleep, state, positions, start, end);
+			Util.readLine();
+		}
+		((DP_22_24) anim.pane).update(sleep, state, positions, start, end);
+	}
 
 	static final IP3[] _MOVES = { //
 			new IP3(-1, 00, 0), // up
@@ -57,6 +78,7 @@ public class Y22D24 extends Day {
 		Set<IP3> positions = new HashSet<>();
 		positions.add(start.clone());
 		int minSteps = 1;
+		drawAnim(sleep, state, positions, start, end);
 		while (minSteps > 0 && positions.size() > 0) {
 			// tick blizzards
 			Map<IP3, List<IP3>> newState = new HashMap<>();
@@ -91,7 +113,9 @@ public class Y22D24 extends Day {
 			}
 			positions = newPos;
 			minSteps++;
+			drawAnim(sleep, state, positions, start, end);
 		}
+		drawAnim(sleep * 10, state, positions, start, end);
 		return new Pair<Map<IP3, List<IP3>>, Integer>(state, minSteps);
 	}
 
@@ -115,10 +139,11 @@ public class Y22D24 extends Day {
 		return ret;
 	}
 
+	@Data
 	public static class IP3 {
-		int p1 = 0;
-		int p2 = 0;
-		int p3 = 0;
+		public int p1 = 0;
+		public int p2 = 0;
+		public int p3 = 0;
 
 		public IP3() {
 		}

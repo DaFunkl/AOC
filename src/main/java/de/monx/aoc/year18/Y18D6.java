@@ -1,66 +1,72 @@
 package de.monx.aoc.year18;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y18D6 extends Day {
-	List<IntPair> in = getInputList().stream() //
-			.map(x -> x.split(", ")) //
-			.map(x -> new IntPair(x[0], x[1]) //
-			).toList();
-	IntPair borders = in.stream().reduce(new IntPair(0, 0), (s, e) -> s.maxVals(e));
-	int[][] grid = new int[borders.first + 1][borders.second + 1];
-	Set<Integer> infinites = new HashSet<>();
-	int[] counts = new int[in.size()];
+	List<int[]> in = getInputList().stream().map(x -> x.split(", ")) //
+			.map(x -> new int[] { Integer.valueOf(x[0]), Integer.valueOf(x[1]) }).toList();
+	int[] max = in.stream().reduce(new int[] { 0, 0 },
+			(a, b) -> new int[] { Math.max(a[0], b[0]), Math.max(a[1], b[1]) });
+
+	int md(int a1, int a2, int b1, int b2) {
+		return Math.abs(a1 - b1) + Math.abs(a2 - b2);
+	}
 
 	@Override
 	public Object part1() {
-		IntPair ip = new IntPair(0, 0);
-		for (int y = 0; y < grid.length; y++) {
-			for (int x = 0; x < grid[0].length; x++) {
-				int[] t = { Integer.MAX_VALUE, -1, 0 };
-				int count = 0;
-				for (var dots : in) {
-					int md = ip.manhattenDistance(dots);
-					if (md < t[0]) {
-						t[0] = md;
-						t[1] = count;
-						t[2] = count;
-					} else if (t[0] == md) {
-						t[2] = -1;
+		Set<Integer> infinite = new HashSet<>();
+		Map<Integer, Integer> count = new HashMap<>();
+		int[][] grid = new int[max[0] + 1][max[1] + 1];
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				boolean inf = i == 0 || j == 0 || i == max[0] || j == max[1];
+				boolean same = false;
+				int minDis = Integer.MAX_VALUE;
+				int idx = -1;
+				for (int k = 0; k < in.size(); k++) {
+					int md = md(i, j, in.get(k)[0], in.get(k)[1]);
+					if (md <= minDis) {
+						same = md == minDis;
+						minDis = md;
+						idx = k;
 					}
-					count++;
 				}
-				if (ip.first == 0 || ip.second == 0 || //
-						ip.first == (borders.first) || ip.second == (borders.second)) {
-					infinites.add(t[2]);
+				if (!same) {
+					grid[i][j] = idx + 1;
+					if (inf) {
+						infinite.add(idx);
+					}
+					count.put(idx, count.getOrDefault(idx, 0) + 1);
 				}
-				grid[ip.first][ip.second] = t[2];
-				if (t[2] >= 0) {
-					counts[t[2]]++;
-				}
-				ip.second++;
-			}
-			ip.first++;
-			ip.second = 0;
-		}
-		int max = 0;
-		for (int i = 0; i < counts.length; i++) {
-			if (!infinites.contains(i)) {
-				max = Math.max(max, counts[i]);
 			}
 		}
-		return max;
+		return count.entrySet().stream().filter(x -> !infinite.contains(x.getKey())) //
+				.mapToInt(x -> x.getValue()).max().getAsInt();
 	}
 
 	@Override
 	public Object part2() {
-
-		return null;
+		int ret = 0;
+		for (int i = 0; i < max[0]; i++) {
+			for (int j = 0; j < max[1]; j++) {
+				int md = 0;
+				for (var x : in) {
+					int add = md(i, j, x[0], x[1]);
+					md += add;
+				}
+				if (md >= 10000) {
+					continue;
+				}
+				ret++;
+			}
+		}
+		return ret;
 	}
 
 }

@@ -89,6 +89,11 @@ public class IntPair extends Pair<Integer, Integer> {
 		return new IntPair(Math.max(first, o.first), Math.max(second, o.second));
 	}
 
+	public void iMaxVals(IntPair o) {
+		first = Math.max(first, o.first);
+		second = Math.max(second, o.second);
+	}
+
 	public int manhattenDistance() {
 		return Math.abs(first) + Math.abs(second);
 	}
