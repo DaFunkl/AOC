@@ -40,6 +40,8 @@ public class LinkList<T> {
 	public LinkList<T> insert(T o) {
 		var nex = next;
 		var ins = new LinkList<>(o);
+		ins.prev = this;
+		nex.prev = ins;
 		ins.next = nex;
 		this.next = ins;
 		return ins;
