@@ -2,15 +2,12 @@ package de.monx.aoc.year23;
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.common.Pair;
 
 public class Y23D07 extends Day {
-
-	List<String> in = getInputList();
 
 	@Override
 	public Object part1() {
