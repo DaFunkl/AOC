@@ -34,6 +34,7 @@ public class Y23D08 extends Day {
 		int steps = 0;
 		int idx = 0;
 		int reached = 0;
+		BigInteger ret = new BigInteger("1");
 		while (reached < todos.length) {
 			steps++;
 			for (int i = 0; i < todos.length; i++) {
@@ -43,17 +44,14 @@ public class Y23D08 extends Day {
 				todos[i] = opts.get(todos[i])[dir[idx] == 'R' ? 1 : 0];
 				if (todos[i].endsWith("Z")) {
 					if (seen[i] == 0) {
+						BigInteger bi = new BigInteger("" + steps);
+						ret = ret.multiply(bi).divide(ret.gcd(bi));
 						seen[i] = steps;
 						reached++;
 					}
 				}
 			}
 			idx = (idx + 1) % dir.length;
-		}
-		BigInteger ret = new BigInteger("" + seen[0]);
-		for (int i = 1; i < seen.length; i++) {
-			BigInteger bi = new BigInteger("" + seen[i]);
-			ret = ret.multiply(bi).divide(ret.gcd(bi));
 		}
 		return ret;
 	}
