@@ -21,6 +21,7 @@ public class Y23D08 extends Day {
 		}
 		String cur = "AAA";
 		int steps = 0;
+		int i = 0;
 		while (!cur.equals("ZZZ")) {
 			cur = opts.get(cur)[dir[steps++ % dir.length] == 'R' ? 1 : 0];
 		}
@@ -29,7 +30,7 @@ public class Y23D08 extends Day {
 
 	@Override
 	public Object part2() {
-		String[] todos = opts.keySet().stream().filter(x -> x.endsWith("A")).toArray(String[]::new);
+		String[] todos = opts.keySet().stream().filter(x -> x.charAt(2) == 'A').toArray(String[]::new);
 		int[] seen = new int[todos.length];
 		int steps = 0;
 		int idx = 0;
@@ -42,7 +43,7 @@ public class Y23D08 extends Day {
 					continue;
 				}
 				todos[i] = opts.get(todos[i])[dir[idx] == 'R' ? 1 : 0];
-				if (todos[i].endsWith("Z")) {
+				if (todos[i].charAt(2) == 'Z') {
 					if (seen[i] == 0) {
 						BigInteger bi = new BigInteger("" + steps);
 						ret = ret.multiply(bi).divide(ret.gcd(bi));
