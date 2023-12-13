@@ -96,6 +96,5 @@ public class Y23D07 extends Day {
 			}
 			return compCards(o1.first, o2.first);
 		}
-
 	};
 }
