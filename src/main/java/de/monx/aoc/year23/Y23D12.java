@@ -42,7 +42,7 @@ public class Y23D12 extends Day {
 
 	long arrangements(int[] er, String str, int x, Map<String, Long> m) {
 		String k = str + "," + x;
-		if (m.containsKey(str + "," + x)) {
+		if (m.containsKey(k)) {
 			return m.get(k);
 		}
 		if (x >= er.length) {
