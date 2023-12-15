@@ -5,8 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_23_14;
 
 public class Y23D14 extends Day {
+
+//	Year: 23, Day: 14
+//	Part1: 109833 	 1.4587 ms
+//	Part2: 99875 	 55.9938 ms
 
 	List<char[]> in = getInputList().stream().map(String::toCharArray).toList();
 
@@ -18,8 +25,26 @@ public class Y23D14 extends Day {
 	};
 	Map<String, Integer> map = new HashMap<>();
 
+	boolean isAnim = false;
+	Animation anim = null;
+	long sleep = 1;
+
+	void drawAnim(long sleep) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1000, 1000, new DP_23_14());
+			((DP_23_14) anim.pane).update(sleep, in);
+			Util.readLine();
+		}
+		((DP_23_14) anim.pane).update(sleep, in);
+	}
+
 	@Override
 	public Object part1() {
+
+		drawAnim(1);
 		int ret = solve(_DIRS[0]);
 		return ret;
 	}
@@ -81,12 +106,16 @@ public class Y23D14 extends Day {
 				if (in.get(k)[n] == '.') {
 					in.get(k)[n] = 'O';
 					in.get(i)[j] = '.';
+					drawAnim(0);
 					ret += in.size() - k;
 				} else {
 					ret += in.size() - i;
 				}
+//				drawAnim(1);
 			}
+			drawAnim(1);
 		}
+		drawAnim(50);
 		return ret;
 	}
 
