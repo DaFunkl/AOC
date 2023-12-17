@@ -34,29 +34,29 @@ public class Y23D17 extends Day {
 		PriorityQueue<int[]> st = new PriorityQueue<>(new Comparator<int[]>() {
 			@Override
 			public int compare(int[] o1, int[] o2) {
-				return o1[4] - o2[4];
+				return o1[3] - o2[3];
 			}
 		});
-		st.add(new int[] { 0, 0, 0, 0, 0 });
-		st.add(new int[] { 0, 0, 1, 0, 0 });
+		st.add(new int[] { 0, 0, 0, 0 });
+		st.add(new int[] { 0, 0, 1, 0 });
 		int ret = Integer.MAX_VALUE;
 		int gy = map.length - 1;
 		int gx = map[0].length - 1;
 		while (!st.isEmpty()) {
 			var cur = st.poll();
-			if (bw[cur[0]][cur[1]][cur[2] % 2] != 0 && bw[cur[0]][cur[1]][cur[2] % 2] <= cur[4]) {
+			if (bw[cur[0]][cur[1]][cur[2] % 2] != 0 && bw[cur[0]][cur[1]][cur[2] % 2] <= cur[3]) {
 				continue;
 			}
-			bw[cur[0]][cur[1]][cur[2] % 2] = cur[4];
+			bw[cur[0]][cur[1]][cur[2] % 2] = cur[3];
 			if (cur[0] == gy && cur[1] == gx) {
-				ret = Math.min(ret, cur[4]);
+				ret = Math.min(ret, cur[3]);
 				continue;
 			}
 			for (int id : _AD) {
 				int ny = cur[0];
 				int nx = cur[1];
 				int nd = (cur[2] + id) % 4;
-				int w = cur[4];
+				int w = cur[3];
 				for (int i = 1; i < max; i++) {
 					ny += _DIRS[nd][0];
 					nx += _DIRS[nd][1];
@@ -65,7 +65,7 @@ public class Y23D17 extends Day {
 					}
 					w += map[ny][nx];
 					if (i > min) {
-						st.add(new int[] { ny, nx, nd, i, w });
+						st.add(new int[] { ny, nx, nd, w });
 					}
 				}
 			}
