@@ -7,6 +7,8 @@ import java.util.Map;
 
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_23_16;
 import de.monx.aoc.util.common.Pair;
 import de.monx.aoc.util.common.pairs.IntPair;
 
@@ -19,13 +21,31 @@ public class Y23D16 extends Day {
 	int[] swd2 = { 3, 2, 1, 0 };
 	int[][] spl = { { 1, 3 }, { 0, 2 }, { 1, 3 }, { 0, 2 } };
 
+	boolean isAnim = false;
+	Animation anim = null;
+	long sleep = 1;
+
+	void drawAnim(long sleep, Map<IntPair, boolean[]> bw) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1030, 1080, new DP_23_16());
+			((DP_23_16) anim.pane).update(sleep, in, bw);
+			Util.readLine();
+		}
+		((DP_23_16) anim.pane).update(sleep, in, bw);
+	}
+
 	@Override
 	public Object part1() {
+		drawAnim(sleep, new HashMap<>());
 		return solve(new Pair(new IntPair(0, -1), 3));
 	}
 
 	@Override
 	public Object part2() {
+		isAnim = true;
 		int ret = 0;
 		for (int i = 0; i < in.size(); i++) {
 			ret = Math.max(ret, solve(new Pair(new IntPair(i, -1), 3)));
@@ -44,6 +64,7 @@ public class Y23D16 extends Day {
 		Map<IntPair, boolean[]> bw = new HashMap<>();
 		s.add(start);
 		while (!s.isEmpty()) {
+			drawAnim(sleep, bw);
 			var st = s.pop();
 			var ip = st.first;
 			var d = st.second;
@@ -78,19 +99,18 @@ public class Y23D16 extends Day {
 				}
 				bw.get(ip)[d] = true;
 				var d1 = spl[d][0];
-				var ip1 = ip.clone();
-				if (getChar(ip1) != 'X' && (!bw.containsKey(ip1) || !bw.get(ip1)[d1])) {
-					s.push(new Pair(ip1, d1));
+				if (getChar(ip) != 'X' && (!bw.containsKey(ip) || !bw.get(ip)[d1])) {
+					s.push(new Pair(ip, d1));
 				}
 				var d2 = spl[d][1];
-				var ip2 = ip.clone();
-				if (getChar(ip2) != 'X' && (!bw.containsKey(ip2) || !bw.get(ip2)[d2])) {
-					s.push(new Pair(ip2, d2));
+				if (getChar(ip) != 'X' && (!bw.containsKey(ip) || !bw.get(ip)[d2])) {
+					s.push(new Pair(ip, d2));
 				}
 			} else {
 				System.err.println("???");
 			}
 		}
+		drawAnim(sleep * 10, bw);
 		return bw.keySet().size() - 1;
 	}
 
