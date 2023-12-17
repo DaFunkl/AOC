@@ -4,6 +4,9 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_23_17;
 
 public class Y23D17 extends Day {
 
@@ -18,6 +21,22 @@ public class Y23D17 extends Day {
 	};
 
 	int[] _AD = { 1, 3 };
+
+	boolean isAnim = false;
+	Animation anim = null;
+	long sleep = 1;
+
+	void drawAnim(long sleep, int[][][] bw) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(1030, 1030, new DP_23_17());
+			((DP_23_17) anim.pane).update(sleep, map, bw);
+			Util.readLine();
+		}
+		((DP_23_17) anim.pane).update(sleep, map, bw);
+	}
 
 	@Override
 	public Object part1() {
@@ -37,8 +56,10 @@ public class Y23D17 extends Day {
 				return o1[3] - o2[3];
 			}
 		});
+		drawAnim(sleep, bw);
 		st.add(new int[] { 0, 0, 0, 0 });
 		st.add(new int[] { 0, 0, 1, 0 });
+		int cc = 0;
 		int ret = Integer.MAX_VALUE;
 		int gy = map.length - 1;
 		int gx = map[0].length - 1;
@@ -51,6 +72,12 @@ public class Y23D17 extends Day {
 			if (cur[0] == gy && cur[1] == gx) {
 				ret = Math.min(ret, cur[3]);
 				continue;
+			}
+			if (cc++ >= 10) {
+				cc = 0;
+				drawAnim(2, bw);
+			} else {
+				drawAnim(0, bw);
 			}
 			for (int id : _AD) {
 				int ny = cur[0];
@@ -70,6 +97,7 @@ public class Y23D17 extends Day {
 				}
 			}
 		}
+		drawAnim(sleep * 10, bw);
 		return ret;
 	}
 
