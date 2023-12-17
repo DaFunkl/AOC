@@ -83,7 +83,7 @@ public class Y23D17 extends Day {
 	}
 
 	String toKey(int[] arr) {
-		return arr[0] + "," + arr[1] + "," + arr[2];
+		return arr[0] + "," + arr[1] + "," + (arr[2] % 2);
 	}
 
 	int[][] init() {
