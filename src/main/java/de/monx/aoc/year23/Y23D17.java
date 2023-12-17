@@ -1,8 +1,6 @@
 package de.monx.aoc.year23;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 import de.monx.aoc.util.Day;
@@ -32,7 +30,7 @@ public class Y23D17 extends Day {
 	}
 
 	int solve(int min, int max) {
-		Map<Integer, Integer> bw = new HashMap<>();
+		int[][][] bw = new int[map.length][map[0].length][2];
 		PriorityQueue<int[]> st = new PriorityQueue<>(new Comparator<int[]>() {
 			@Override
 			public int compare(int[] o1, int[] o2) {
@@ -45,19 +43,15 @@ public class Y23D17 extends Day {
 		int gy = map.length - 1;
 		int gx = map[0].length - 1;
 		while (!st.isEmpty()) {
-
 			var cur = st.poll();
-
-			var k = cur[0] * 10000 + cur[1] * 10 + (cur[2] % 2);
-			if (bw.containsKey(k) && bw.get(k) <= cur[4]) {
+			if (bw[cur[0]][cur[1]][cur[2] % 2] != 0 && bw[cur[0]][cur[1]][cur[2] % 2] <= cur[4]) {
 				continue;
 			}
-			bw.put(k, cur[4]);
+			bw[cur[0]][cur[1]][cur[2] % 2] = cur[4];
 			if (cur[0] == gy && cur[1] == gx) {
 				ret = Math.min(ret, cur[4]);
 				continue;
 			}
-
 			for (int id : _AD) {
 				int ny = cur[0];
 				int nx = cur[1];
