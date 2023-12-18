@@ -74,6 +74,10 @@ public class IntPair extends Pair<Integer, Integer> {
 		this.second *= o;
 	}
 
+	public IntPair mul(int o) {
+		return new IntPair(o * this.first, o * this.second);
+	}
+
 	public void seti(IntPair o) {
 		first = o.first;
 		second = o.second;
