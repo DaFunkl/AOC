@@ -22,7 +22,7 @@ public class Y23D17 extends Day {
 
 	int[] _AD = { 1, 3 };
 
-	boolean isAnim = false;
+	boolean isAnim = true;
 	Animation anim = null;
 	long sleep = 1;
 

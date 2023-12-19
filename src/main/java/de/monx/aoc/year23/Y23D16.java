@@ -65,7 +65,8 @@ public class Y23D16 extends Day {
 		s.add(start);
 		while (!s.isEmpty()) {
 			drawAnim(sleep, bw);
-			var st = s.pop();
+//			var st = s.pop();
+			var st = s.pollLast();
 			var ip = st.first;
 			var d = st.second;
 			if (bw.containsKey(ip)) {

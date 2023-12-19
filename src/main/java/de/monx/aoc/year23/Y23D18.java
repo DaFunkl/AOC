@@ -1,7 +1,6 @@
 package de.monx.aoc.year23;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.monx.aoc.util.Day;
