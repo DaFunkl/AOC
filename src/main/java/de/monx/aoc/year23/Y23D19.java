@@ -22,7 +22,6 @@ public class Y23D19 extends Day {
 	public Object part1() {
 		init();
 		int[] ret = new int[4];
-
 		for (var p : parts) {
 			String cs = "in";
 			while (!(cs.equals("R") || cs.equals("A"))) {
@@ -41,7 +40,6 @@ public class Y23D19 extends Day {
 				}
 			}
 		}
-
 		return ret[0] + ret[1] + ret[2] + ret[3];
 	}
 
