@@ -120,4 +120,20 @@ public class IntPair extends Pair<Integer, Integer> {
 		return "[" + first + "," + second + "]";
 	}
 
+//	@Override
+//	public boolean equals(Object o) {
+//		if (o == this) {
+//			return true;
+//		}
+//		if (!(o instanceof IntPair)) {
+//			return false;
+//		}
+//		IntPair op = (IntPair) o;
+//		return first == op.first && second == op.second;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return (7 * 31 + first) * 31 + second;
+//	}
 }

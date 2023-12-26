@@ -50,9 +50,6 @@ public class Y23D20 extends Day {
 			low++;
 			while (!stack.isEmpty()) {
 				var cur = stack.pollLast();
-				if (cur.first.equals("rx") && !cur.second) {
-					return i;
-				}
 				if (cur.second) {
 					high++;
 				} else {
@@ -80,6 +77,11 @@ public class Y23D20 extends Day {
 							if (!p2tracker.containsKey(p)) {
 								p2tracker.put(p, i + 1);
 								if (p2tracker.size() >= mods.get(rxGiver).inp.size()) {
+									System.out.println(mods.get(rxGiver));
+									for(var k : p2tracker.keySet()) {
+										System.out.println(k + " -> " + p2tracker.get(k));
+									}
+									System.out.println(Arrays.toString(p2tracker.values().toArray()));
 									return lcm(p2tracker);
 								}
 							}
