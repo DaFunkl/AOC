@@ -29,7 +29,7 @@ public class Y23D24 extends Day {
 	}
 
 	boolean intersect(BigDecimal[] bd1, BigDecimal[] bd2) {
-		
+
 		return false;
 	}
 }

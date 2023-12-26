@@ -16,11 +16,14 @@ public class Y23D22 extends Day {
 					new int[] { Integer.valueOf(x[0]), Integer.valueOf(x[1]), Integer.valueOf(x[2]) },
 					new int[] { Integer.valueOf(x[3]), Integer.valueOf(x[4]), Integer.valueOf(x[5]) } })
 			.toList();
+	Map<Integer, List<Integer>> above = new HashMap<>();
+	Map<Integer, List<Integer>> below = new HashMap<>();
+	Map<Integer, List<Integer>> touchu = new HashMap<>();
+	Map<Integer, List<Integer>> touchd = new HashMap<>();
+	Set<Integer> safe = new HashSet<>();
 
 	@Override
 	public Object part1() {
-		Map<Integer, List<Integer>> above = new HashMap<>();
-		Map<Integer, List<Integer>> below = new HashMap<>();
 		Set<Integer> todos = new HashSet<>();
 		for (int i = 0; i < in.size(); i++) {
 			var bi = in.get(i);
@@ -66,24 +69,23 @@ public class Y23D22 extends Day {
 				}
 			}
 		}
-		Map<Integer, List<Integer>> touchu = new HashMap<>();
-		Map<Integer, List<Integer>> touchd = new HashMap<>();
 		for (int i = 0; i < in.size(); i++) {
 			touchu.put(i, new ArrayList<>());
 			touchd.put(i, new ArrayList<>());
 			var bi = in.get(i);
 			for (int j : above.get(i)) {
 				var bj = in.get(j);
-				if (bi[0][2] - bj[1][2] == 1) {
-					touchd.get(i).add(j);
-				}
-				if (bi[1][2] - bj[0][2] == -1) {
+				if (bj[0][2] - bi[1][2] == 1) {
 					touchu.get(i).add(j);
 				}
 			}
+			for (int j : below.get(i)) {
+				var bj = in.get(j);
+				if (bi[0][2] - bj[1][2] == 1) {
+					touchd.get(i).add(j);
+				}
+			}
 		}
-
-		int ret = 0;
 		for (int i = 0; i < in.size(); i++) {
 			boolean canRemove = true;
 			for (var j : touchu.get(i)) {
@@ -93,12 +95,10 @@ public class Y23D22 extends Day {
 				}
 			}
 			if (canRemove) {
-				System.out.println("can remove: " + i);
-				ret++;
+				safe.add(i);
 			}
 		}
-		System.out.println(ret);
-		return ret;
+		return safe.size();
 	}
 
 	boolean intersect(int[][] b1, int[][] b2) {
@@ -111,7 +111,38 @@ public class Y23D22 extends Day {
 
 	@Override
 	public Object part2() {
-		return null;
+		int ret = 0;
+		Map<Integer, Integer> map = new HashMap<>();
+		safe.forEach(x -> map.put(x, 0));
+		for (int i = 0; i < in.size(); i++) {
+			if (safe.contains(i)) {
+				continue;
+			}
+			Set<Integer> falling = new HashSet<>();
+			falling.add(i);
+			Set<Integer> fall = new HashSet<>();
+			fall.add(i);
+			while (!fall.isEmpty()) {
+				Set<Integer> next = new HashSet<>();
+				for (var j : fall) {
+					for (var k : touchu.get(j)) {
+						var wouldFall = true;
+						for (var n : touchd.get(k)) {
+							if (!falling.contains(n)) {
+								wouldFall = false;
+								break;
+							}
+						}
+						if (wouldFall) {
+							falling.add(k);
+							next.add(k);
+						}
+					}
+				}
+				fall = next;
+			}
+			ret += falling.size() - 1;
+		}
+		return ret;
 	}
-
 }
