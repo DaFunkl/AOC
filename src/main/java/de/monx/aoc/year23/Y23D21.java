@@ -33,25 +33,21 @@ public class Y23D21 extends Day {
 
 	@Override
 	public Object part2() {
-		long evenPoints = solve(start, false, in.size() * 3, 1);
-		long oddPoints = solve(start, false, in.size() * 3, 0);
-		System.out.println(evenPoints);
-		System.out.println(oddPoints);
-		return 0;
+		return p2();
 	}
 
 	long p2() {
-		int steps = 26501365;
-		long base = steps % steps;
-		List<Long> refs = new ArrayList<>();
+		long target = 26501365;
+		long base = target % in.size();
+		List<Long> refpoints = new ArrayList<>();
 
 		List<IntPair> q = new ArrayList<>();
 		q.add(start);
-		int step = 0;
+		int stp = 0;
 		Map<IntPair, Integer> seen = new HashMap<>();
 		long[] dp = { 1, 0 };
 
-		while (step <= base + 3 * in.size()) {
+		while (stp <= base + 3 * in.size()) {
 			List<IntPair> next = new ArrayList<>();
 			for (var p : q) {
 				for (var d : _DIRS) {
@@ -59,19 +55,27 @@ public class Y23D21 extends Day {
 					if (seen.containsKey(nip) || getChar(nip, true) == '#') {
 						continue;
 					}
-					seen.put(nip, step);
+					seen.put(nip, stp);
 					next.add(nip);
 				}
 			}
-			step++;
-			dp[step%2] += q.size();
-			long ps = step - 1;
-			if(ps == base || ()) {
-				
+			stp++;
+			dp[stp % 2] += q.size();
+			long ps = stp - 1;
+			if (ps == base || (ps > base && (ps - base) % in.size() == 0)) {
+				refpoints.add(dp[stp % 2] - 1);
 			}
+			q = next;
 		}
-
-		long ret = 0;
+		long step = base;
+		long ret = refpoints.get(0);
+		long diff = refpoints.get(1) - refpoints.get(0);
+		long inc = refpoints.get(2) - 2 * refpoints.get(1) + refpoints.get(0);
+		while (step < target) {
+			step += in.size();
+			ret += diff;
+			diff += inc;
+		}
 		return ret;
 	}
 

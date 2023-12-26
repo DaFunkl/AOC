@@ -1,5 +1,6 @@
 package de.monx.aoc.year23;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,95 +19,94 @@ public class Y23D22 extends Day {
 
 	@Override
 	public Object part1() {
-		Map<Integer, Set<Integer>> hasAbove = new HashMap<>();
-		Map<Integer, Set<Integer>> hasBeneath = new HashMap<>();
-		Map<Integer, Set<Integer>> touchingBeneath = new HashMap<>();
-		Set<Integer> notDone = new HashSet<>();
-		System.out.println("check");
+		Map<Integer, List<Integer>> above = new HashMap<>();
+		Map<Integer, List<Integer>> below = new HashMap<>();
+		Set<Integer> todos = new HashSet<>();
 		for (int i = 0; i < in.size(); i++) {
-			var b1 = in.get(i);
-			notDone.add(i);
-			hasAbove.put(i, new HashSet<>());
-			touchingBeneath.put(i, new HashSet<>());
-			if (!hasBeneath.containsKey(i)) {
-				hasBeneath.put(i, new HashSet<>());
-			}
-			for (int j = 0; j < in.size(); j++) {
-				if (i == j) {
+			var bi = in.get(i);
+			todos.add(i);
+			above.putIfAbsent(i, new ArrayList<>());
+			below.putIfAbsent(i, new ArrayList<>());
+			for (int j = i + 1; j < in.size(); j++) {
+				var bj = in.get(j);
+				above.putIfAbsent(j, new ArrayList<>());
+				below.putIfAbsent(j, new ArrayList<>());
+				if (!intersect(bi, bj)) {
 					continue;
 				}
-				var b2 = in.get(j);
-				// b1 is not beneath b2
-				if (b1[1][2] > b2[0][2]) {
-					continue;
+				if (bi[1][2] < bj[0][2]) {
+					above.get(i).add(j);
+					below.get(j).add(i);
+				} else if (bj[1][2] < bi[0][2]) {
+					above.get(j).add(i);
+					below.get(i).add(j);
+				} else {
+					System.err.println("Someting Wong: " + i + "|" + j);
 				}
-				// they dont overlap
-				if (b1[1][0] < b2[0][0] || b2[1][0] < b1[0][0] || b1[1][1] < b2[0][1] || b2[1][1] < b1[0][1]) {
-					continue;
-				}
-				hasAbove.get(i).add(j);
-				if (!hasBeneath.containsKey(j)) {
-					hasBeneath.put(j, new HashSet<>());
-				}
-				hasBeneath.get(j).add(i);
 			}
 		}
-		System.out.println("drop");
-		while (!notDone.isEmpty()) {
-			for (var i : notDone) {
-				var b = in.get(i);
-				if (b[0][2] == 1) {
-					notDone.remove(i);
-					break;
-				}
-				boolean freeToMove = true;
-				boolean removed = false;
-				for (var j : hasBeneath.get(i)) {
-					var bj = in.get(j);
-					if (b[0][2] - bj[1][2] == 1) {
-						freeToMove = false;
-						if (!notDone.contains(j)) {
-							notDone.remove(i);
-							removed = true;
-						}
+		while (!todos.isEmpty()) {
+			for (var i : todos) {
+				var bi = in.get(i);
+				int dropto = 1;
+				boolean done = true;
+				for (var j : below.get(i)) {
+					dropto = Math.max(dropto, in.get(j)[1][2] + 1);
+					if (todos.contains(j)) {
+						done = false;
 					}
 				}
-				if (removed) {
-					break;
+				if (dropto < bi[0][2]) {
+					in.get(i)[1][2] -= in.get(i)[0][2] - dropto;
+					in.get(i)[0][2] = dropto;
 				}
-				if (freeToMove) {
-					in.get(i)[0][2]--;
-					in.get(i)[1][2]--;
+				if (done) {
+					todos.remove(i);
+					break;
 				}
 			}
 		}
+		Map<Integer, List<Integer>> touchu = new HashMap<>();
+		Map<Integer, List<Integer>> touchd = new HashMap<>();
 		for (int i = 0; i < in.size(); i++) {
-			var b = in.get(i);
-			for (var j : hasBeneath.get(i)) {
+			touchu.put(i, new ArrayList<>());
+			touchd.put(i, new ArrayList<>());
+			var bi = in.get(i);
+			for (int j : above.get(i)) {
 				var bj = in.get(j);
-				if (b[0][2] - bj[1][2] == 1) {
-					touchingBeneath.get(i).add(j);
+				if (bi[0][2] - bj[1][2] == 1) {
+					touchd.get(i).add(j);
+				}
+				if (bi[1][2] - bj[0][2] == -1) {
+					touchu.get(i).add(j);
 				}
 			}
 		}
-		System.out.println("roll");
-		Set<Integer> canRemove = new HashSet<>();
+
+		int ret = 0;
 		for (int i = 0; i < in.size(); i++) {
-			if (hasAbove.get(i).isEmpty()) {
-				canRemove.add(i);
-			}
-			boolean removable = true;
-			for (var r : hasAbove.get(i)) {
-				if (touchingBeneath.get(r).size() <= 1) {
-					removable = false;
+			boolean canRemove = true;
+			for (var j : touchu.get(i)) {
+				if (touchd.get(j).size() < 2) {
+					canRemove = false;
 					break;
 				}
 			}
-			if (removable) {
-				canRemove.add(i);
+			if (canRemove) {
+				System.out.println("can remove: " + i);
+				ret++;
 			}
 		}
-		return canRemove.size();
+		System.out.println(ret);
+		return ret;
+	}
+
+	boolean intersect(int[][] b1, int[][] b2) {
+		if (b1[0][0] <= b2[1][0] && b1[0][1] <= b2[1][1] && //
+				b2[0][0] <= b1[1][0] && b2[0][1] <= b1[1][1]) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
