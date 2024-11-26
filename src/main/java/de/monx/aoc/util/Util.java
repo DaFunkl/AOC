@@ -138,6 +138,10 @@ public class Util {
 		}
 		return false;
 	}
+	
+	public static int rando(int min, int max) {
+		return rando.nextInt(min, max);
+	}
 
 	public static Color randoColor() {
 		return new Color(rando.nextInt(0, 255), rando.nextInt(0, 255), rando.nextInt(0, 255));
