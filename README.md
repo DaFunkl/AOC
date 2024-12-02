@@ -1,5 +1,17 @@
 # AOC
 
+## [AOC: 2024](https://adventofcode.com/2024)  
+Status: on hold 
+
+| Day 1 - 5  | Day 6 - 10 | Day 11 - 15 | Day 15 - 20 | Day 21 - 25| 
+| ------------- | ------------- |  ------------- |  ------------- |  ------------- |
+| [Day 1](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D01.java) | [Day 6](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D06.java) | [Day 11](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D11.java) | [Day 16](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D16.java) | [Day 21](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D21.java) |
+| [Day 2](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D02.java) | [Day 7](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D07.java) | [Day 12](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D12.java) | [Day 17](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D17.java) | [Day 22](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D22.java)  |
+| [Day 3](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D03.java) | [Day 8](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D08.java) | [Day 13](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D13.java) | [Day 18](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D18.java) | [Day 23](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D23.java)  |
+| [Day 4](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D04.java) | [Day 9](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D09.java) | [Day 14](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D14.java) | [Day 19](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D19.java) | [Day 24](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D24.java)  |
+| [Day 5](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D05.java) | [Day 10](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D10.java) | [Day 15](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D15.java) | [Day 20](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D20.java) | [Day 25](https://github.com/DaFunkl/AOC/blob/main/src/main/java/de/monx/aoc/year24/Y24D25.java)  |
+
+
 ## [AOC: 2023](https://adventofcode.com/2023)  
 Status: on hold 
 
