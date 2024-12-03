@@ -27,11 +27,8 @@ public class Y24D03 extends Day {
 	int solve(String in) {
 		int sum = 0;
 		String[] ars = in.split("mul\\(");
-		for (var a : ars) {
-			if (!a.contains(")")) {
-				continue;
-			}
-			var str = a.split("\\)")[0];
+		for (int i = 1; i < ars.length; i++) {
+			var str = ars[i].split("\\)")[0];
 			int[] ns = { 0, 0 };
 			int nr = 0;
 			for (var c : str.toCharArray()) {
