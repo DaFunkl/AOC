@@ -3,19 +3,29 @@ package de.monx.aoc.year24;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import de.monx.aoc.util.Day;
 
 public class Y24D05 extends Day {
 
-	List<Integer> empty = new ArrayList<>();
 	List<String> in = getInputList();
+	static final List<Integer> EMPTY = new ArrayList<>();
 	Map<Integer, List<Integer>> pa = new HashMap<>();
 	List<int[]> ups = new ArrayList<>();
+
+	void init() {
+		for (var str : in) {
+			if (str.contains(",")) {
+				ups.add(Arrays.stream(str.split(",")).mapToInt(Integer::valueOf).toArray());
+			} else if (str.contains("|")) {
+				int[] arr = Arrays.stream(str.split("\\|")).mapToInt(Integer::valueOf).toArray();
+				pa.putIfAbsent(arr[0], new ArrayList<>());
+				pa.get(arr[0]).add(arr[1]);
+			}
+		}
+	}
 
 	int[] rets = { 0, 0 };
 
@@ -37,7 +47,7 @@ public class Y24D05 extends Day {
 	int[] fixOrder(int[] arr) {
 		int r1 = 0;
 		for (int i = 0; i < arr.length; i++) {
-			for (var x : pa.getOrDefault(arr[i], empty)) {
+			for (var x : pa.getOrDefault(arr[i], EMPTY)) {
 				for (int j = 0; j < i; j++) {
 					if (arr[j] == x) {
 						r1 = 1;
@@ -50,17 +60,5 @@ public class Y24D05 extends Day {
 			}
 		}
 		return new int[] { arr[arr.length / 2], r1 };
-	}
-
-	void init() {
-		for (var str : in) {
-			if (str.contains(",")) {
-				ups.add(Arrays.stream(str.split(",")).mapToInt(Integer::valueOf).toArray());
-			} else if (str.contains("|")) {
-				int[] arr = Arrays.stream(str.split("\\|")).mapToInt(Integer::valueOf).toArray();
-				pa.putIfAbsent(arr[0], new ArrayList<>());
-				pa.get(arr[0]).add(arr[1]);
-			}
-		}
 	}
 }
