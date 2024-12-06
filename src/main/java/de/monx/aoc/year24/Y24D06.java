@@ -40,7 +40,7 @@ public class Y24D06 extends Day {
 	@Override
 	public Object part2() {
 		Map<IntPair, List<IntPair>> seen = new HashMap<>();
-		var pos = startPos.clone(); // solve
+		var pos = startPos.clone(); // sim walking and place walls infront of head
 		int cp = 0;
 		int count = 0;
 		Set<IntPair> loopWalls = new HashSet<>();
@@ -52,7 +52,7 @@ public class Y24D06 extends Day {
 				cp = (cp + 1) % 4;
 			} else {
 				walls.add(np);
-				if (sim(walls) < 0) {
+				if (sim(walls) < 0) { // test if wall is alright
 					loopWalls.add(np);
 				}
 				walls.remove(np);
