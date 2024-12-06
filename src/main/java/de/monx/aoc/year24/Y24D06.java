@@ -34,7 +34,7 @@ public class Y24D06 extends Day {
 				}
 			}
 		}
-		return sim(walls);
+		return sim(startPos.clone(), 0, walls);
 	}
 
 	@Override
@@ -52,7 +52,15 @@ public class Y24D06 extends Day {
 				cp = (cp + 1) % 4;
 			} else {
 				walls.add(np);
-				if (sim(walls) < 0) { // test if wall is alright
+				
+				var pp = pos.clone();
+				int cpp = cp;
+				if (seen.containsKey(np)) { 
+					pp = startPos.clone();
+					cpp = 0;
+				}
+				
+				if (sim(pp, cpp, walls) < 0) { // test if wall is alright
 					loopWalls.add(np);
 				}
 				walls.remove(np);
@@ -63,10 +71,10 @@ public class Y24D06 extends Day {
 		return loopWalls.size();
 	}
 
-	int sim(Set<IntPair> walls) {
+	int sim(IntPair pos, int cp, Set<IntPair> walls) {
 		Map<IntPair, List<IntPair>> seen = new HashMap<>();
-		var pos = startPos.clone(); // solve
-		int cp = 0;
+//		var pos = startPos.clone(); // solve
+//		int cp = 0;
 		int count = 0;
 		while (pos.first >= 0 && pos.second >= 0 && pos.first < grid.size() && pos.second < grid.get(0).length()) {
 			final int fcp = cp;
