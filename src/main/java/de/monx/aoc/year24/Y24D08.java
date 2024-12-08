@@ -1,19 +1,18 @@
 package de.monx.aoc.year24;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.monx.aoc.util.Day;
 
 public class Y24D08 extends Day {
 
 	List<String> in = getInputList();
-	Map<Character, List<int[]>> coords = new HashMap<>();
+	int[][] seen = new int[in.size()][in.get(0).length()];
+	int[][][] cords = new int[160][20][2];
+	int[] dots = new int[100];
 	int r1 = 0;
 	int r2 = 0;
-
+	
 	@Override
 	public Object part1() {
 		solve();
@@ -26,27 +25,33 @@ public class Y24D08 extends Day {
 	}
 
 	void solve() {
-		int[][] seen = new int[in.size()][in.get(0).length()];
+
 		for (int i = 0; i < in.size(); i++) { // init, find coords
 			for (int j = 0; j < in.get(i).length(); j++) {
-				char c = in.get(i).charAt(j);
-				if (c != '.') {
-					coords.putIfAbsent(c, new ArrayList<>());
-					coords.get(c).add(new int[] { i, j });
+				char ch = in.get(i).charAt(j);
+				int c = (int) ch;
+				if (ch != '.') {
+					if (cords[c][0][0] == 0) {
+						dots[0]++;
+						dots[dots[0]] = c;
+					}
+					cords[c][0][0]++;
+					cords[c][cords[c][0][0]][0] = i;
+					cords[c][cords[c][0][0]][1] = j;
 				}
 			}
 		}
-		for (var cors : coords.values()) {
-			for (int i = 0; i < cors.size(); i++) {
-				var ci = cors.get(i);
-				for (int j = i + 1; j < cors.size(); j++) {
-					var cj = cors.get(j);
-					int[] del = { cj[0] - ci[0], cj[1] - ci[1] };
+		for (int i = 1; i <= dots[0]; i++) {
+			for (int j = 1; j <= cords[dots[i]][0][0]; j++) {
+				var c1 = cords[dots[i]][j];
+				for (int n = j + 1; n <= cords[dots[i]][0][0]; n++) {
+					var c2 = cords[dots[i]][n];
+					int[] del = { c2[0] - c1[0], c2[1] - c1[1] };
 					boolean[] d12 = { false, false };
 					for (int m = 0; !d12[0] || !d12[1]; m++) {
 						int[][] p = { //
-								{ ci[0] - m * del[0], ci[1] - m * del[1] }, //
-								{ cj[0] + m * del[0], cj[1] + m * del[1] } //
+								{ c1[0] - m * del[0], c1[1] - m * del[1] }, //
+								{ c2[0] + m * del[0], c2[1] + m * del[1] } //
 						};
 						for (int k = 0; k < 2; k++) {
 							if (p[k][0] < 0 || p[k][1] < 0 || p[k][0] >= in.size() || p[k][1] >= in.get(0).length()) {
