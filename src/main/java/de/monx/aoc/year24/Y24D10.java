@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.Util;
+import de.monx.aoc.util.anim.Animation;
+import de.monx.aoc.util.anim.DP_24_10;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y24D10 extends Day {
@@ -41,6 +44,23 @@ public class Y24D10 extends Day {
 		return ret2;
 	}
 
+	boolean isAnim = true;
+	Animation anim = null;
+	long sleep = 100;
+
+	void drawAnim(long sleep, Set<IntPair> seen) {
+		if (!isAnim) {
+			return;
+		}
+		if (anim == null) {
+			anim = new Animation(650, 650, new DP_24_10());
+			((DP_24_10) anim.pane).update(sleep, seen);
+			((DP_24_10) anim.pane).setGrid(in);
+			Util.readLine();
+		}
+		((DP_24_10) anim.pane).update(sleep, seen);
+	}
+
 	int getTrails(IntPair start, boolean useSeen) {
 		int ret = 0;
 		ArrayDeque<IntPair> stack = new ArrayDeque<IntPair>();
@@ -52,6 +72,7 @@ public class Y24D10 extends Day {
 				continue;
 			}
 			seen.add(c);
+			drawAnim(0, seen);
 			var cv = in.get(c.first)[c.second];
 			if (cv == 9) {
 				ret++;
@@ -68,6 +89,7 @@ public class Y24D10 extends Day {
 				}
 			}
 		}
+		drawAnim(50, seen);
 		return ret;
 	}
 }
