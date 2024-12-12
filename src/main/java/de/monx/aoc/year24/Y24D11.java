@@ -29,6 +29,7 @@ public class Y24D11 extends Day {
 		return ret;
 	}
 
+	long max = 0;
 	long fetchAmt(LongPair lp) {
 		if (memo.containsKey(lp)) {
 			return memo.get(lp);
@@ -40,6 +41,10 @@ public class Y24D11 extends Day {
 				memo.put(lp, fetchAmt(lp.add(1, -1)));
 				return memo.get(lp);
 			} else if (("" + lp.first).length() % 2 == 0) {
+				if(lp.first > max) {
+					max = lp.first;
+					System.out.println(max);
+				}
 				String s = "" + lp.first;
 				long l = Long.valueOf(s.substring(0, s.length() / 2));
 				long r = Long.valueOf(s.substring(s.length() / 2));
