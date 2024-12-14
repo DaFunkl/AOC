@@ -37,7 +37,12 @@ public class Y24D14 extends Day {
 		int seconds = 100;
 		int[][] grid = new int[tiles[0]][tiles[1]];
 		for (int i = 0; i < 1_000_000_000; i++) {
+			int[][] nGrid = new int[tiles[0]][tiles[1]];
+			int[] np = { //
+					(x[0][0] + (seconds * (tiles[0] + x[1][0]))) % tiles[0], //
+					(x[0][1] + (seconds * (tiles[1] + x[1][1]))) % tiles[1] };
 
+			
 		}
 		for (var x : in) {
 			int[] np = { //
