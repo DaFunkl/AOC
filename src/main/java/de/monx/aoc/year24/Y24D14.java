@@ -1,6 +1,7 @@
 package de.monx.aoc.year24;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Y24D14 extends Day {
 	@Override
 	public Object part2() {
 		int[][] grid = new int[tiles[0]][tiles[1]];
+		boolean print = false;
 		int step = 1;
 		int inRowAmt = 10;
 		for (; step < 1_000_000_000; step++) {
@@ -77,11 +79,13 @@ public class Y24D14 extends Day {
 				break;
 			}
 		}
-//		System.out.println("===== GRID =====");
-//		for (var x : grid) {
-//			System.out.println(Arrays.toString(x).replace("0", ".").replace(",", ""));
-//		}
-//		System.out.println("===== GRID =====");
+		if(print) {
+			System.out.println("===== GRID =====");
+			for (var x : grid) {
+				System.out.println(Arrays.toString(x).replace("0", ".").replace(",", ""));
+			}
+			System.out.println("===== GRID =====");
+		}
 		return step;
 	}
 
