@@ -10,7 +10,6 @@ import java.util.Set;
 import de.monx.aoc.util.Day;
 import de.monx.aoc.util.Util;
 import de.monx.aoc.util.anim.Animation;
-import de.monx.aoc.util.anim.DP_23_17;
 import de.monx.aoc.util.anim.DP_24_06;
 import de.monx.aoc.util.common.pairs.IntPair;
 
