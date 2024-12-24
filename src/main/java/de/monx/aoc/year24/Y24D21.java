@@ -43,20 +43,38 @@ public class Y24D21 extends Day {
 
 	@Override
 	public Object part1() {
-		int ret = 0;
+		return solve(3);
+	}
+
+	@Override
+	public Object part2() {
+		return solve(27);
+	}
+
+	long solve(int amt) {
+		long ret = 0;
+		String[] defaultEmpties = new String[amt];
+		char[] defaultChars = new char[amt];
+		for (int i = 0; i < amt; i++) {
+			defaultChars[i] = 'A';
+			defaultEmpties[i] = "";
+		}
 		for (var str : in) {
 			String[] best = null;
 			ArrayDeque<Pair<String[][], char[]>> stack = new ArrayDeque<>();
-			stack.push(new Pair<>(new String[][] { { "", "", "" }, { str, "", "" } }, new char[] { 'A', 'A', 'A' }));
+			String[] firstEntry = Arrays.copyOf(defaultEmpties, amt);
+			firstEntry[0] = str;
+			stack.push(new Pair<>(new String[][] { Arrays.copyOf(defaultEmpties, amt), firstEntry },
+					Arrays.copyOf(defaultChars, amt)));
 			while (!stack.isEmpty()) {
 				var cur = stack.pollLast();
 				var sarr = cur.first[0];
 				var tarr = cur.first[1];
 				var carr = cur.second;
-				System.out.println(Arrays.toString(sarr));
-				System.out.println(Arrays.toString(tarr));
-				System.out.println(Arrays.toString(carr));
-				System.out.println();
+//				System.out.println(Arrays.toString(sarr));
+//				System.out.println(Arrays.toString(tarr));
+//				System.out.println(Arrays.toString(carr));
+//				System.out.println();
 
 				var tidx = tarr.length - 1;
 				while (tidx >= 0 && tarr[tidx].isBlank()) {
@@ -65,7 +83,7 @@ public class Y24D21 extends Day {
 				if (tidx < 0) {
 					if (best == null || sarr[2].length() < best[2].length()) {
 						best = sarr;
-						System.out.println("new Best: " + Arrays.toString(sarr));
+//						System.out.println("new Best: " + Arrays.toString(sarr));
 					}
 					continue;
 				}
@@ -93,27 +111,20 @@ public class Y24D21 extends Day {
 			System.out.println(str + " | " + codeVal + " * " + best[2].length() + " = " + (codeVal * best[2].length())
 					+ Arrays.toString(best));
 			ret += codeVal * best[2].length();
-			break;
 		}
 		return ret;
-	}
-
-	@Override
-	public Object part2() {
-		return null;
 	}
 
 	Map<Integer, String[]> moveMap = new HashMap<>();
 
 	String[] toMoves(char fromChar, char toChar, int fixd) {
 
-		int reqKey = (((fromChar << 4) + toChar) << 2) + fixd;
-//		String reqKey = "" + fromChar + toChar + fixd;
+		int reqKey = (((fromChar << 5) + toChar) << 2) + fixd;
 		if (moveMap.containsKey(reqKey)) {
 			return moveMap.get(reqKey);
 		}
 
-		IntPair from1 = fixd == 0 ? pad1.get(fromChar) : pad2.get(fromChar);
+		IntPair from1 = fixd == 0 ? pad1.get(fromChar).clone() : pad2.get(fromChar).clone();
 		IntPair from2 = from1.clone();
 		IntPair to = fixd == 0 ? pad1.get(toChar) : pad2.get(toChar);
 		String r1 = "";
