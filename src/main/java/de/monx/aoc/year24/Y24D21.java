@@ -1,10 +1,13 @@
 package de.monx.aoc.year24;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
+import de.monx.aoc.util.common.Pair;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y24D21 extends Day {
@@ -36,37 +39,61 @@ public class Y24D21 extends Day {
 		pad2 = bMap;
 	}
 
+	static final IntPair[] ForbiddenCell = { new IntPair(3, 0), new IntPair(0, 0) };
+
 	@Override
 	public Object part1() {
 		int ret = 0;
 		for (var str : in) {
-			char c1 = 'A';
-			char c2 = 'A';
-			char c3 = 'A';
-			String m1 = "";
-			String m2 = "";
-			String m3 = "";
-			for (var ca : str.toCharArray()) {
-				var dlt1 = pad1.get(c1).sub(pad1.get(ca));
-				var moves1 = toMoves(dlt1);
-				m1 += moves1;
-				c1 = ca;
-				for (var cb : moves1.toCharArray()) {
-					var dlt2 = pad2.get(c2).sub(pad2.get(cb));
-					var moves2 = toMoves(dlt2);
-					m2 += moves2;
-					c2 = cb;
-					for (var cc : moves1.toCharArray()) {
-						var dlt3 = pad2.get(c3).sub(pad2.get(cc));
-						var moves3 = toMoves(dlt3);
-						m3 += moves3;
-						c3 = cc;
+			String[] best = null;
+			ArrayDeque<Pair<String[][], char[]>> stack = new ArrayDeque<>();
+			stack.push(new Pair<>(new String[][] { { "", "", "" }, { str, "", "" } }, new char[] { 'A', 'A', 'A' }));
+			while (!stack.isEmpty()) {
+				var cur = stack.pollLast();
+				var sarr = cur.first[0];
+				var tarr = cur.first[1];
+				var carr = cur.second;
+				System.out.println(Arrays.toString(sarr));
+				System.out.println(Arrays.toString(tarr));
+				System.out.println(Arrays.toString(carr));
+				System.out.println();
+
+				var tidx = tarr.length - 1;
+				while (tidx >= 0 && tarr[tidx].isBlank()) {
+					tidx--;
+				}
+				if (tidx < 0) {
+					if (best == null || sarr[2].length() < best[2].length()) {
+						best = sarr;
+						System.out.println("new Best: " + Arrays.toString(sarr));
 					}
+					continue;
+				}
+
+				var nxc = tarr[tidx].charAt(0);
+				var rst = tarr[tidx].substring(1);
+				var mvs = toMoves(carr[tidx], nxc, tidx > 0 ? 1 : 0);
+
+				for (var mov : mvs) {
+					if (mov == null) {
+						continue;
+					}
+					String[][] sar = { Arrays.copyOf(sarr, sarr.length), Arrays.copyOf(tarr, tarr.length) };
+					sar[0][tidx] += mov;
+					sar[1][tidx] = rst;
+					if ((tidx + 1) < tarr.length) {
+						sar[1][tidx + 1] = mov;
+					}
+					char[] car = Arrays.copyOf(carr, carr.length);
+					car[tidx] = nxc;
+					stack.push(new Pair<>(sar, car));
 				}
 			}
-			ret += m2.length() * m3.length();
-			System.out.println(str + " " + m2.length() + " * " + m3.length() + " = " + (m2.length() * m3.length())
-					+ " => " + ret + " " + m1 + ", " + m2 + ", " + m3);
+			int codeVal = Integer.valueOf(str.substring(0, str.length() - 1));
+			System.out.println(str + " | " + codeVal + " * " + best[2].length() + " = " + (codeVal * best[2].length())
+					+ Arrays.toString(best));
+			ret += codeVal * best[2].length();
+			break;
 		}
 		return ret;
 	}
@@ -76,20 +103,63 @@ public class Y24D21 extends Day {
 		return null;
 	}
 
-	String toMoves(IntPair ip) {
-		String ret = "";
-		int y = ip.first;
-		int iy = y < 0 ? 1 : -1;
-		int x = ip.second;
-		int ix = x < 0 ? 1 : -1;
-		while (y != 0) {
-			ret += y < 0 ? '^' : 'v';
-			y += iy;
+	Map<Integer, String[]> moveMap = new HashMap<>();
+
+	String[] toMoves(char fromChar, char toChar, int fixd) {
+
+		int reqKey = (((fromChar << 4) + toChar) << 2) + fixd;
+//		String reqKey = "" + fromChar + toChar + fixd;
+		if (moveMap.containsKey(reqKey)) {
+			return moveMap.get(reqKey);
 		}
-		while (x != 0) {
-			ret += x < 0 ? '<' : '>';
-			x += ix;
+
+		IntPair from1 = fixd == 0 ? pad1.get(fromChar) : pad2.get(fromChar);
+		IntPair from2 = from1.clone();
+		IntPair to = fixd == 0 ? pad1.get(toChar) : pad2.get(toChar);
+		String r1 = "";
+		String r2 = "";
+		IntPair adders = new IntPair(from1.first < to.first ? 1 : -1, from1.second < to.second ? 1 : -1);
+
+		// from 1 starts moving on y axis first
+		while (from1.first != to.first) {
+			r1 += adders.first < 0 ? '^' : 'v';
+			from1.first += adders.first;
+			if (from1.equals(ForbiddenCell[fixd])) {
+				r1 = null;
+				break;
+			}
 		}
-		return ret + "A";
+		while (r1 != null && from1.second != to.second) {
+			r1 += adders.second < 0 ? '<' : '>';
+			from1.second += adders.second;
+			if (from1.equals(ForbiddenCell[fixd])) {
+				r1 = null;
+				break;
+			}
+		}
+
+		// from 2 starts moving on x axis first
+		while (from2.second != to.second) {
+			r2 += adders.second < 0 ? '<' : '>';
+			from2.second += adders.second;
+			if (from2.equals(ForbiddenCell[fixd])) {
+				r2 = null;
+				break;
+			}
+		}
+		while (r2 != null && from2.first != to.first) {
+			r2 += adders.first < 0 ? '^' : 'v';
+			from2.first += adders.first;
+			if (from2.equals(ForbiddenCell[fixd])) {
+				r2 = null;
+				break;
+			}
+		}
+		if (r1 != null && r2 != null && r1.equals(r2)) {
+			r2 = null;
+		}
+
+		moveMap.put(reqKey, new String[] { r1 == null ? r1 : r1 + "A", r2 == null ? r2 : r2 + "A" });
+		return moveMap.get(reqKey);
 	}
 }
