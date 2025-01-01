@@ -1,13 +1,10 @@
 package de.monx.aoc.year24;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.common.Pair;
 import de.monx.aoc.util.common.pairs.IntPair;
 
 public class Y24D21 extends Day {
@@ -43,76 +40,67 @@ public class Y24D21 extends Day {
 
 	@Override
 	public Object part1() {
-		return solve(3);
+		long ret = 0;
+		for (var str : in) {
+			long cost = best(str, 2);
+//			System.out.println(str + " - " + cost);
+			ret += cost;
+		}
+		return ret;
 	}
 
 	@Override
 	public Object part2() {
-		return solve(27);
-	}
-
-	long solve(int amt) {
 		long ret = 0;
-		String[] defaultEmpties = new String[amt];
-		char[] defaultChars = new char[amt];
-		for (int i = 0; i < amt; i++) {
-			defaultChars[i] = 'A';
-			defaultEmpties[i] = "";
-		}
 		for (var str : in) {
-			String[] best = null;
-			ArrayDeque<Pair<String[][], char[]>> stack = new ArrayDeque<>();
-			String[] firstEntry = Arrays.copyOf(defaultEmpties, amt);
-			firstEntry[0] = str;
-			stack.push(new Pair<>(new String[][] { Arrays.copyOf(defaultEmpties, amt), firstEntry },
-					Arrays.copyOf(defaultChars, amt)));
-			while (!stack.isEmpty()) {
-				var cur = stack.pollLast();
-				var sarr = cur.first[0];
-				var tarr = cur.first[1];
-				var carr = cur.second;
-//				System.out.println(Arrays.toString(sarr));
-//				System.out.println(Arrays.toString(tarr));
-//				System.out.println(Arrays.toString(carr));
-//				System.out.println();
-
-				var tidx = tarr.length - 1;
-				while (tidx >= 0 && tarr[tidx].isBlank()) {
-					tidx--;
-				}
-				if (tidx < 0) {
-					if (best == null || sarr[2].length() < best[2].length()) {
-						best = sarr;
-//						System.out.println("new Best: " + Arrays.toString(sarr));
-					}
-					continue;
-				}
-
-				var nxc = tarr[tidx].charAt(0);
-				var rst = tarr[tidx].substring(1);
-				var mvs = toMoves(carr[tidx], nxc, tidx > 0 ? 1 : 0);
-
-				for (var mov : mvs) {
-					if (mov == null) {
-						continue;
-					}
-					String[][] sar = { Arrays.copyOf(sarr, sarr.length), Arrays.copyOf(tarr, tarr.length) };
-					sar[0][tidx] += mov;
-					sar[1][tidx] = rst;
-					if ((tidx + 1) < tarr.length) {
-						sar[1][tidx + 1] = mov;
-					}
-					char[] car = Arrays.copyOf(carr, carr.length);
-					car[tidx] = nxc;
-					stack.push(new Pair<>(sar, car));
-				}
-			}
-			int codeVal = Integer.valueOf(str.substring(0, str.length() - 1));
-			System.out.println(str + " | " + codeVal + " * " + best[2].length() + " = " + (codeVal * best[2].length())
-					+ Arrays.toString(best));
-			ret += codeVal * best[2].length();
+			long cost = best(str, 25);
+//			System.out.println(str + " - " + cost);
+			ret += cost;
 		}
 		return ret;
+	}
+
+	long best(String str, int lvl) {
+		long ret = 0;
+		String code = "A" + str;
+		for (int i = 1; i < code.length(); i++) {
+			ret += calcMoves(code.charAt(i - 1), code.charAt(i), true, lvl);
+		}
+		int codeVal = Integer.valueOf(str.substring(0, str.length() - 1));
+		return ret * codeVal;
+	}
+
+	Map<Integer, Long> bestMoves = new HashMap<>();
+
+	long calcMoves(char a, char b, boolean numPad, int lvl) {
+		int key = ((((a << 5) + b) << 2) + (numPad ? 1 : 0) << 5) + lvl;
+		if (bestMoves.containsKey(key)) {
+			return bestMoves.get(key);
+		}
+		long ret = Long.MAX_VALUE;
+		String[] moves = toMoves(a, b, numPad ? 0 : 1);
+		if (lvl == 0) {
+			for (var m : moves) {
+				if (m == null) {
+					continue;
+				}
+				ret = Math.min(ret, m.length());
+			}
+		} else {
+			for (var m : moves) {
+				if (m == null) {
+					continue;
+				}
+				String code = "A" + m;
+				long mc = 0;
+				for (int i = 1; i < code.length(); i++) {
+					mc += calcMoves(code.charAt(i - 1), code.charAt(i), false, lvl - 1);
+				}
+				ret = Math.min(ret, mc);
+			}
+		}
+		bestMoves.put(key, ret);
+		return bestMoves.get(key);
 	}
 
 	Map<Integer, String[]> moveMap = new HashMap<>();
