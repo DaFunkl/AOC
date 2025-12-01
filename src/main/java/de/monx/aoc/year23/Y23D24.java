@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import de.monx.aoc.util.Day;
-import de.monx.aoc.util.Util;
 
 public class Y23D24 extends Day {
 
@@ -77,56 +77,90 @@ public class Y23D24 extends Day {
 		return mul;
 	}
 
+	// shamelessly pulled p2 from:
+	// https://github.com/zebalu/advent-of-code-2023/blob/master/aoc2023/src/main/java/io/github/zebalu/aoc2023/days/Day24.java#L8
 	@Override
 	public Object part2() {
-		BigDecimal upperBound = new BigDecimal("500");
-		while (true) {
-			int[] hails = { //
-					Util.rando(0, in.size()), //
-					Util.rando(0, in.size()), //
-					Util.rando(0, in.size()), //
-					Util.rando(0, in.size()) //
-			};
-			BigDecimal[] area = { new BigDecimal("1"), new BigDecimal("1") };
-			BigDecimal deltaX = new BigDecimal("-500");
-			BigDecimal deltaY = new BigDecimal("-500");
-			for (; deltaX.compareTo(upperBound) <= 0; deltaX = deltaX.add(ONE)) {
-				for (; deltaY.compareTo(upperBound) <= 0; deltaY = deltaY.add(ONE)) {
-					var hail0 = withVelocityDelta(in.get(hails[0]), deltaX, deltaY);
-					List<Integer> intercepts = new ArrayList<>();
-					for (int i = 1; i < 4; i++) {
-						for (int j = i + 1; j < 4; j++) {
-							if (intersect(in.get(i), hail0, area)) {
-								intercepts.add(null);
-							}
-						}
-					}
 
-					if (intercepts.size() != 3 // 
-							//
-					) {
-						continue;
-					}
+		var m2 = createBDLinearMatrix(find3UsableHails(in));
+		solve(m2);
+		var x2 = m2[0][6];
+		var y2 = m2[1][6];
+		var z2 = m2[2][6];
+		return x2.add(y2).add(z2).setScale(0, RoundingMode.HALF_EVEN).longValue();
+	}
 
-					
-				}
+	private static final int PRECISION_100 = 100;
+
+	private static void solve(BigDecimal[][] c) {
+		for (int row = 0; row < c.length; row++) {
+			// 1. set c[row][row] equal to 1
+			BigDecimal factor = c[row][row];
+			for (int col = 0; col < c[row].length; col++) {
+				c[row][col] = c[row][col].divide(factor, PRECISION_100, RoundingMode.HALF_EVEN);
 			}
 
-			if (true) {
-				return true;
+			// 2. set c[row][row2] equal to 0
+			for (int row2 = 0; row2 < c.length; row2++) {
+				if (row2 != row) {
+					BigDecimal factor2 = c[row2][row].negate();
+					for (int col = 0; col < c[row2].length; col++) {
+						c[row2][col] = c[row2][col].add(factor2.multiply(c[row][col]));
+					}
+				}
 			}
 		}
 	}
 
-	BigDecimal[] withVelocityDelta(BigDecimal[] vec, BigDecimal vx, BigDecimal vy) {
-		return new BigDecimal[] { vec[0], vec[1], vec[2], //
-				vec[3].add(vx), //
-				vec[4].add(vy), //
-				vec[5] };
+	private static BigDecimal[][] createBDLinearMatrix(List<BigDecimal[]> hails) {
+		if (hails.size() != 3) {
+			throw new IllegalArgumentException("It can only work with 3 hails; got: " + hails.size());
+		}
+
+		BigDecimal zero = BigDecimal.ZERO;
+
+		BigDecimal[] a = hails.get(0);
+		BigDecimal[] b = hails.get(1);
+		BigDecimal[] c = hails.get(2);
+//@formatter:off
+        BigDecimal[][] result = {
+                {a[4].subtract(b[4]),          a[3].subtract(b[3]).negate(), zero,                         a[1].subtract(b[1]).negate(), a[0].subtract(b[0]),          zero,                         b[1].multiply(b[3]).subtract(b[0].multiply(b[4])).subtract(a[1].multiply(a[3]).subtract(a[0].multiply(a[4])))}, //
+                {a[4].subtract(c[4]),          a[3].subtract(c[3]).negate(), zero,                         a[1].subtract(c[1]).negate(), a[0].subtract(c[0]),          zero,                         c[1].multiply(c[3]).subtract(c[0].multiply(c[4])).subtract(a[1].multiply(a[3]).subtract(a[0].multiply(a[4])))}, //
+                {a[5].subtract(b[5]).negate(), zero,                         a[3].subtract(b[3]),          a[2].subtract(b[2]),          zero,                         a[0].subtract(b[0]).negate(), b[0].multiply(b[5]).subtract(b[2].multiply(b[3])).subtract(a[0].multiply(a[5]).subtract(a[2].multiply(a[3])))}, //
+                {a[5].subtract(c[5]).negate(), zero,                         a[3].subtract(c[3]),          a[2].subtract(c[2]),          zero,                         a[0].subtract(c[0]).negate(), c[0].multiply(c[5]).subtract(c[2].multiply(c[3])).subtract(a[0].multiply(a[5]).subtract(a[2].multiply(a[3])))}, //
+                {zero,                         a[5].subtract(b[5]),          a[4].subtract(b[4]).negate(), zero,                         a[2].subtract(b[2]).negate(), a[1].subtract(b[1]),          b[2].multiply(b[4]).subtract(b[1].multiply(b[5])).subtract(a[2].multiply(a[4]).subtract(a[1].multiply(a[5])))}, //
+                {zero,                         a[5].subtract(c[5]),          a[4].subtract(c[4]).negate(), zero,                         a[2].subtract(c[2]).negate(), a[1].subtract(c[1]),          c[2].multiply(c[4]).subtract(c[1].multiply(c[5])).subtract(a[2].multiply(a[4]).subtract(a[1].multiply(a[5])))} //
+        };
+//@formatter:on
+		return result;
 	}
 
-	BigDecimal predictZ(BigDecimal[] vec, BigDecimal time, BigDecimal deltaVZ) {
-		return vec[2].add((vec[5].add(deltaVZ)).multiply(time));
+	private static List<BigDecimal[]> find3UsableHails(List<BigDecimal[]> hails) {
+		List<BigDecimal[]> result = new ArrayList<>();
+		for (int aInd = 0; aInd < hails.size() - 2 && result.size() < 3; ++aInd) {
+			BigDecimal[] a = hails.get(aInd);
+			for (int bInd = aInd + 1; bInd < hails.size() - 1 && result.size() < 3; ++bInd) {
+				BigDecimal[] b = hails.get(bInd);
+				if (a[3] == b[3] && a[4] == b[4] && a[5] == b[5]) {
+					continue;
+				}
+				for (int cInd = bInd + 1; cInd < hails.size() && result.size() < 3; ++cInd) {
+					BigDecimal[] c = hails.get(cInd);
+					if (a[3] == c[3] && a[4] == c[4] && a[5] == c[5]) {
+						continue;
+					}
+					if (b[3] == c[3] && b[4] == c[4] && b[5] == c[5]) {
+						continue;
+					}
+					result.add(a);
+					result.add(b);
+					result.add(c);
+				}
+			}
+		}
+		if (result.size() < 3) {
+			throw new NoSuchElementException("Can not find 3 usable hails");
+		}
+		return result;
 	}
-
 }
