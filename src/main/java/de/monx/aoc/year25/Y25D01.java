@@ -12,17 +12,17 @@ public class Y25D01 extends Day {
 					x.charAt(0), //
 					Integer.valueOf(x.substring(1)) //
 			)).toList();
-	int r1 = 0;
 
 	@Override
 	public Object part1() {
+		int ret = 0;
 		int current = 50;
 		for (var p : in) {
 			int mul = p.first == 'R' ? 1 : -1;
 			current = (100 + current + (mul * p.second)) % 100;
-			r1 += current == 0 ? 1 : 0;
+			ret += current == 0 ? 1 : 0;
 		}
-		return r1;
+		return ret;
 	}
 
 	@Override
@@ -42,7 +42,6 @@ public class Y25D01 extends Day {
 				ret++;
 				cur = (cur + 100) % 100;
 			}
-			System.out.println(ret + "\t" + cur + "\t" + p);
 		}
 		return ret;
 	}
