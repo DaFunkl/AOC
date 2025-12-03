@@ -10,46 +10,15 @@ public class Y25D03 extends Day {
 
 	@Override
 	public Object part1() {
-		int ret = 0;
-		for (var l : in) {
-			int[][] dict = new int[10][2];
-			int mi = 0;
-			for (int i = 0; i < l.length(); i++) {
-				int val = Character.getNumericValue(l.charAt(i));
-				if (dict[val][0] == 0) {
-					dict[val][0] = i + 1;
-					dict[val][1] = i + 1;
-				} else {
-					dict[val][1] = i + 1;
-				}
-				mi = Math.max(mi, val);
-			}
-			boolean found = false;
-			int m = 0;
-			while (!found) {
-				m = 10 * mi;
-				if (dict[mi][0] == 0) {
-					continue;
-				}
-				for (int i = 9; i >= 0; i--) {
-					if (dict[i][0] == 0) {
-						continue;
-					}
-					if (dict[i][1] > dict[mi][0]) {
-						m += i;
-						found = true;
-						break;
-					}
-				}
-				mi--;
-			}
-			ret += m;
-		}
-		return ret;
+		return solve(2);
 	}
 
 	@Override
 	public Object part2() {
+		return solve(12);
+	}
+
+	long solve(int size) {
 		long ret = 0;
 		for (var l : in) {
 			int[][] dic = new int[10][l.length() + 2];
@@ -61,7 +30,7 @@ public class Y25D03 extends Day {
 				dic[val][dic[val][0]] = i;
 				dic[val][0]++;
 			}
-			long r = getHighest(dic, -1, l.length(), 0l, 12);
+			long r = getHighest(dic, -1, l.length(), 0l, size);
 			ret += r;
 		}
 		return ret;
@@ -74,7 +43,6 @@ public class Y25D03 extends Day {
 		if ((cp + ll) >= sl) {
 			return 0l;
 		}
-		long max = cn;
 		for (int i = 9; i >= 0; i--) {
 			for (int j = 1; j < dic[i][0]; j++) {
 				if (dic[i][j] > cp) {
@@ -85,6 +53,6 @@ public class Y25D03 extends Day {
 				}
 			}
 		}
-		return max;
+		return 0l;
 	}
 }
