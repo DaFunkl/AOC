@@ -57,7 +57,6 @@ public class Y25D08 extends Day {
 	}
 
 	int[] doIt() {
-//		var ods = orderedDistances.get(0);
 		var ods = queue.poll();
 		int[] pt = { (int) ods[0], (int) ods[1], -1, -1 };
 		for (int ci = 0; ci < connections.size(); ci++) {
