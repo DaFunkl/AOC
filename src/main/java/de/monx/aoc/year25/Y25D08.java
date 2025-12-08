@@ -60,38 +60,39 @@ public class Y25D08 extends Day {
 	}
 
 	int[] doIt() {
-		int[] con = { 0, 0, -1, -1 };
 		var ods = odis.get(0);
 		int i = (int) ods[0];
 		int j = (int) ods[1];
+		int coni = -1;
+		int conj = -1;
 		for (int ci = 0; ci < cons.size(); ci++) {
 			var cs = cons.get(ci);
 			if (cs.contains(i)) {
-				con[2] = ci;
+				coni = ci;
 			}
 			if (cs.contains(j)) {
-				con[3] = ci;
+				conj = ci;
 			}
-			if (con[2] != -1 && con[3] != -1) {
+			if (coni != -1 && conj != -1) {
 				break;
 			}
 		}
-		if (con[2] == con[3] && con[2] != -1) {
+		if (coni == conj && coni != -1) {
 			odis.remove(0);
 			return null;
 		}
-		if (con[2] == -1 && con[3] != -1) {
-			con[2] = con[3];
-			con[3] = -1;
-		} else if (con[2] == -1 && con[2] == -1) {
+		if (coni == -1 && conj != -1) {
+			coni = conj;
+			conj = -1;
+		} else if (coni == -1 && coni == -1) {
 			cons.add(new HashSet<>());
-			con[2] = cons.size() - 1;
+			coni = cons.size() - 1;
 		}
-		cons.get(con[2]).add(i);
-		cons.get(con[2]).add(j);
-		if (con[3] != -1) {
-			cons.get(con[2]).addAll(cons.get(con[3]));
-			cons.remove(con[3]);
+		cons.get(coni).add(i);
+		cons.get(coni).add(j);
+		if (conj != -1) {
+			cons.get(coni).addAll(cons.get(conj));
+			cons.remove(conj);
 		}
 		odis.remove(0);
 		return new int[] { i, j };
