@@ -11,8 +11,6 @@ public class Pair<T, K> {
 	public T first;
 	public K second;
 
-	
-	
 	public Pair<T, K> clone() {
 		return new Pair<T, K>(first, second);
 	}
