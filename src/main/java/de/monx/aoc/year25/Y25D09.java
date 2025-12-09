@@ -1,5 +1,6 @@
 package de.monx.aoc.year25;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,14 +12,20 @@ import de.monx.aoc.util.Day;
 public class Y25D09 extends Day {
 
 	List<long[]> in = getInputList().stream().map(x -> x.split(",")) //
-			.map(x -> new long[] { Long.valueOf(x[0]), Long.valueOf(x[1]) }).toList();
+			.map(x -> new long[] { Long.valueOf(x[0]), Long.valueOf(x[1]) }) //
+			.sorted(new Comparator<long[]>() {
+				@Override
+				public int compare(long[] o1, long[] o2) {
+					return Long.compare((o1[0] + o1[1]), (o2[0] + o2[1]));
+				}
+			}).toList();
 
 	@Override
 	public Object part1() {
 		long max = 0;
 		for (int i = 0; i < in.size(); i++) {
 			var pi = in.get(i);
-			for (int j = i + 1; j < in.size(); j++) {
+			for (int j = in.size() - 1; j > i; j--) {
 				var pj = in.get(j);
 				long y = 1 + Math.abs((pi[0] - pj[0]));
 				long x = 1 + Math.abs((pi[1] - pj[1]));
@@ -37,7 +44,7 @@ public class Y25D09 extends Day {
 		for (int i = 0; i < in.size(); i++) {
 			var pi = in.get(i);
 			dots.add(pi[0] + "," + pi[1]);
-			for (int j = i + 1; j < in.size(); j++) {
+			for (int j = in.size() - 1; j > i; j--) {
 				var pj = in.get(j);
 				if (pi[0] != pj[0] && pi[1] != pj[1]) {
 					continue;
